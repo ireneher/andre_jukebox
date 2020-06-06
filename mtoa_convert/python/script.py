@@ -1,5 +1,6 @@
 from PySide2 import QtWidgets
 import os
+import constants
 import ui
 import utils
 import sys
@@ -29,18 +30,23 @@ def main():
         elif extension == ".mtl":
             materials[asset_name] = filepath
 
-    assets_dir = os.path.join(project_root, "scenes/MODELS/SET/buildings")
-    refs_dir = os.path.join(project_root, "scenes/REFS")
-    if not os.path.isdir(refs_dir):
-        os.mkdir(refs_dir)
-        
+    assets_dir = utils.create_dir(project_root, constants.assets_dir_rel)
+    refs_dir = utils.create_dir(project_root, constants.refs_dir_rel)
+
     for asset_name, obj_path in objs.items():
         print("Opening OBJ for {}".format(asset_name))
+        asset_archive = utils.create_dir(assets_dir, os.path.join(asset_name, constants.archive_dir_rel))
+        asset_file = os.path.join(os.path.dirname(asset_archive), "{}.ma".format(asset_name))
         cmds.file(obj_path, i=True, groupReference=True, groupName=asset_name)
-        cmds.file(rename=os.path.join(assets_dir, "{}.ma".format(asset_name)))
+        cmds.file(rename=asset_file)
         cmds.file(save=True, type="mayaAscii")
-        cmds.file(rename=os.path.join(refs_dir, "{}_ref.ma".format(asset_name)))
+        utils.archive_file(asset_archive, asset_file)
+
+        ref_archive = utils.create_dir(refs_dir, os.path.join(asset_name, constants.archive_dir_rel))
+        ref_file = os.path.join(os.path.dirname(ref_archive), "{}_ref.ma".format(asset_name))
+        cmds.file(rename=ref_file)
         cmds.file(save=True, type="mayaAscii")
+        utils.archive_file(ref_archive, ref_file)
 
     # window = ui.Dialog()
     # window.show()
