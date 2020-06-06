@@ -15,6 +15,7 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     maya.standalone.initialize()
     cmds.loadPlugin("objExport")
+    cmds.loadPlugin("mtoa")
     path = "C:/Users/their/Documents/AndreJukebox/MAYA/scenes/MODELS/SET/buildings/OBJ"
     project_root = utils.find_project_root(path)
     if not project_root:
