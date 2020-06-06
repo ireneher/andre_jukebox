@@ -1,6 +1,8 @@
 import os
 import shutil
 
+import maya.cmds as cmds
+
 def walk_up_path(path):
     """
     os.walk from path to paths above (bottom to top)
@@ -45,7 +47,7 @@ def get_next_version(archive_path):
     for file in os.listdir(archive_path):
         if file:
             filename, _ = os.path.splitext(file)
-            versions.append(int(filename.split("_")[-1]))
+            versions.append(int(filename.split(".")[-1]))
     return max(versions) + 1 if versions else 1
 
 
@@ -53,7 +55,7 @@ def get_versioned_path(archive_path, asset_path):
     next_version = get_next_version(archive_path)
     _, asset_filename = os.path.split(asset_path)
     asset_name, ext = os.path.splitext(asset_filename)
-    versioned_asset = "{}_{:03}{}".format(asset_name, next_version, ext)
+    versioned_asset = "{}.{:04}{}".format(asset_name, next_version, ext)
     return os.path.join(archive_path, versioned_asset)
 
 
@@ -62,3 +64,8 @@ def archive_file(archive_dir, filepath):
     shutil.copyfile(filepath, archive_filepath)
 
 
+def get_scene_materials():
+    for shading_engine in cmds.ls(type='shadingEngine'):
+        if cmds.sets(shading_engine, q=True):
+            for material in cmds.ls(cmds.listConnections(shading_engine), materials=True):
+                yield material
