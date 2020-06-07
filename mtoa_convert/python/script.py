@@ -27,8 +27,9 @@ def main():
 
     assets_dir = utils.create_dir(project_root, constants.assets_dir_rel)
     refs_dir = utils.create_dir(project_root, constants.refs_dir_rel)
+    textures_dir = os.path.join(project_root, constants.textures_dir_rel)
 
-    api.publish_objs(objs, assets_dir, refs_dir)
+    api.publish_objs(objs, assets_dir, refs_dir, textures_dir)
 
     # window = ui.Dialog()
     # window.show()
