@@ -12,6 +12,7 @@ class Dialog(QtWidgets.QWidget):
 
         self.path_editor = QtWidgets.QLineEdit()
         self.path_editor.setPlaceholderText("Input path to OBJ(s)")
+        self.path_editor.setText("C:/Users/their/Documents/AndreJukebox/MAYA/scenes/MODELS/SET/buildings/OBJ")
 
         self.convert_btn = QtWidgets.QPushButton("Convert", self)
         self.layout.addWidget(self.path_editor)

@@ -31,8 +31,13 @@ def retrieve_objs_mtls(path):
 
 
 def publish_objs(objs_dict, assets_dir, refs_dir, textures_dir):
+    total_objs = len(objs_dict)
+    idx = 0
     for asset_name, obj_path in objs_dict.items():
-        print("Processing OBJ for {}".format(asset_name))
+        idx += 1
+        print("*")*250
+        print("Processing OBJ for {}. \n {} out of {}".format(asset_name, idx, total_objs))
+        print("*")*250
         asset_archive = utils.create_dir(assets_dir, os.path.join(asset_name, constants.archive_dir_rel))
         asset_file = os.path.join(os.path.dirname(asset_archive), "{}.ma".format(asset_name))
         cmds.file(new=True, force=True)  # clear scene
@@ -49,6 +54,10 @@ def publish_objs(objs_dict, assets_dir, refs_dir, textures_dir):
         cmds.file(rename=ref_file)
         cmds.file(save=True, type="mayaAscii")
         utils.archive_file(ref_archive, ref_file)
+        if idx == total_objs:
+            print("-") * 250
+            print("Done! Processed {} OBJs.".format(total_objs))
+            print("-") * 250
 
 
 def convert_materials_to_arnold(textures_dir):

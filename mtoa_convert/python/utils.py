@@ -3,6 +3,7 @@ import shutil
 
 import maya.cmds as cmds
 
+
 def walk_up_path(path):
     """
     os.walk from path to paths above (bottom to top)
