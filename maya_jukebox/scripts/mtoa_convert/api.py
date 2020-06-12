@@ -1,10 +1,9 @@
 import os
-import re
-
 import maya.cmds as cmds
 
 import constants
 import utils
+import maya_jukebox.scripts.common.path as path_util
 
 
 def set_up_dirs(project_root):
@@ -93,7 +92,7 @@ def convert_materials_to_arnold(textures_dir):
 
 
 def publish_mtoa_convert(path):
-    project_root = utils.find_project_root(path)
+    project_root = path_util.find_project_root(path)
     if not project_root:
         print("Input path {} is not part of a Maya project".format(path))
         return 1
