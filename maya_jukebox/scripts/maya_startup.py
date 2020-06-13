@@ -3,18 +3,18 @@ import os
 import maya.cmds as cmds
 from maya.api import OpenMaya as om2
 
-from maya_jukebox.scripts.common import os as os_lib
+from common import path as path_lib
 
-PROJECT_PLUGINS: (
+PROJECT_PLUGINS = [
     "cvwrap",
     "grim_IK",
     "meshSnapCommand",
     "mgear_solvers",
-)
+]
 
 def set_project():
     
-    project_root = os_lib.find_project_root(os.path.abspath(__file__))
+    project_root = path_lib.find_project_root(os.path.abspath(__file__))
 
     try:
         cmds.workspace(project_root, openWorkspace=True)

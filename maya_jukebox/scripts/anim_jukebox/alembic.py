@@ -7,13 +7,13 @@ or $ "path/to/mayapy" "path/to/alembic_export.py" -mayaFile "path/to/mayaFile.mb
 """
 
 
-import argparse
+# import argparse
 
-try:
-    import maya.standalone
-    maya.standalone.initialize()
-except RuntimeError:
-    pass
+# try:
+#     import maya.standalone
+#     maya.standalone.initialize()
+# except RuntimeError:
+#     pass
 
 from maya import cmds
 
