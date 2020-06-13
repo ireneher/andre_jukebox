@@ -1,9 +1,6 @@
 import os
 import shutil
 
-import maya.cmds as cmds
-
-
 def create_dir(root, directory):
     path = os.path.join(root, directory)
     if not os.path.exists(path):
@@ -33,18 +30,6 @@ def archive_file(archive_dir, filepath):
     shutil.copyfile(filepath, archive_filepath)
 
 
-def get_scene_materials():
-    for shading_engine in cmds.ls(type='shadingEngine'):
-        if cmds.sets(shading_engine, q=True):
-            for material in cmds.ls(cmds.listConnections(shading_engine), materials=True):
-                yield material, shading_engine
-
-
-def get_material_texture_root(material):
-    # Get texture filepath connected via File node to the shading node color attr
-    file_node = cmds.connectionInfo("{}.color".format(material), sfd=True).split(".")[0]
-    if cmds.objExists(file_node):
-        texture_path = cmds.getAttr("{}.fileTextureName".format(file_node))
-        # Remove last part of the texture filename ({}_Diffuse.png) to get texture root
-        texture_root = ("_").join(os.path.basename(texture_path).split("_")[0:-1])
-        return texture_root
+def retrieve_assets():
+    # TODO: get assets_root from config once yaml is decided upon
+    ASSETS_PATH="C:\Users\their\Documents\AndreJukebox\MAYA\scenes\REFS"
