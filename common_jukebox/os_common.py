@@ -65,6 +65,7 @@ def retrieve_assets():
     for asset_dir_name in os.listdir(ASSETS_PATH):
         asset_dir = os.path.join(ASSETS_PATH, asset_dir_name)
         for asset_filename in os.listdir(asset_dir):
-            assets[os.path.join(asset_dir, asset_filename)] = os.path.splitext(asset_filename)[0]
+            if os.path.isfile(os.path.join(asset_dir, asset_filename)):
+                assets[os.path.join(asset_dir, asset_filename)] = os.path.splitext(asset_filename)[0]
 
     return assets
