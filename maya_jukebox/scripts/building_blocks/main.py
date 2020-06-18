@@ -7,7 +7,9 @@ import maya.cmds as cmds
 from maya_jukebox.scripts.building_blocks import api
 
 
-def build(bboxes_json="boundingboxes.json"):
+def build(bboxes_json=None):
+    bboxes_json = bboxes_json or os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                              "boundingboxes.json")
     with open(os.path.join(cmds.workspace(), bboxes_json)) as f:
         bboxes_data = json.load(f)
         print(bboxes_data)
