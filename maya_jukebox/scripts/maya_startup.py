@@ -17,7 +17,7 @@ PROJECT_PLUGINS: (
 
 def set_project():
     
-    project_root = path_lib.find_project_root(os.path.abspath(__file__))
+    project_root = os_lib.find_project_root(os.path.abspath(__file__))
 
     try:
         cmds.workspace(project_root, openWorkspace=True)
