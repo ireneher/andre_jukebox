@@ -28,7 +28,9 @@ class Track(object):
             asset = filename.split(".")[0]
             
         elif os.path.isdir(filepath):
-            if parse 
+            if parse:
+                # TODO
+                pass
         return cls()
     
     def __init__(self, filepath):
