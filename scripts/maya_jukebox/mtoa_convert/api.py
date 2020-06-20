@@ -3,7 +3,7 @@ import maya.cmds as cmds
 
 import constants
 import utils
-import maya_jukebox.scripts.common.os_maya as os_maya
+import maya_jukebox.common.os_maya as os_maya
 
 
 def set_up_dirs(project_root):

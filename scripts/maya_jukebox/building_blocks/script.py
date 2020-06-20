@@ -6,7 +6,7 @@ import maya.standalone
 import maya.cmds as cmds
 
 from common_jukebox import os_common
-from maya_jukebox.scripts.building_blocks import api, utils
+from maya_jukebox.building_blocks import api, utils
 
 
 def save_bbox_file(outdir="C:/Users/their/Documents/AndreJukebox/MAYA"):

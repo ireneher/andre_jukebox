@@ -5,7 +5,7 @@ import maya.cmds as cmds
 from maya.api import OpenMaya as om2
 
 import maya_jukebox
-from maya_jukebox.scripts.common import os_maya as os_lib
+from maya_jukebox.common import os_maya as os_lib
 
 PROJECT_PLUGINS: (
     "cvwrap",
