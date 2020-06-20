@@ -12,10 +12,10 @@ def get_local_bounding_box(shape_node):
 
 def get_bbox_overlap(bbox1, bbox2):
     # Position both objects at origin
-    xdiff = bbox1[0] - bbox2[0]
-    ydiff = bbox1[1] - bbox2[1]
-    zdiff = bbox1[2] - bbox2[2]
-    return xdiff * ydiff * zdiff
+    xdiff = math.pow(bbox1[0] - bbox2[0], 2) * 0.5
+    ydiff = math.pow(bbox1[1] - bbox2[1], 2) * 0.3
+    zdiff = math.pow(bbox1[2] - bbox2[2], 2) * 0.2
+    return xdiff + ydiff + zdiff
 
 
 def get_best_fitting_bbox(subject_bbox, target_bboxes):
@@ -28,4 +28,4 @@ def get_best_fitting_bbox(subject_bbox, target_bboxes):
     for target_id, target_bbox in target_bboxes.items():
         bbox_overlaps[target_id] = get_bbox_overlap(target_bbox, subject_bbox)
 
-    return max(bbox_overlaps, key=bbox_overlaps.get)
+    return min(bbox_overlaps, key=bbox_overlaps.get)
