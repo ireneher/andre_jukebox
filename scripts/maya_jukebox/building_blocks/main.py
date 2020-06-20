@@ -17,14 +17,14 @@ def build(bboxes_json=None):
     children = cmds.listRelatives(selected, allDescendents=True, type="transform") or selected
     transforms = cmds.ls(children, transforms=True)
     for transform in transforms:
-        shapes = cmds.listRelatives(transform, shapes=True)
-        scene_bbox = api.get_local_bounding_box(shapes[0])
+        scene_bbox = api.get_local_bounding_box(transform)
         closest_asset_bbox = api.get_best_fitting_bbox(scene_bbox, bboxes_data)
+        print(closest_asset_bbox)
         # Bring in closest_asset_bbox file as reference
         rotate_pivot = cmds.xform(transform, query=True, worldSpace=True, rotatePivot=True)
-        print(closest_asset_bbox)
-        # building = cmds.file(closest_asset_bbox, reference=True)        
-        # cmds.xform(building, rotatePivot=rotate_pivot)
+        building = cmds.file(closest_asset_bbox, reference=True, returnNewNodes=True)[0]
+        print(building)
+        cmds.xform(building, rotatePivot=rotate_pivot)
 
 
 if __name__ == "__main__":
