@@ -20,12 +20,11 @@ def get_bbox_overlap(bbox1, bbox2):
     bbox2y = bbox2[1][0][1] - bbox2[0][0][1]  # xmax - xmin
     bbox2z = bbox2[1][0][2] - bbox2[0][0][2]  # xmax - xmin
 
+    xdiff = math.pow(bbox1x - bbox2x, 2) * 0.5
+    ydiff = math.pow(bbox1y - bbox2y, 2) * 0.3
+    zdiff = math.pow(bbox1z - bbox2z, 2) * 0.2
 
-    xdiff = bbox1x - bbox2x
-    ydiff = bbox1y - bbox2y
-    zdiff = bbox1z - bbox2z
-
-    return xdiff * ydiff * zdiff
+    return xdiff + ydiff + zdiff
 
 
 def get_best_fitting_bbox(subject_bbox, target_bboxes):
