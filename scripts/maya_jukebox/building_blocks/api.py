@@ -14,7 +14,7 @@ def get_bbox_overlap(bbox1, bbox2):
 
     bbox2x = bbox2[0] - bbox2[3]
     bbox2y = bbox2[1] - bbox2[4]
-    bbox2z = bbox2[2] - bbox2[5]  
+    bbox2z = bbox2[2] - bbox2[5]
 
     xdiff = math.pow(bbox1x - bbox2x, 2) * 0.5
     ydiff = math.pow(bbox1y - bbox2y, 2) * 0.3
