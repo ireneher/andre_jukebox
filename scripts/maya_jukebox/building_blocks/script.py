@@ -20,7 +20,7 @@ def save_bbox_file(outdir="C:/Users/their/Documents/AndreJukebox/MAYA"):
         utils.merge_shapes(asset_name)
         bboxes_info[asset_path] = api.get_local_bounding_box(asset_name)
         outfile = os.path.join(outdir, "boundingboxes.json")
-    with open(outfile, 'w') as outfile:
+    with open(outfile, "w") as outfile:
         json.dump(bboxes_info, outfile)
     print("uninitiliasing")
     maya.standalone.uninitialize()

@@ -20,7 +20,6 @@ def get_bbox_overlap(bbox1, bbox2):
     bbox2y = bbox2[1][0][1] - bbox2[0][0][1]  # xmax - xmin
     bbox2z = bbox2[1][0][2] - bbox2[0][0][2]  # xmax - xmin
 
-
     xdiff = bbox1x - bbox2x
     ydiff = bbox1y - bbox2y
     zdiff = bbox1z - bbox2z

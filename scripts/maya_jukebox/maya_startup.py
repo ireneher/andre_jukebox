@@ -16,7 +16,7 @@ PROJECT_PLUGINS: (
 
 
 def set_project():
-    
+
     project_root = os_lib.find_project_root(os.path.abspath(__file__))
 
     try:
@@ -29,13 +29,22 @@ def set_project():
 
 def load_rig_plugins():
     if not cmds.about(q=True, version=True) == "2018":
-        om2.MGlobal.displayInfo("Maya Version not compatible with Jukebox project plugins. Skipping load...")
+        om2.MGlobal.displayInfo(
+            "Maya Version not compatible with Jukebox project plugins. Skipping load..."
+        )
         return
 
     for plugin in PROJECT_PLUGINS:
-        cmds.evalDeferred('if not cmds.pluginInfo("{0}", q=True, loaded=True): cmds.loadPlugin("{0}")'.format(plugin))
+        cmds.evalDeferred(
+            'if not cmds.pluginInfo("{0}", q=True, loaded=True): cmds.loadPlugin("{0}")'.format(
+                plugin
+            )
+        )
 
 
 def append_to_path():
     print("Appending {}".format(os.path.dirname(maya_jukebox.__path__)))
-    sys.path.append(os.path.dirname(maya_jukebox.__path__))  # Adds andre_jukebox dir to the path
+    sys.path.append(
+        os.path.dirname(maya_jukebox.__path__)
+    )  # Adds andre_jukebox dir to the path
+

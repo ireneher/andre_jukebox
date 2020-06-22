@@ -34,9 +34,11 @@ def archive_file(archive_dir, filepath):
 
 
 def get_scene_materials():
-    for shading_engine in cmds.ls(type='shadingEngine'):
+    for shading_engine in cmds.ls(type="shadingEngine"):
         if cmds.sets(shading_engine, q=True):
-            for material in cmds.ls(cmds.listConnections(shading_engine), materials=True):
+            for material in cmds.ls(
+                cmds.listConnections(shading_engine), materials=True
+            ):
                 yield material, shading_engine
 
 

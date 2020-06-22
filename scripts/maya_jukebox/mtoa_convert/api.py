@@ -34,11 +34,17 @@ def publish_objs(objs_dict, assets_dir, refs_dir, textures_dir):
     idx = 0
     for asset_name, obj_path in objs_dict.items():
         idx += 1
-        print("*")*250
-        print("Processing OBJ for {}. \n {} out of {}".format(asset_name, idx, total_objs))
-        print("*")*250
-        asset_archive = utils.create_dir(assets_dir, os.path.join(asset_name, constants.archive_dir_rel))
-        asset_file = os.path.join(os.path.dirname(asset_archive), "{}.ma".format(asset_name))
+        print("*") * 250
+        print(
+            "Processing OBJ for {}. \n {} out of {}".format(asset_name, idx, total_objs)
+        )
+        print("*") * 250
+        asset_archive = utils.create_dir(
+            assets_dir, os.path.join(asset_name, constants.archive_dir_rel)
+        )
+        asset_file = os.path.join(
+            os.path.dirname(asset_archive), "{}.ma".format(asset_name)
+        )
         cmds.file(new=True, force=True)  # clear scene
         cmds.file(obj_path, i=True, groupReference=True, groupName=asset_name)
         cmds.file(rename=asset_file)
@@ -48,8 +54,12 @@ def publish_objs(objs_dict, assets_dir, refs_dir, textures_dir):
         cmds.file(save=True, type="mayaAscii")
         utils.archive_file(asset_archive, asset_file)
 
-        ref_archive = utils.create_dir(refs_dir, os.path.join(asset_name, constants.archive_dir_rel))
-        ref_file = os.path.join(os.path.dirname(ref_archive), "{}_ref.ma".format(asset_name))
+        ref_archive = utils.create_dir(
+            refs_dir, os.path.join(asset_name, constants.archive_dir_rel)
+        )
+        ref_file = os.path.join(
+            os.path.dirname(ref_archive), "{}_ref.ma".format(asset_name)
+        )
         cmds.file(rename=ref_file)
         cmds.file(save=True, type="mayaAscii")
         utils.archive_file(ref_archive, ref_file)
@@ -61,30 +71,53 @@ def publish_objs(objs_dict, assets_dir, refs_dir, textures_dir):
 
 def convert_materials_to_arnold(textures_dir):
     for material, original_shading_group in utils.get_scene_materials():
-        shader = cmds.shadingNode("aiStandardSurface", asShader=True, name="{}_SHD".format(material))
+        shader = cmds.shadingNode(
+            "aiStandardSurface", asShader=True, name="{}_SHD".format(material)
+        )
         texture_root = utils.get_material_texture_root(material)
 
         # Set up hypershader graph with texture maps
         for component, (map, colourspace) in constants.texture_mappings.items():
             uv_node = cmds.shadingNode("place2dTexture", asUtility=True)
             file_node = cmds.shadingNode("file", asTexture=True)
-            cmds.connectAttr('{}.outUV'.format(uv_node), '{}.uvCoord'.format(file_node))
-            cmds.setAttr('{}.colorSpace'.format(file_node), colourspace, type='string')
+            cmds.connectAttr("{}.outUV".format(uv_node), "{}.uvCoord".format(file_node))
+            cmds.setAttr("{}.colorSpace".format(file_node), colourspace, type="string")
             out_attr = "outAlpha" if colourspace == "Raw" else "outColor"
             if component == "normalCamera":
                 # add aiNormalMap node
                 normal_map_node = cmds.shadingNode("aiNormalMap", asUtility=True)
-                cmds.connectAttr('{}.{}'.format(file_node, out_attr), '{}.input'.format(normal_map_node))
-                cmds.connectAttr('{}.outValue'.format(normal_map_node), '{}.{}'.format(shader, component), force=True)
+                cmds.connectAttr(
+                    "{}.{}".format(file_node, out_attr),
+                    "{}.input".format(normal_map_node),
+                )
+                cmds.connectAttr(
+                    "{}.outValue".format(normal_map_node),
+                    "{}.{}".format(shader, component),
+                    force=True,
+                )
             else:
-                cmds.connectAttr('{}.{}'.format(file_node, out_attr), '{}.{}'.format(shader, component), force=True)
-            map_filepath = os.path.join(textures_dir, "{}_{}.png".format(texture_root, map))
+                cmds.connectAttr(
+                    "{}.{}".format(file_node, out_attr),
+                    "{}.{}".format(shader, component),
+                    force=True,
+                )
+            map_filepath = os.path.join(
+                textures_dir, "{}_{}.png".format(texture_root, map)
+            )
             if os.path.exists(map_filepath):
-                cmds.setAttr('{}.fileTextureName'.format(file_node), map_filepath, type='string')
+                cmds.setAttr(
+                    "{}.fileTextureName".format(file_node), map_filepath, type="string"
+                )
 
         # Create Shading Group for Arnold shader:
-        shading_group = cmds.sets(shader, renderable=True, empty=True, name="{}_SHD{}".format(material, "SG"))
-        cmds.connectAttr("{}.outColor".format(shader), "{}.surfaceShader".format(shading_group), force=True)
+        shading_group = cmds.sets(
+            shader, renderable=True, empty=True, name="{}_SHD{}".format(material, "SG")
+        )
+        cmds.connectAttr(
+            "{}.outColor".format(shader),
+            "{}.surfaceShader".format(shading_group),
+            force=True,
+        )
 
         # Reassign shading groups
         for object in cmds.sets(original_shading_group, q=True, nodesOnly=True):

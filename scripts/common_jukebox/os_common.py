@@ -24,7 +24,7 @@ def walk_up_path(path):
 
     yield path, dirs, nondirs
 
-    upper_path = os.path.realpath(os.path.join(path, '..'))
+    upper_path = os.path.realpath(os.path.join(path, ".."))
     if upper_path == path:
         return
 
@@ -60,12 +60,14 @@ def retrieve_assets():
     Returns dict {asset_name: abs_path}
     """
     # TODO: get assets_root from config once yaml is decided upon
-    ASSETS_PATH="C:/Users/their/Documents/AndreJukebox/MAYA/scenes/REFS"
+    ASSETS_PATH = "C:/Users/their/Documents/AndreJukebox/MAYA/scenes/REFS"
     assets = {}
     for asset_dir_name in os.listdir(ASSETS_PATH):
         asset_dir = os.path.join(ASSETS_PATH, asset_dir_name)
         for asset_filename in os.listdir(asset_dir):
             if os.path.isfile(os.path.join(asset_dir, asset_filename)):
-                assets[os.path.join(asset_dir, asset_filename)] = os.path.splitext(asset_filename)[0]
+                assets[os.path.join(asset_dir, asset_filename)] = os.path.splitext(
+                    asset_filename
+                )[0]
 
     return assets
