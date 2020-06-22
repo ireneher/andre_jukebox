@@ -20,16 +20,10 @@ def save_bbox_file(outdir="C:/Users/their/dev/andre_jukebox/scripts/maya_jukebox
         cmds.file(new=True, force=True)  # clear scene
         cmds.file(asset_path, o=True, force=True)
         utils.merge_shapes(asset_name)
-<<<<<<< HEAD
-        bboxes_info[asset_path] = api.get_local_bounding_box(asset_name)
-        outfile = os.path.join(outdir, "boundingboxes.json")
-    with open(outfile, "w") as outfile:
-=======
         rel_asset_path = os.path.relpath(asset_path, project_root)
         bboxes_info[rel_asset_path] = api.get_local_bounding_box(asset_name)
     outfile = os.path.join(outdir, "boundingboxes.json")
     with open(outfile, 'w') as outfile:
->>>>>>> 3f9ffc9591ab004b5dc2501d0a7b2026cf233630
         json.dump(bboxes_info, outfile)
     print("uninitiliasing")
     maya.standalone.uninitialize()

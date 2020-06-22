@@ -25,19 +25,10 @@ def build(bboxes_json=None):
         print("----- Selected asset {} as the closest match".format(closest_asset_bbox))
         asset_path = os.path.join(project_root, closest_asset_bbox)
         # Bring in closest_asset_bbox file as reference
-<<<<<<< HEAD
-        rotate_pivot = cmds.xform(
-            transform, query=True, worldSpace=True, rotatePivot=True
-        )
-        print(closest_asset_bbox)
-        # building = cmds.file(closest_asset_bbox, reference=True)
-        # cmds.xform(building, rotatePivot=rotate_pivot)
-=======
         new_ref_nodes = cmds.file(asset_path, reference=True, returnNewNodes=True)
         building = cmds.ls(new_ref_nodes, assemblies=True)
         print("----- Created new reference {}".format(str(building)))
         cmds.matchTransform(building, transform, position=True, rotation=True)
->>>>>>> 3f9ffc9591ab004b5dc2501d0a7b2026cf233630
 
 
 if __name__ == "__main__":
