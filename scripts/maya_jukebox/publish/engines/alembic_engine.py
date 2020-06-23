@@ -3,7 +3,7 @@ import maya.cmds as cmds
 
 # from python_lib import enum
 from maya_jukebox.lib import plugins as lib_plugins
-from maya_jukebox.publish import abstract_engine
+from maya_jukebox.publish.engines import abstract_engine
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ class AbcFlags(object):
         (invisible, or templated) will not be written out. Defaults to
         False.
     selection (bool, optional): Write out all all selected nodes from the
-        active selection list that are descendents of the roots specified
+        active selection list that are descendents of the exports specified
         with -root. Defaults to False.
     uvWrite (bool, optional): Uv data for PolyMesh and SubD shapes will be
         written to the Alembic file.  Only the current uv map is used.
@@ -137,18 +137,21 @@ class AbcFlags(object):
 
 class AbcEngine(abstract_engine.AbstractEngine):
     def __init__(self, **kwargs):
-        super(AbcEngine, self).__init__(**kwargs)
+        super(AbcEngine, self).__init__(kwargs)
 
         self.representation = "abc"
-        self.build_flags(AbcFlags, **kwargs)
-        # Execute export
-        # cmds.loadPlugin("AbcExport.mll", quiet=True)
+        self.build_flags(AbcFlags, kwargs)
 
+    # "AbcExport.mll"
     @lib_plugins.ensure_plugins_loaded(["AbcExport"])
-    def run_export(self, filepath):
-        self.export(filepath)
+    def run_export(
+        self, filepath, exports=None, frame_range=None,
+    ):
+        self.export(filepath, exports, frame_range)
 
-    def export(self, filepath):
+    def export(
+        self, filepath, exports=None, frame_range=None,
+    ):
         # Generate job add_argument
         jobArg = ""
 
@@ -189,7 +192,8 @@ class AbcEngine(abstract_engine.AbstractEngine):
         multiple_arguments = {
             "attr": self.flags.attr,
             "attrPrefix": self.flags.attrPrefix,
-            "root": self.flags.root,
+            # Exports flag
+            "root": exports or self.flags.root,
             "userAttrPrefix": self.flags.userAttrPrefix,
             "userAttr": self.flags.userAttr,
             "frameRelativeSample": self.flags.frameRelativeSample,
@@ -198,14 +202,23 @@ class AbcEngine(abstract_engine.AbstractEngine):
             for item in value:
                 jobArg += ' -{0} "{1}"'.format(key, item)
 
-        # frame range flag
-        for start, end in self.flags.frameRange:
+        # Frame range flag
+        frame_range = (
+            frame_range
+            or self.flags.frameRange
+            or (
+                cmds.playbackOptions(q=True, min=True),
+                cmds.playbackOptions(q=True, max=True),
+            )
+        )
+
+        for start, end in frame_range:
             jobArg += " -frameRange {0} {1}".format(start, end)
 
         # strip namespaces flag
         if self.flags.stripNamespaces == 0:
             jobArg += " -stripNamespaces"
-        if self.flags.stripNamespaces > 0:
+        elif self.flags.stripNamespaces > 0:
             jobArg += " -stripNamespaces {}".format(self.flags.stripNamespaces)
 
         # file flag
@@ -220,6 +233,6 @@ class AbcEngine(abstract_engine.AbstractEngine):
             "jobArg": jobArg,
         }
 
-        print("Exporting with: {}".format(export_args))
+        logger.debug("Exporting with: {}".format(export_args))
 
         cmds.AbcExport(**export_args)

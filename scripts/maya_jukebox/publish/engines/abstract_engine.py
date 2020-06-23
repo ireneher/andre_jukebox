@@ -19,15 +19,14 @@ class AbstractEngine(object):
 
     def build_flags(self, flags_obj, **kwargs):
         self.flags = flags_obj
-        for flag, value in **kwargs.items():
+        for flag, value in kwargs.items():
             try:
                 setattr(self.flags, flag)
             except AttributeError:
                 logger.error("Invalid flag: {} for {}".format(flag, self.__class__.__name__),exc_info=True)
 
-    def run_export(self, roots, destination, start_frame, end_frame, flags=None):
-        flags = (self.flags + flags) if flags else self.flags
-        self.export(roots, destination, start_frame, end_frame, flags)
+    def run_export(self, filepath, exports=None, frame_range=None):
+        self.export(exports, filepath, frame_range, flags)
 
-    def export(self, roots, destination, start_frame, end_frame, flags):
+    def export(self, filepath, exports=None, frame_range=None):
         raise NotImplementedError

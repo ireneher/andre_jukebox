@@ -53,22 +53,22 @@ class AtomEngine(AbstractEngine):
         self._representation = "atom"
 
     @lib_plugins.ensure_plugins_loaded(["atomImportExport"])
-    def run_export(self, roots, destination, start_frame, end_frame, flags=None):
+    def run_export(self, roots, filepath, start_frame, end_frame, flags=None):
         flags = (self.flags + flags) if flags else self.flags
-        self.export(roots, destination, start_frame, end_frame, flags)
+        self.export(roots, filepath, start_frame, end_frame, flags)
 
-    def export(self, root, destination, start_frame, end_frame, flags):
+    def export(self, root, filepath, start_frame, end_frame, flags):
         option_string = self.construct_options_string(start_frame, end_frame, flags)
         logger.debug(
-            "Running atomExport: {roots}, {destination}, {options}",
+            "Running atomExport: {roots}, {filepath}, {options}",
             roots=root,
-            destination=destination,
+            filepath=filepath,
             options=option_string,
         )
         # Ensure only the requested items are selected
         with selection.reset_selection(root):
             cmds.file(
-                destination,
+                filepath,
                 force=True,
                 exportSelected=True,
                 options=option_string,
