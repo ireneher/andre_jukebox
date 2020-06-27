@@ -1,7 +1,7 @@
 # import maya.cmds as cmds
 import maya.OpenMaya as om
 
-from scripts.common_jukebox.jukebox import tape
+from scripts.core_jukebox.jukebox import tape
 from scripts.maya_jukebox.common import file_reference
 
 

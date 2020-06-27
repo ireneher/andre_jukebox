@@ -5,7 +5,7 @@ import sys
 import maya.standalone
 import maya.cmds as cmds
 
-from scripts.common_jukebox import os_common
+from scripts.core_jukebox import os_common
 from scripts.maya_jukebox.building_blocks import api, utils
 
 

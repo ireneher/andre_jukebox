@@ -3,9 +3,9 @@ import os
 import shutil
 import logging
 
-from common_jukebox.jukebox import track
+from core_jukebox.jukebox import track
 
-# from common_jukebox import path_templates
+# from core_jukebox import path_templates
 
 logger = logging.getLogger(__name__)
 

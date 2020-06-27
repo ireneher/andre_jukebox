@@ -1,6 +1,6 @@
 import os
 
-import common_jukebox.os_common as common_os
+import core_jukebox.os_common as common_os
 
 
 def find_project_root(path):

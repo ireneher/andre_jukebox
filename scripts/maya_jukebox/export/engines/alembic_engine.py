@@ -1,6 +1,6 @@
 import logging
-import maya.cmds as cmds
 
+import maya.cmds as cmds
 # from python_lib import enum
 from maya_jukebox.lib import plugins as lib_plugins
 from maya_jukebox.publish.engines import abstract_engine
@@ -103,36 +103,36 @@ class AbcFlags(object):
         isn't actually translated. Defaults to 0.
     """
 
-    eulerFilter = False
-    noNormals = False
-    preRoll = False
-    renderableOnly = False
-    selection = False
-    uvWrite = True
-    writeColorSets = False
-    writeFaceSets = False
-    wholeFrameGeo = False
-    worldSpace = True
-    writeVisibility = True
-    writeUVSets = True
-    writeCreases = True
-    dataFormat = "Ogawa"
-    step = 1.0
-    melPerFrameCallback = ""
-    melPostJobCallback = ""
-    pythonPerFrameCallback = ""
-    pythonPostJobCallback = ""
-    userAttr = []
-    userAttrPrefix = ["ABC_"]
     attr = []
     attrPrefix = []
-    root = []
-    frameRelativeSample = []
-    frameRange = []
-    stripNamespaces = 0
+    dataFormat = "Ogawa"
     dontSkipUnwrittenFrames = False
-    verbose = False
+    eulerFilter = False
+    frameRange = []
+    frameRelativeSample = []
+    melPerFrameCallback = ""
+    melPostJobCallback = ""
+    noNormals = False
+    preRoll = False
     preRollStartFrame = 0
+    pythonPerFrameCallback = ""
+    pythonPostJobCallback = ""
+    renderableOnly = False
+    root = []
+    selection = False
+    step = 1.0
+    stripNamespaces = 0
+    userAttr = []
+    userAttrPrefix = ["ABC_"]
+    uvWrite = True
+    verbose = False
+    wholeFrameGeo = False
+    worldSpace = True
+    writeColorSets = False
+    writeCreases = True
+    writeFaceSets = False
+    writeUVSets = True
+    writeVisibility = True
 
 
 class AbcEngine(abstract_engine.AbstractEngine):

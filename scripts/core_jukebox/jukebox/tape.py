@@ -1,7 +1,8 @@
 import os
-import yaml
-from common_jukebox import os_common
-from common_jukebox.track import track
+
+from python_lib import parse
+from core_jukebox import os_common, path_templates
+from core_jukebox.track import track
 
 
 class Tape(object):
@@ -14,6 +15,14 @@ class Tape(object):
 
 
 class AssetTape(Tape):
+
+    @classmethod
+    def from_filepath(cls, filepath):
+        parse.parse(path_templates.ASSET)
+
+        return cls()
+
+
     def __init__(self, name, asset_type=None):
         super(AssetTape, self).__init__(name)
         self.name = name
@@ -21,6 +30,13 @@ class AssetTape(Tape):
 
 
 class ShotTape(Tape):
+    
+    @classmethod
+    def from_filepath(cls, filepath):
+        parse.parse(path_templates.ASSET)
+
+        return cls()
+
     def __init__(self, name, task=None):
         super(ShotTape, self).__init__(name)
         self.name = name
