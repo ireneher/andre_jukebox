@@ -1,13 +1,24 @@
+import contextlib
 import os
 import shutil
+import logging
 
-from common_jukebox.track import track
+from common_jukebox.jukebox import track
+
+# from common_jukebox import path_templates
+
+logger = logging.getLogger(__name__)
+
+
+class Status(object):
+    COMPLETE = "complete"
+    FAILED = "failed"
+    PENDING = "pending"
+
 
 class Recorder(object):
-
-    
     def __init__(self, track, debug_mode=False):
-        """ Main generic engine to publish files.
+        """ Main engine to copy and archive the new published files.
 
         Args:
             track (Track): Object that represents an output folder for a certain asset of a specific datatype.
@@ -15,34 +26,38 @@ class Recorder(object):
         """
         self.track = track
         self.debug_mode = debug_mode
-    
 
-    @staticmethod
-    def ensure_path(self, name):
-        track.Track()
-
-    def start_recording(self):
-        pass
-
-    def publish_record(self):
-
-        self.archive_file(self.track.archive, self.)
-        if self.debug_mode:
-            print ("Recorded")
+        self.status = Status.PENDING
 
     def archive_file(self, archive_dir, filepath):
         archive_filepath = get_versioned_path(archive_dir, filepath)
-        shutil.copyfile(filepath, archive_filepath)
+        return shutil.copyfile(filepath, archive_filepath)
 
     def get_versioned_path(self, archive_path):
         # TODO: Should this take the archive, track or path to asset?
         next_version = self.track.get_next_version_number()
         # TODO: Should this initiate a new track to work as a static method?
-        versioned_asset = track.VersionName.TEMPLATE.format(self.track.name, next_version, self.track.extension)
+        versioned_asset = track.VersionName.TEMPLATE.format(
+            self.track.name, next_version, self.track.extension
+        )
         return os.path.join(archive_path, versioned_asset)
 
-    def create_dir(self, root, directory):
-        path = os.path.join(root, directory)
-        if not os.path.exists(path):
-            os.makedirs(path)
-        return path
+    @contextlib.contextmanager
+    def publish_record(self, filepath):
+        try:
+            if not self.debug_mode:
+                self.archive_file(self.track.archive, filepath)
+
+            logger.info(
+                "Sucessfully Recorded: {} at {}".format(filepath, self.archive_file)
+            )
+
+        except:
+            self.status = Status.FAILED
+            logger.error(
+                "Failed to record: {} at {}".format(filepath, self.archive_file)
+            )
+
+        finally:
+            # TODO: Not sure how to make this error nicely
+            pass

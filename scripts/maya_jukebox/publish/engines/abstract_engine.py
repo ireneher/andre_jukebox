@@ -2,8 +2,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class AbstractEngine(object):
 
+class AbstractEngine(object):
     def __init__(self, **kwargs):
         """
         Kwargs:
@@ -23,7 +23,10 @@ class AbstractEngine(object):
             try:
                 setattr(self.flags, flag)
             except AttributeError:
-                logger.error("Invalid flag: {} for {}".format(flag, self.__class__.__name__),exc_info=True)
+                logger.error(
+                    "Invalid flag: {} for {}".format(flag, self.__class__.__name__),
+                    exc_info=True,
+                )
 
     def run_export(self, filepath, exports=None, frame_range=None):
         self.export(exports, filepath, frame_range, flags)

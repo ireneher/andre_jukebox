@@ -5,7 +5,28 @@ from maya_jukebox.common import node
 
 
 class FileReference(node.MayaNode):
-    "Inspired by the pymel FileReference but without the ages to load"
+    """Inspired by the pymel FileReference, without taking ages to load
+    """
+
+    @classmethod
+    def create_reference(cls, filepath, namespace=None):
+        """ Create a maya reference in the scene and return a class object
+        Args:
+            filepath (str)
+        """
+        new_nodes = cmds.file(
+            filepath,
+            reference=True,
+            namespace=namespace,
+            returnNewNodes=True,
+            ignoreVersion=True,
+            force=True,
+        )
+        if not new_nodes:
+            om.MGlobal.displayWarning("Failed to reference: {}".format(new_nodes))
+            return
+        reference_node = cmds.referenceQuery(new_nodes[0], referenceNode=True)
+        return cls(reference_node)
 
     @classmethod
     def ls_references(cls):

@@ -8,16 +8,17 @@ class Publisher(object):
             fields (dict): Optional dict of fields to store for publishers
         """
         self.exports = exports
-        self.frame_range= frame_range
+        self.frame_range = frame_range
         self.fields = fields or {}
 
     def __repr__(self):
         return "{}({}, {}, {}, {})".format(
-            self.__class__.__name__,
-            self.exports,
-            self.frame_range,
-            self.fields,
+            self.__class__.__name__, self.exports, self.frame_range, self.fields,
         )
 
     def publish(self, engine, filepath, exports=None, frame_range=None):
-        engine.run_export(filepath, exports=self.exports or exports, frame_range=frame_range or self.frame_range)
+        engine.run_export(
+            filepath,
+            exports=self.exports or exports,
+            frame_range=frame_range or self.frame_range,
+        )

@@ -3,6 +3,9 @@ import maya.cmds as cmds
 
 
 class MayaNode(object):
+    """Based on the blogpost by toadstorm 
+    """
+
     def __init__(self, node_name):
 
         self.mobject = om.MObject()

@@ -1,0 +1,79 @@
+VIEWPORT:
+  default:
+    - nurbsCurves
+    - nurbsSurfaces
+    - cv
+    - hulls
+    - polymeshes
+    - subdivSurfaces
+    - planes
+    - lights
+    - cameras
+    - imagePlane
+    - joints
+    - ikHandles
+    - deformers
+    - dynamics
+    - particleInstancers
+    - fluids
+    - hairSystems
+    - follicles
+    - nCloths
+    - nParticles
+    - nRigids
+    - dynamicConstraints
+    - locators
+    - dimensions
+    - pivots
+    - handles
+    - textures
+    - strokes
+    - motionTrails
+    - pluginShapes
+    - clipGhosts
+    - greasePencils
+    - controllers
+
+  overides:
+    dynamics: true
+    hairSystems: true
+    locators: false
+    nurbsCurves: false
+    nurbsSurfaces: true
+    polymeshes: true
+
+  modelEditor:
+    activeView: True
+    controlVertices: False
+    displayAppearance: smoothShaded
+    grid: False
+    headsUpDisplay: True
+    ignorePanZoom: True
+    selectionHiliteDisplay: False
+    shadows: False
+    sortTransparent: True
+    wireframeOnShaded: False
+
+RESOLUTION:
+  full: (1920, 1080)
+  mid: (1080, 720)
+  low: (960, 540)
+
+PLAYBLAST:
+  forceOverwrite: true
+  format: qt
+  framePadding: 4
+  compression: H.264
+  offScreen: true
+  percent: 100
+  showOrnaments: true
+  viewer: False
+  sequenceTime: 0
+  clearCache: true
+
+formatsMap:
+  qt: mov
+movieFormat: image
+imageScalePercent: 100
+compression: png
+squality: 100

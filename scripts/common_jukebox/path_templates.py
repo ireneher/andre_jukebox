@@ -1,9 +1,7 @@
-ASSET = "{maya_project}/scenes/assets/{asset_type}/{asset}"
+ASSET = "{maya_project}/scenes/assets/{asset_type}/{asset}/outputs/{datatype}"
 
-ASSET_ARCHIVE = (
-    "{maya_project}/scenes/assets/{asset_type}/{asset}/outputs/{datatype}/archive"
-)
+ASSET_ARCHIVE = "{}/archive".format(ASSET)
 
-SHOT = "{maya_project}/scenes/shots/{shot}/{task}"
+SHOT = "{maya_project}/scenes/{shot}/outputs/{datatype}/{asset}/{instance}"
 
-SHOT_ARCHIVE = "{maya_project}/scenes/{shot}/outputs/{datatype}/{asset}/archive"
+SHOT_ARCHIVE = "{}/archive".format(SHOT)
