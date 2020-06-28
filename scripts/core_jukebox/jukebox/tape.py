@@ -22,9 +22,15 @@ class AssetTape(Tape):
     def from_filepath(cls, filepath):
         parsed = parse.search(path_templates.ASSET, filepath)
         if not parsed:
-            logger.warning("Invalid filepath: {} Expected: {}".format(filepath))
+            logger.warning(
+                "Invalid filepath: {} Expected: {}".format(
+                    filepath, path_templates.ASSET
+                )
+            )
         else:
-            return cls(parsed.get("asset"), asset_type=parsed.get("asset_type"))
+            return cls(
+                parsed.named.get("asset"), asset_type=parsed.named.get("asset_type")
+            )
 
     def __init__(self, name, asset_type=None):
         super(AssetTape, self).__init__(name)
@@ -37,9 +43,13 @@ class ShotTape(Tape):
     def from_filepath(cls, filepath):
         parsed = parse.search(path_templates.SHOT, filepath)
         if not parsed:
-            logger.warning("Invalid filepath: {} Expected: {}".format(filepath))
+            logger.warning(
+                "Invalid filepath: {} Expected: {}".format(
+                    filepath, path_templates.SHOT
+                )
+            )
         else:
-            return cls(parsed.get("asset"), task=parsed.get("task"))
+            return cls(parsed.named.get("asset"), task=parsed.named.get("task"))
 
     def __init__(self, name, task=None):
         super(ShotTape, self).__init__(name)

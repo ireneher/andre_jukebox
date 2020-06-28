@@ -1,10 +1,10 @@
-ASSET = "scenes/assets/{asset_type}/{asset}/"
+ASSET = "scenes/dev_test/assets/{asset_type}/{asset}/"
 
 ASSET_OUTPUT = ASSET + "/outputs/{datatype}" 
 
 ASSET_ARCHIVE = ASSET_OUTPUT + "/archive" 
 
-SHOT = "scenes/{shot}/task"
+SHOT = "scenes/dev_test/shots/{shot}/task"
 
 SHOT_OUTPUT = SHOT + "/outputs/{datatype}/{asset}/{instance}" 
 

@@ -2,8 +2,8 @@
 import maya.OpenMaya as om
 import maya.cmds as cmds
 
-from scripts.core_jukebox.jukebox import tape
-from scripts.maya_jukebox.common import file_reference
+from core_jukebox.jukebox import tape
+from maya_jukebox.common import file_reference
 
 
 class AnimInstance(object):

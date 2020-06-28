@@ -5,12 +5,12 @@ from core_jukebox.tape_record import resolve, record
 from maya_jukebox.export import main as main_export
 from maya_jukebox.export.engines import alembic_engine
 
-from maya_jukebox.anim_jukebox.scene import anim_instance, scene
+from maya_jukebox.anim_jukebox.scene import anim_instance, api
 
 
 class Manager(object):
     def __init__(self, anim_instances=None):
-        self.instances = anim_instances or scene.instances_from_scene()
+        self.instances = anim_instances or api.instances_from_scene()
 
         self.scene_frame_range = (
             cmds.playbackOptions(query=True, minTime=True),

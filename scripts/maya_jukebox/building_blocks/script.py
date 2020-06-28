@@ -5,8 +5,8 @@ import sys
 import maya.standalone
 import maya.cmds as cmds
 
-from scripts.core_jukebox import os_common
-from scripts.maya_jukebox.building_blocks import api, utils
+from core_jukebox import os_common
+from maya_jukebox.building_blocks import api, utils
 
 
 def save_bbox_file(

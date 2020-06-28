@@ -3,8 +3,7 @@ import glob
 import logging
 
 from python_lib import parse
-from core_jukebox import os_common, path_template
-from core_jukebox.jukebox import constants
+from core_jukebox import os_common, path_templates
 
 
 class VersionName(object):
@@ -23,27 +22,28 @@ class Track(object):
             -output.0002.abc
         -output.abc
     """
+
     @classmethod
     def from_filepath(cls, filepath):
         if not os.path.exists(filepath):
             logging.warning("No Track found in: {} ".format(filepath))
             return
 
-        # TODO : Need to add some logic here to get which type of output
-        # (asset or shot) 
-        # parse.parse(path_template.SHOT_OUTPUT, filepath)
+        asset_parse = parse.search(path_templates.ASSET_OUTPUT, filepath)
+        if asset_parse:
+            return cls(asset_parse.asset, filepath)
 
+        shot_parse = parse.search(path_templates.SHOT_OUTPUT, filepath)
+        if shot_parse:
+            return cls(asset_parse.instance, filepath)
 
-        return cls(asset, filename)
-
-    def __init__(self, name, filepath, representation=None):
+    def __init__(self, name, filepath):
         self.name = name
         self.archive = ""
         self.filepath = ""
         self.root = ""
-        # TODO : There's a better way of doing this 
+        # TODO : There's a better way of doing this
         self.representation = filepath.split(".")[-1]
-
 
     @property
     def filepath(self):
