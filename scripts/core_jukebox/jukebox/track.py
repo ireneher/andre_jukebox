@@ -23,6 +23,7 @@ class Track(object):
             return
 
         if os.path.isfile(filepath):
+            # TODO : Change this to use the path_template
             filename = os.path.basename(filepath)
             asset = filename.split(".")[0]
 

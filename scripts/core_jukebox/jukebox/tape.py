@@ -1,8 +1,11 @@
 import os
+import logging
 
 from python_lib import parse
 from core_jukebox import os_common, path_templates
-from core_jukebox.track import track
+from core_jukebox.jukebox import track
+
+logger = logging.getLogger(__name__)
 
 
 class Tape(object):
@@ -15,13 +18,13 @@ class Tape(object):
 
 
 class AssetTape(Tape):
-
     @classmethod
     def from_filepath(cls, filepath):
-        parse.parse(path_templates.ASSET)
-
-        return cls()
-
+        parsed = parse.search(path_templates.ASSET, filepath)
+        if not parsed:
+            logger.warning("Invalid filepath: {} Expected: {}".format(filepath))
+        else:
+            return cls(parsed.get("asset"), asset_type=parsed.get("asset_type"))
 
     def __init__(self, name, asset_type=None):
         super(AssetTape, self).__init__(name)
@@ -30,17 +33,18 @@ class AssetTape(Tape):
 
 
 class ShotTape(Tape):
-    
     @classmethod
     def from_filepath(cls, filepath):
-        parse.parse(path_templates.ASSET)
-
-        return cls()
+        parsed = parse.search(path_templates.SHOT, filepath)
+        if not parsed:
+            logger.warning("Invalid filepath: {} Expected: {}".format(filepath))
+        else:
+            return cls(parsed.get("asset"), task=parsed.get("task"))
 
     def __init__(self, name, task=None):
         super(ShotTape, self).__init__(name)
         self.name = name
-        self.root = os_lib.getshot
+        self.root = os_common.getshot
         self.task = task
 
     def get_outputs(self, datatype=None):
