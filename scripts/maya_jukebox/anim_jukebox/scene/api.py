@@ -20,7 +20,6 @@ def instances_from_scene():
             # TODO : Optimize this so that Tape doesn't get called twice
             instance = anim_instance.AnimInstance(reference)
             instances.append(instance)
-
     if not_found:
         # Might need to add a filter if sets or other references make this to noisy
         om.MGlobal.displayWarning(

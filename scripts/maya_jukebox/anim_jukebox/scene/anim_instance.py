@@ -14,7 +14,6 @@ class AnimInstance(object):
         # super(AnimInstance, self).__init__(refnode)
 
         self.file_ref = file_reference
-        print file_reference.filepath
 
     @property
     def instance(self):
@@ -27,7 +26,7 @@ class AnimInstance(object):
     @property
     def asset_tape(self):
         return tape.AssetTape.from_filepath(
-            file_reference.filepath
+            self.file_ref.filepath
         )
         
     @property

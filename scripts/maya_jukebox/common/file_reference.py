@@ -3,6 +3,9 @@ import maya.OpenMaya as om
 
 from maya_jukebox.common import node
 
+# Default maya thing that I'm still not sure what it does
+BLACKLIST = ["sharedReferenceNode"]
+
 
 class FileReference(node.MayaNode):
     """Inspired by the pymel FileReference, without taking ages to load
@@ -30,16 +33,18 @@ class FileReference(node.MayaNode):
 
     @classmethod
     def ls_references(cls):
-        iter = om.MItDependencyNodes(om.MFn.kReference)
-        fn_reference = om.MFnReference()
+        it = om.MItDependencyNodes(om.MFn.kReference)
+        refNodes = om.MObjectArray()
+        while not it.isDone():
+            refNodes.append(it.thisNode())
+            it.next()
 
-        references = []
-
-        while not iter.isDone():
-            fn_reference.setObject(iter.thisNode())
-            references.append(cls(fn_reference.name()))
-            iter.next()
-        return references
+        # Kinda shitty...
+        return [
+            cls(om.MFnReference(refNodes[idx]).name())
+            for idx in range(refNodes.length())
+            if not om.MFnReference(refNodes[idx]).name() in BLACKLIST
+        ]
 
     def __init__(self, refnode):
         super(FileReference, self).__init__(refnode)
