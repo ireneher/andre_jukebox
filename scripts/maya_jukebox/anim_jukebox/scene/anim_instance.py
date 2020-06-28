@@ -14,6 +14,7 @@ class AnimInstance(object):
         # super(AnimInstance, self).__init__(refnode)
 
         self.file_ref = file_reference
+        print file_reference.filepath
 
     @property
     def instance(self):

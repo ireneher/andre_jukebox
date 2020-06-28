@@ -66,6 +66,7 @@ class FileReference(node.MayaNode):
 
     @property
     def filepath(self):
+        # TODO : THis should be changed to a relative path
         return self._fn_reference.fileName(True, False, False)
 
     @filepath.setter
