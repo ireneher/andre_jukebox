@@ -1,10 +1,11 @@
+import os
 import maya.cmds as cmds
 
 from core_jukebox.tape_record import resolve, record
 from maya_jukebox.export import main as main_export
 from maya_jukebox.export.engines import alembic_engine
 
-from anim_jukebox.scene import anim_instance, scene
+from maya_jukebox.anim_jukebox.scene import anim_instance, scene
 
 
 class Manager(object):
@@ -16,15 +17,17 @@ class Manager(object):
             cmds.playbackOptions(query=True, maxTime=True),
         )
 
-
-    def export(self, instances=None):
+    def publish(self, instances=None):
         instances = instances or self.instances
         # TODO :look how to run these in parallel
         for instance in instances:
-            # Check
+            track = resolve.ensure_track()
+            # Might not need this later
+            filepath = os.path.join(track.root, track.name, track.representation)
 
-            track = resolve.ensure_track(filepath)
-            
-            exporter = main_export.Exporter(instance.root_node, frame_range=self.scene_frame_range)
-            exporter.export(alembic_engine.AbcEngine(), track.filepath)
-        
+            with record.publish_record(filepath):
+                exporter = main_export.Exporter(
+                    instance.root_node, frame_range=self.scene_frame_range
+                )
+                exporter.export(alembic_engine.AbcEngine(), filepath)
+

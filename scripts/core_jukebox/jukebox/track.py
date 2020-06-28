@@ -4,7 +4,7 @@ import logging
 
 from python_lib import parse
 from core_jukebox import os_common, path_template
-from core_jukebox.track import constants
+from core_jukebox.jukebox import constants
 
 
 class VersionName(object):
@@ -12,32 +12,45 @@ class VersionName(object):
     TEMPLATE = "{asset}.{:04}.{rep}"
     asset = 0
     version = 1
-    extension = 2
+    representation = 2
 
 
 class Track(object):
+    """This is the main object to describe an output entity.
+    The expected hierarchy is:
+        -archive
+            -output.0001.abc
+            -output.0002.abc
+        -output.abc
+    """
     @classmethod
     def from_filepath(cls, filepath):
         if not os.path.exists(filepath):
             logging.warning("No Track found in: {} ".format(filepath))
             return
 
-        if os.path.isfile(filepath):
-            # TODO : Change this to use the path_template
-            filename = os.path.basename(filepath)
-            asset = filename.split(".")[0]
+        # TODO : Need to add some logic here to get which type of output
+        # (asset or shot) 
+        # parse.parse(path_template.SHOT_OUTPUT, filepath)
 
-        elif os.path.isdir(filepath):
-            # TODO
-            pass
-        return cls()
 
-    def __init__(self, filepath):
+        return cls(asset, filename)
+
+    def __init__(self, name, filepath, representation=None):
         self.name = name
         self.archive = ""
         self.filepath = ""
         self.root = ""
-        self.extension = ""
+        # TODO : There's a better way of doing this 
+        self.representation = filepath.split(".")[-1]
+
+
+    @property
+    def filepath(self):
+        # TODO : Standardized this
+        """This has to return the right filepath even if the file is not published 
+        """
+        return os.path.join(self.root, self.name, self.representation)
 
     @property
     def current_version(self):
@@ -53,7 +66,7 @@ class Track(object):
         versions = []
         for version in os.listdir(self.archive):
             asset, v, rep = parse.parse(VersionName.TEMPLATE, version)
-            if not asset == self.name or not rep == self.extension:
+            if not asset == self.name or not rep == self.representation:
                 continue
             versions.append(version)
         return sorted(versions)
