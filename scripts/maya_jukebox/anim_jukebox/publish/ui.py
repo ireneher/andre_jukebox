@@ -28,15 +28,18 @@ class AnimPublishWidget(QtWidgets.QWidget):
 
         self.setLayout(main_layout)
 
-        self.instance_list = QtWidgets.QListView()
-        self.model = QtGui.QStandardItemModel(self.instance_list)
+        self.list_view = QtWidgets.QListView()
+        self.model = QtGui.QStandardItemModel(self.list_view)
+        self.list_view.setModel(self.model)
+        self.list_view.setFont(QtGui.QFont("Open Sans", 12))
+        self.list_view.setSelectionMode(QtWidgets.QAbstractItemView.ContiguousSelection)
 
         if self.manager:
             for instance in self.manager.instances:
                 item = QtGui.QStandardItem(instance.instance)
                 item.setCheckable(True)
-                model.appendRow(item)
-
+                item.setCheckState(QtCore.Qt.Checked)
+                self.model.appendRow(item)
         self.label = QtWidgets.QLabel("ANIMATION JUKEBOX")
         self.label.setFont(QtGui.QFont("Helvetica Bold", 18))
         self.label.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
@@ -56,8 +59,9 @@ class AnimPublishWidget(QtWidgets.QWidget):
         # ======================================================================== #
 
         main_layout.addWidget(self.label, 0, 0, 2, 1)
-        main_layout.addWidget(self.publish_btn, 5, 0, 2, 1)
+        main_layout.addWidget(self.list_view, 2, 0, 4, 1)
+        main_layout.addWidget(self.publish_btn, 6, 0, 1, 1)
 
     def on_publish(self):
         if self.manager:
-            pass
+            self.manager.publish()
