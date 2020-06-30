@@ -8,13 +8,16 @@ from maya_jukebox.building_blocks import api
 
 
 def build(bboxes_json=None):
-    bboxes_json = bboxes_json or os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                              "boundingboxes.json")
+    bboxes_json = bboxes_json or os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "boundingboxes.json"
+    )
     with open(bboxes_json) as f:
         bboxes_data = json.load(f)
     project_root = cmds.workspace(q=True, rd=True)
     selected = cmds.ls(selection=True)
-    children = cmds.listRelatives(selected, allDescendents=True, type="transform") or selected
+    children = (
+        cmds.listRelatives(selected, allDescendents=True, type="transform") or selected
+    )
     transforms = cmds.ls(children, transforms=True)
     for transform in transforms:
         scene_bbox = api.get_local_bounding_box(transform)
