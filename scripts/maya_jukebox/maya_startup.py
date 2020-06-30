@@ -2,44 +2,43 @@ import os
 import sys
 
 import maya.cmds as cmds
-from maya.api import OpenMaya as om2
 
 import maya_jukebox
-from maya_jukebox.common import os_maya as os_lib
+from maya_jukebox.common import os_maya
 
-PROJECT_PLUGINS: (
-    "cvwrap",
-    "grim_IK",
-    "meshSnapCommand",
-    "mgear_solvers",
+PROJECT_PLUGINS = (
+    "cvwrap.mll",
+    "grim_IK.mll",
+    "meshSnapCommand.mll",
+    "mgear_solvers.mll",
 )
 
 
 def set_project():
 
-    project_root = os_lib.find_project_root(os.path.abspath(__file__))
+    project_root = os_maya.find_project_root(os.path.abspath(__file__))
 
     try:
         cmds.workspace(project_root, openWorkspace=True)
-    except RuntimeError:
-        cmds.workspace(project_root, newWorkspace=True)
-    finally:
-        cmds.workspace(dir=project_root)
+    except:
+        print ("No Andre Jukebox project found. Resorting to default")
+        pass
 
-
-def load_rig_plugins():
+set_project()
+def load_project_plugins():
     if not cmds.about(q=True, version=True) == "2018":
-        om2.MGlobal.displayInfo(
-            "Maya Version not compatible with Jukebox project plugins. Skipping load..."
+        print(
+            "Maya Version not compatible with Jukebox project plugins. Skipping loading..."
         )
         return
 
     for plugin in PROJECT_PLUGINS:
         cmds.evalDeferred(
-            'if not cmds.pluginInfo("{0}", q=True, loaded=True): cmds.loadPlugin("{0}")'.format(
+            "if not cmds.pluginInfo({0}, q=True, loaded=True): cmds.loadPlugin({0})".format(
                 plugin
             )
         )
+    print ("Sucessfully Loaded plugins: {}".format(PROJECT_PLUGINS))
 
 
 def append_to_path():
