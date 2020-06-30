@@ -49,16 +49,10 @@ def publish_objs(objs_dict, assets_dir, refs_dir, textures_dir):
 
         convert_materials_to_arnold(textures_dir)
         map_interiors()
-
+        mel.eval("cleanUpScene 3")
         cmds.file(save=True, type="mayaAscii")
         utils.archive_file(asset_archive, asset_file)
 
-        ref_archive = utils.create_dir(refs_dir, os.path.join(asset_name, constants.archive_dir_rel))
-        ref_file = os.path.join(os.path.dirname(ref_archive), "{}_ref.ma".format(asset_name))
-        mel.eval("cleanUpScene 3")
-        cmds.file(rename=ref_file)
-        cmds.file(save=True, type="mayaAscii")
-        utils.archive_file(ref_archive, ref_file)
         if idx == total_objs:
             print("-") * 250
             print("Done! Processed {} OBJs.".format(total_objs))
@@ -75,9 +69,6 @@ def convert_materials_to_arnold(textures_dir):
             map_filepath = os.path.join(textures_dir, "{}_{}.png".format(texture_root, map))
             if not os.path.exists(map_filepath):
                 continue
-            if component == "transmission":
-                cmds.setAttr("{}.caustics".format(shader), 1)
-                cmds.setAttr("{}.transmitAovs".format(shader), 1)
             uv_node = cmds.shadingNode("place2dTexture", asUtility=True)
             file_node = cmds.shadingNode("file", asTexture=True)
             file_node = cmds.rename(file_node, os.path.splitext(os.path.basename(map_filepath))[0])
@@ -105,6 +96,10 @@ def convert_materials_to_arnold(textures_dir):
                 if alpha_flag:
                     cmds.setAttr('{}.invert'.format(file_node), 1)
                     cmds.setAttr('{}.alphaIsLuminance'.format(file_node), 1)
+            if component == "transmission":
+                cmds.setAttr('{}.invert'.format(file_node), 0)
+                cmds.setAttr("{}.caustics".format(shader), 1)
+                cmds.setAttr("{}.transmitAovs".format(shader), 1)
 
         # Create Shading Group for Arnold shader:
         shading_group = cmds.sets(shader, renderable=True, empty=True, name="{}_SHD{}".format(material, "SG"))
