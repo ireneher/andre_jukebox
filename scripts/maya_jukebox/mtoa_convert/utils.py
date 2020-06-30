@@ -34,11 +34,9 @@ def archive_file(archive_dir, filepath):
 
 
 def get_scene_materials():
-    for shading_engine in cmds.ls(type="shadingEngine"):
+    for shading_engine in cmds.ls(type='shadingEngine'):
         if cmds.sets(shading_engine, q=True):
-            for material in cmds.ls(
-                cmds.listConnections(shading_engine), materials=True
-            ):
+            for material in cmds.ls(cmds.listConnections(shading_engine), materials=True):
                 yield material, shading_engine
 
 
@@ -50,3 +48,35 @@ def get_material_texture_root(material):
         # Remove last part of the texture filename ({}_Diffuse.png) to get texture root
         texture_root = ("_").join(os.path.basename(texture_path).split("_")[0:-1])
         return texture_root
+
+
+def walk_up_path(path):
+    """
+    os.walk from path to paths above (bottom to top)
+    """
+    path = os.path.realpath(path)
+    names = os.listdir(path)
+    dirs, nondirs = [], []
+    for name in names:
+        if os.path.isdir(os.path.join(path, name)):
+            dirs.append(name)
+        else:
+            nondirs.append(name)
+
+    yield path, dirs, nondirs
+
+    upper_path = os.path.realpath(os.path.join(path, '..'))
+    if upper_path == path:
+        return
+
+    for x in walk_up_path(upper_path):
+        yield x
+
+
+def find_project_root(path):
+    """
+    Given path inside project, find the Maya project root
+    """
+    for upper_dir, _, _ in walk_up_path(path):
+        if os.path.exists(os.path.join(upper_dir, "workspace.mel")):
+            return upper_dir
