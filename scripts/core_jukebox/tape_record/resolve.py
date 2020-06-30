@@ -86,5 +86,6 @@ class Resolver(object):
     def create_dirs(self, root, directory):
         path = os.path.join(root, directory)
         if not os.path.exists(path):
+            print path
             os.makedirs(path)
         return path
