@@ -3,15 +3,10 @@ import glob
 import logging
 
 from python_lib import parse
-from core_jukebox import os_common, path_templates
+from core_jukebox import os_common, templates
 
 
-class VersionName(object):
 
-    TEMPLATE = "{asset}.{:04}.{rep}"
-    asset = 0
-    version = 1
-    representation = 2
 
 
 class Track(object):
@@ -29,11 +24,11 @@ class Track(object):
             logging.warning("No Track found in: {} ".format(filepath))
             return
 
-        asset_parse = parse.search(path_templates.ASSET_OUTPUT, filepath)
+        asset_parse = parse.search(templates.ASSET_OUTPUT, filepath)
         if asset_parse:
             return cls(asset_parse.asset, filepath)
 
-        shot_parse = parse.search(path_templates.SHOT_OUTPUT, filepath)
+        shot_parse = parse.search(templates.SHOT_OUTPUT, filepath)
         if shot_parse:
             return cls(asset_parse.instance, filepath)
 
@@ -65,7 +60,7 @@ class Track(object):
     def get_versions(self):
         versions = []
         for version in os.listdir(self.archive):
-            asset, v, rep = parse.parse(VersionName.TEMPLATE, version)
+            asset, v, rep = parse.parse(templates.VersionName.TEMPLATE, version)
             if not asset == self.name or not rep == self.representation:
                 continue
             versions.append(version)
@@ -79,4 +74,4 @@ class Track(object):
             str: 4 digit version
         """
         filename = os.path.basename(filepath)
-        return parse.parse(VersionName.TEMPLATE, filename)[VersionName.version]
+        return parse.parse(templates.VersionName.TEMPLATE, filename)[templates.VersionName.version]

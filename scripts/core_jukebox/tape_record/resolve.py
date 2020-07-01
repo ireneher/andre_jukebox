@@ -5,20 +5,9 @@ import logging
 
 from python_lib import enum, parse
 from core_jukebox.jukebox import project, track
-from core_jukebox import path_templates
+from core_jukebox import templates
 
 logger = logging.getLogger(__name__)
-
-# TODO : Find a more central place to put this
-class InstanceName(object):
-
-    TEMPLATE = "{asset}_{:d}"
-    asset = 0
-    count = 1
-
-    def parse(self, instance_name):
-        return parse.parse(self.TEMPLATE, instance_name)
-
 
 class Resolver(object):
     def __init__(self):
@@ -38,7 +27,7 @@ class Resolver(object):
             instance ([type]): [description]
         """
         asset = self.asset_from_instance(instance).named.get("asset")
-        output_template = path_templates.SHOT_OUTPUT.format(
+        output_template = templates.SHOT_OUTPUT.format(
             shot=tape.name, datatype=datatype, asset=asset, instance=instance
         )
         return os.path.join(project.get_project_root(), output_template)
@@ -52,7 +41,7 @@ class Resolver(object):
         Returns:
             parse.Result: (asset, instance) Acts as a tuple by default or dict
         """
-        return InstanceName().parse(instance_name)
+        return templates.InstanceName().parse(instance_name)
     
 
     def get_next_version_number(self, filepath):

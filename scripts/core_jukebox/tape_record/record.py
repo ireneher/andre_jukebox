@@ -5,7 +5,7 @@ import logging
 
 from core_jukebox.jukebox import project, track
 
-# from core_jukebox import path_templates
+# from core_jukebox import templates
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +15,8 @@ class Status(object):
     FAILED = "failed"
     PENDING = "pending"
 
+
+ARCHIVE_FOLDER = "archive"
 
 class Recorder(object):
     def __init__(self, track, debug_mode=False):
@@ -59,13 +61,29 @@ class Recorder(object):
 
         return filepath
 
+    def ensure_archive_path(self, filepath):
+        """ Ensures that the filepath provided will exist 
+
+        Args:
+            filepath ([type]): [description]
+            track_type ([type], optional): [description]. Defaults to TrackTypes.SHOT.
+
+        Returns:
+            [type]: [description]
+        """
+        # TODO : This currently doesn't check for the track or even queries the template
+        archive_path = os.path.join(os.path.dirname(filepath), ARCHIVE_FOLDER)
+        self.create_dirs(archive_path)
+
+        return archive_path
+
     def create_dirs(self, filepath):
         if not os.path.exists(filepath):
             os.makedirs(filepath)
         return filepath
 
     @contextlib.contextmanager
-    def publish_record(self, filepath):
+    def publish_record(self, filepath, version_number):
         try:
             if not self.debug_mode:
                 self.archive_file(self.track.archive, filepath)
@@ -80,6 +98,15 @@ class Recorder(object):
                 "Failed to record: {} at {}".format(filepath, self.archive_file)
             )
 
-        finally:
-            # TODO: Not sure how to make this error nicely
-            pass
+        else:
+            archive_path = self.ensure_archive_path(filepath)
+
+            _, filename = os.path.split(filepath)
+            asset, rep = os.path.splitext(filename)
+
+            archive_file = track.InstanceName.TEMPLATE.format(version_number, asset=asset, rep=rep)
+            versioned_path = os.path.join(archive_path, archive_file)
+
+            shutil.copyfile(filepath, versioned_path)
+
+            self.status = Status.COMPLETE

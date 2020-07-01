@@ -2,7 +2,7 @@ import os
 import logging
 
 from python_lib import parse
-from core_jukebox import os_common, path_templates
+from core_jukebox import os_common, templates
 from core_jukebox.jukebox import track
 
 logger = logging.getLogger(__name__)
@@ -20,11 +20,11 @@ class Tape(object):
 class AssetTape(Tape):
     @classmethod
     def from_filepath(cls, filepath):
-        parsed = parse.search(path_templates.ASSET, filepath)
+        parsed = parse.search(templates.ASSET, filepath)
         if not parsed:
             logger.warning(
                 "Invalid filepath: {} Expected: {}".format(
-                    filepath, path_templates.ASSET
+                    filepath, templates.ASSET
                 )
             )
         else:
@@ -41,11 +41,11 @@ class AssetTape(Tape):
 class ShotTape(Tape):
     @classmethod
     def from_filepath(cls, filepath):
-        parsed = parse.search(path_templates.SHOT, filepath)
+        parsed = parse.search(templates.SHOT, filepath)
         if not parsed:
             logger.warning(
                 "Invalid filepath: {} Expected: {}".format(
-                    filepath, path_templates.SHOT
+                    filepath, templates.SHOT
                 )
             )
         else:
