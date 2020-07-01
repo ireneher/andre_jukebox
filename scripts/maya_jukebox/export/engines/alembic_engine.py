@@ -222,6 +222,8 @@ class AbcEngine(abstract_engine.AbstractEngine):
             jobArg += " -stripNamespaces {}".format(self.flags.stripNamespaces)
 
         # file flag
+        if not ".abc" in filepath:
+            "{}.abc".format(filepath)
         # Alembic exporter does not like back slashes
         jobArg += " -file {}".format(filepath.replace("\\", "/"))
 

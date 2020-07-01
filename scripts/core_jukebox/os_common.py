@@ -14,6 +14,7 @@ def walk_up_path(path):
     os.walk from path to paths above (bottom to top)
     """
     path = os.path.realpath(path)
+    print path
     names = os.listdir(path)
     dirs, nondirs = [], []
     for name in names:

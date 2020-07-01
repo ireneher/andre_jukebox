@@ -80,7 +80,3 @@ class Track(object):
         """
         filename = os.path.basename(filepath)
         return parse.parse(VersionName.TEMPLATE, filename)[VersionName.version]
-
-    def get_next_version_number(self):
-        return self.current_version_number + 1 if self.current_version_number else 1
-

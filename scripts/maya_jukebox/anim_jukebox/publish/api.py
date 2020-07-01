@@ -1,6 +1,7 @@
 import os
 import maya.cmds as cmds
 
+from core_jukebox.jukebox import tape
 from core_jukebox.tape_record import resolve, record
 from maya_jukebox.export import main as main_export
 from maya_jukebox.export.engines import alembic_engine
@@ -18,17 +19,14 @@ class Manager(object):
 
     def publish(self, instances=None):
         instances = instances or self.instances
-        for instance in instances:
+        for anim_instance in instances:
 
-            archive_path = resolve.Resolver().filepath_from_instance(self.shot, "caches", instance.instance)
-            track = resolve.Resolver().ensure_track(archive_path, track_type= resolve.TrackTypes.SHOT)
-
-            # Actual filepath with file name
-            filepath = os.path.join(track.root, track.name)
-
-            with record.publish_record(filepath):
+            output_path = resolve.Resolver().filepath_from_instance(self.shot, "caches", anim_instance.instance)
+            filepath = os.path.join(output_path, anim_instance.instance)
+            next_version = resolve.Resolver().get_next_version_number()
+            with record.Recorder().publish_record(filepath, next_version):
                 exporter = main_export.Exporter(
-                    instance.root_node, frame_range=self.scene_frame_range
+                    anim_instance.root_node, frame_range=self.scene_frame_range
                 )
                 exporter.export(alembic_engine.AbcEngine(), filepath)
 

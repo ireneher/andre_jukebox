@@ -3,7 +3,7 @@ import os
 import shutil
 import logging
 
-from core_jukebox.jukebox import track
+from core_jukebox.jukebox import project, track
 
 # from core_jukebox import path_templates
 
@@ -41,6 +41,28 @@ class Recorder(object):
             self.track.name, next_version, self.track.extension
         )
         return os.path.join(archive_path, versioned_asset)
+        # @staticmethod
+
+
+    def ensure_output_path(self, filepath):
+        """ Ensures that the filepath provided will exist 
+
+        Args:
+            filepath ([type]): [description]
+            track_type ([type], optional): [description]. Defaults to TrackTypes.SHOT.
+
+        Returns:
+            [type]: [description]
+        """
+        if not track.Track.from_filepath(filepath):
+            self.create_dirs(filepath)
+
+        return filepath
+
+    def create_dirs(self, filepath):
+        if not os.path.exists(filepath):
+            os.makedirs(filepath)
+        return filepath
 
     @contextlib.contextmanager
     def publish_record(self, filepath):
