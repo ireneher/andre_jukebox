@@ -87,15 +87,14 @@ def convert_materials_to_arnold(textures_dir):
                 cmds.connectAttr('{}.outValue'.format(normal_map_node), '{}.{}'.format(shader, component), force=True)
             elif component == "specularIOR":
                 # add multiplyDivide node
-                multiplyDivide_node = cmds.shadingNode("multiplyDivide", asUtility=True)
-                cmds.setAttr('{}.input2X'.format(multiplyDivide_node), 2.56)
-                cmds.connectAttr('{}.{}'.format(file_node, out_attr), '{}.input1X'.format(multiplyDivide_node), force=True)
-                cmds.connectAttr('{}.outputX'.format(multiplyDivide_node), '{}.{}'.format(shader, component), force=True)
+                range_node = cmds.shadingNode("aiRange", asUtility=True)
+                cmds.connectAttr('{}.{}'.format(file_node, out_attr), '{}.inputR'.format(range_node), force=True)
+                cmds.connectAttr('{}.outColorR'.format(range_node), '{}.{}'.format(shader, component), force=True)
             else:
                 cmds.connectAttr('{}.{}'.format(file_node, out_attr), '{}.{}'.format(shader, component), force=True)
-                if alpha_flag:
-                    cmds.setAttr('{}.invert'.format(file_node), 1)
-                    cmds.setAttr('{}.alphaIsLuminance'.format(file_node), 1)
+            if alpha_flag:
+                cmds.setAttr('{}.invert'.format(file_node), 1)
+                cmds.setAttr('{}.alphaIsLuminance'.format(file_node), 1)
             if component == "transmission":
                 cmds.setAttr('{}.invert'.format(file_node), 0)
                 cmds.setAttr("{}.caustics".format(shader), 1)
