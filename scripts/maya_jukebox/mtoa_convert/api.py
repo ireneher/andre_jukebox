@@ -86,9 +86,12 @@ def convert_materials_to_arnold(textures_dir):
                 cmds.connectAttr('{}.{}'.format(file_node, out_attr), '{}.input'.format(normal_map_node), force=True)
                 cmds.connectAttr('{}.outValue'.format(normal_map_node), '{}.{}'.format(shader, component), force=True)
             elif component == "specularIOR":
-                # add multiplyDivide node
+                # add aiRange node
                 range_node = cmds.shadingNode("aiRange", asUtility=True)
-                cmds.connectAttr('{}.{}'.format(file_node, out_attr), '{}.inputR'.format(range_node), force=True)
+                cmds.setAttr('{}.outputMin'.format(range_node), 1.32)
+                cmds.setAttr('{}.outputMax'.format(range_node), 1.95)
+                # ior uses outcolor from map, not outalpha as alpha_flag would suggest
+                cmds.connectAttr('{}.outColor'.format(file_node), '{}.input'.format(range_node), force=True)
                 cmds.connectAttr('{}.outColorR'.format(range_node), '{}.{}'.format(shader, component), force=True)
             else:
                 cmds.connectAttr('{}.{}'.format(file_node, out_attr), '{}.{}'.format(shader, component), force=True)
