@@ -41,7 +41,7 @@ class Resolver(object):
         Returns:
             parse.Result: (asset, instance) Acts as a tuple by default or dict
         """
-        return templates.InstanceName().parse(instance_name)
+        return parse.parse(templates.Instance.TEMPLATE, instance_name)
     
 
     def get_next_version_number(self, filepath):

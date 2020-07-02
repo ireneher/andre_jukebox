@@ -3,7 +3,7 @@ import logging
 
 from python_lib import parse
 from core_jukebox import os_common, templates
-from core_jukebox.jukebox import track
+from core_jukebox.jukebox import track, project
 
 logger = logging.getLogger(__name__)
 
@@ -23,9 +23,7 @@ class AssetTape(Tape):
         parsed = parse.search(templates.ASSET, filepath)
         if not parsed:
             logger.warning(
-                "Invalid filepath: {} Expected: {}".format(
-                    filepath, templates.ASSET
-                )
+                "Invalid filepath: {} Expected: {}".format(filepath, templates.ASSET)
             )
         else:
             return cls(
@@ -44,21 +42,25 @@ class ShotTape(Tape):
         parsed = parse.search(templates.SHOT, filepath)
         if not parsed:
             logger.warning(
-                "Invalid filepath: {} Expected: {}".format(
-                    filepath, templates.SHOT
-                )
+                "Invalid filepath: {} Expected: {}".format(filepath, templates.SHOT)
             )
         else:
-            return cls(parsed.named.get("asset"), task=parsed.named.get("task"))
+            print("shot:")
+            print(parsed.named.get("shot"))
+            print("Task:")
+            print(parsed.named.get("task"))
+            return cls(parsed.named.get("shot"), task=parsed.named.get("task"))
 
-    def __init__(self, name, task=None):
+    def __init__(self, name, task=None, dcc=templates.MAYA_PROJECT_ROOT):
         super(ShotTape, self).__init__(name)
         self.name = name
-        self.root = os_common.getshot
         self.task = task
+        self.root = templates.SHOT.format(DCC_ROOT=dcc, shot=self.name, task=self.task)
+        self.absolute_path = os.path.join(project.get_project_root(), self.root)
 
     def get_outputs(self, datatype=None):
-        path = os.path.join(self.root,)
+        # TODO: Use the template
+        path = os.path.join(self.root, "outputs/")
         if datatype:
             path = os.path.join(datatype)
         return [

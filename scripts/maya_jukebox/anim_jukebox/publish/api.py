@@ -20,11 +20,13 @@ class Manager(object):
         )
 
     def publish(self, instances=None):
+        print (self.shot_tape)
+        return
         instances = instances or self.instances
         for anim_instance in instances:
 
             output_path = resolve.Resolver().filepath_from_instance(
-                self.shot, "caches", anim_instance.instance
+                self.shot_tape, "caches", anim_instance.instance
             )
             filepath = os.path.join(output_path, anim_instance.instance, ".abc")
             version_number = resolve.Resolver().get_next_version_number(filepath)
@@ -36,9 +38,16 @@ class Manager(object):
                 exporter.export(alembic_engine.AbcEngine(), filepath)
 
     @property
-    def shot(self, filepath=None):
+    def shot_tape(self):
+        filepath = cmds.file(q=True, sceneName=True)
+        # This is even more:
+        # Just return the upper folder
+        return tape.ShotTape.from_filepath(filepath)      
+
+    @property
+    def shot_name(self):
         # TODO : This is pretty hacky...
-        filepath = filepath or cmds.file(q=True, sn=True)
+        filepath = cmds.file(q=True, sceneName=True)
         # This is even more:
         # Just return the upper folder
         shot = os.path.basename(os.path.dirname(filepath))

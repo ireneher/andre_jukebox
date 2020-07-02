@@ -104,7 +104,7 @@ class Recorder(object):
             _, filename = os.path.split(filepath)
             asset, rep = os.path.splitext(filename)
 
-            archive_file = track.InstanceName.TEMPLATE.format(version_number, asset=asset, rep=rep)
+            archive_file = track.Instance.TEMPLATE.format(version_number, asset=asset, rep=rep)
             versioned_path = os.path.join(archive_path, archive_file)
 
             shutil.copyfile(filepath, versioned_path)
