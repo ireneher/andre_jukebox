@@ -15,8 +15,8 @@ def instances_from_scene():
     not_found = []
 
     for reference in file_reference.FileReference.ls_references():
-        rel_filepath = project.get_relative_path(reference.filepath)
-        tape_obj = tape.AssetTape.from_filepath(rel_filepath)
+        # rel_filepath = project.get_relative_path(reference.filepath)
+        tape_obj = tape.AssetTape.from_filepath(reference.filepath)
         if tape_obj:
             # TODO : Optimize this so that Tape doesn't get called twice
             instance = anim_instance.AnimInstance(reference)

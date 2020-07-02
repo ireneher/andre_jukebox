@@ -4,13 +4,12 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractEngine(object):
-    def __init__(self, **kwargs):
+    def __init__(self, flags=None):
         """
         Kwargs:
             Any engine specific flags that are needed.
         """
         self.representation = None
-        self.build_flags(**kwargs)
 
     def __repr__(self):
         return "{}({!r}, {!r})".format(

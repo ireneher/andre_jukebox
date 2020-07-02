@@ -45,17 +45,14 @@ class ShotTape(Tape):
                 "Invalid filepath: {} Expected: {}".format(filepath, templates.SHOT)
             )
         else:
-            print("shot:")
-            print(parsed.named.get("shot"))
-            print("Task:")
-            print(parsed.named.get("task"))
             return cls(parsed.named.get("shot"), task=parsed.named.get("task"))
 
-    def __init__(self, name, task=None, dcc=templates.MAYA_PROJECT_ROOT):
+    def __init__(self, name, task=None, dcc_root=templates.MAYA_PROJECT_ROOT):
         super(ShotTape, self).__init__(name)
         self.name = name
         self.task = task
-        self.root = templates.SHOT.format(DCC_ROOT=dcc, shot=self.name, task=self.task)
+        self.dcc_root = dcc_root
+        self.root = templates.SHOT.format(DCC_ROOT=self.dcc_root, shot=self.name, task=self.task)
         self.absolute_path = os.path.join(project.get_project_root(), self.root)
 
     def get_outputs(self, datatype=None):

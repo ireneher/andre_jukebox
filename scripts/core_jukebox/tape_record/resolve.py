@@ -9,6 +9,7 @@ from core_jukebox import templates
 
 logger = logging.getLogger(__name__)
 
+
 class Resolver(object):
     def __init__(self):
         """ Resolver to ensure and return the filepaths where to publish to. 
@@ -28,10 +29,14 @@ class Resolver(object):
         """
         asset = self.asset_from_instance(instance).named.get("asset")
         output_template = templates.SHOT_OUTPUT.format(
-            shot=tape.name, datatype=datatype, asset=asset, instance=instance
+            DCC_ROOT=tape.dcc_root,
+            shot=tape.name,
+            task=tape.task,
+            datatype=datatype,
+            asset=asset,
+            instance=instance,
         )
         return os.path.join(project.get_project_root(), output_template)
-         
 
     @staticmethod
     def asset_from_instance(instance_name):
@@ -42,11 +47,10 @@ class Resolver(object):
             parse.Result: (asset, instance) Acts as a tuple by default or dict
         """
         return parse.parse(templates.Instance.TEMPLATE, instance_name)
-    
 
     def get_next_version_number(self, filepath):
         track_obj = track.Track.from_filepath(filepath)
-        if track_obj:
+        if track_obj.current_version_number:
             return track_obj.current_version_number + 1
         else:
             return 1

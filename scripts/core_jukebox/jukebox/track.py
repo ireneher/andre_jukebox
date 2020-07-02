@@ -6,9 +6,6 @@ from python_lib import parse
 from core_jukebox import os_common, templates
 
 
-
-
-
 class Track(object):
     """This is the main object to describe an output entity.
     The expected hierarchy is:
@@ -21,36 +18,41 @@ class Track(object):
     @classmethod
     def from_filepath(cls, filepath):
         if not os.path.exists(filepath):
-            logging.warning("No Track found in: {} ".format(filepath))
+            # logging.warning("No Track found in: {} ".format(filepath))
             return
 
         asset_parse = parse.search(templates.ASSET_OUTPUT, filepath)
         if asset_parse:
-            return cls(asset_parse.asset, filepath)
+            return cls(asset_parse.get("asset"), filepath)
 
         shot_parse = parse.search(templates.SHOT_OUTPUT, filepath)
         if shot_parse:
-            return cls(asset_parse.instance, filepath)
+            return cls(shot_parse.named.get("instance"), filepath)
 
     def __init__(self, name, filepath):
         self.name = name
-        self.archive = ""
-        self.filepath = ""
-        self.root = ""
-        # TODO : There's a better way of doing this
-        self.representation = filepath.split(".")[-1]
+        self.filepath = filepath
+        self.root = os.path.dirname(self.filepath)
+        self.archive = os.path.join(self.root, "archive")
+        self.datatype = os.path.dirname(self.filepath)
+        self.representation = os.path.splitext(self.filepath)
 
-    @property
-    def filepath(self):
-        # TODO : Standardized this
-        """This has to return the right filepath even if the file is not published 
-        """
-        return os.path.join(self.root, self.name, self.representation)
+    # @property
+    # def filepath(self):
+    #     # TODO : Standardized this with the template
+    #     """This has to return the right filepath even if the file is not published
+    #     """
+    #     return os.path.join(self.root, self.name, self.representation)
+
+    # @property
+    # def archive(self):
+    #     # TODO : Standardized this with the template
+    #     return os.path.join(self.root, "/archive")
 
     @property
     def current_version(self):
-        if self.get_versions:
-            return self.get_versions[-1]
+        if self.get_versions():
+            return self.get_versions()[-1]
 
     @property
     def current_version_number(self):
@@ -60,7 +62,7 @@ class Track(object):
     def get_versions(self):
         versions = []
         for version in os.listdir(self.archive):
-            asset, v, rep = parse.parse(templates.VersionName.TEMPLATE, version)
+            asset, v, rep = parse.parse(templates.VersionFile.TEMPLATE, version)
             if not asset == self.name or not rep == self.representation:
                 continue
             versions.append(version)
@@ -74,4 +76,6 @@ class Track(object):
             str: 4 digit version
         """
         filename = os.path.basename(filepath)
-        return parse.parse(templates.VersionName.TEMPLATE, filename)[templates.VersionName.version]
+        return parse.parse(templates.VersionFile.TEMPLATE, filename)[
+            templates.VersionFile.version
+        ]

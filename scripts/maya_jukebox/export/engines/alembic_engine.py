@@ -137,10 +137,10 @@ class AbcFlags(object):
 
 class AbcEngine(abstract_engine.AbstractEngine):
     def __init__(self, **kwargs):
-        super(AbcEngine, self).__init__(kwargs)
+        super(AbcEngine, self).__init__()
 
         self.representation = "abc"
-        self.build_flags(AbcFlags, kwargs)
+        self.build_flags(AbcFlags, **kwargs)
 
     # "AbcExport.mll"
     @lib_plugins.ensure_plugins_loaded(["AbcExport"])
@@ -212,8 +212,7 @@ class AbcEngine(abstract_engine.AbstractEngine):
             )
         )
 
-        for start, end in frame_range:
-            jobArg += " -frameRange {0} {1}".format(start, end)
+        jobArg += " -frameRange {0} {1}".format(frame_range[0], frame_range[1])
 
         # strip namespaces flag
         if self.flags.stripNamespaces == 0:

@@ -29,7 +29,15 @@ class AnimInstance(object):
             self.file_ref.filepath
         )
         
-    @property
-    def root_node(self):
+    def root_node(self, long=False):
         # Kinda shady, might want to do this a better way...
-        return  cmds.ls("{}:*".format(self.instance), assemblies=True)[0]         
+        root_node = cmds.ls("{}:*".format(self.instance), assemblies=True, long=long)     
+        if root_node:
+            return root_node[0]
+
+
+    def geo_node(self, long=False):
+        # Kinda shady, might want to do this a better way...
+        geo_node = cmds.ls("{}:geo".format(self.instance), long=long)
+        if geo_node:
+            return geo_node[0]      
