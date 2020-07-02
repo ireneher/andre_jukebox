@@ -1,9 +1,8 @@
 class VersionFile(object):
 
     TEMPLATE = "{asset}.{:04}{rep}"
-    asset = 0
-    version = 1
-    representation = 2
+    # Version will be index 0 since is the only non-positional
+    version = 0
 
 
 class Instance(object):

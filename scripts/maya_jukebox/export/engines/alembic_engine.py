@@ -169,7 +169,8 @@ class AbcEngine(abstract_engine.AbstractEngine):
             "worldSpace": self.flags.worldSpace,
             "writeVisibility": self.flags.writeVisibility,
             "writeUVSets": self.flags.writeUVSets,
-            "writeCreases": self.flags.writeCreases,
+            # Not supported in Maya 2018
+            # "writeCreases": self.flags.writeCreases,
         }
         for key, value in booleans.iteritems():
             if value:

@@ -50,7 +50,7 @@ class Resolver(object):
 
     def get_next_version_number(self, filepath):
         track_obj = track.Track.from_filepath(filepath)
-        if track_obj.current_version_number:
+        if track_obj and track_obj.current_version_number:
             return track_obj.current_version_number + 1
         else:
             return 1

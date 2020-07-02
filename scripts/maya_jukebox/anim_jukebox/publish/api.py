@@ -28,6 +28,8 @@ class Manager(object):
             )
             filepath = os.path.join(output_path, "{}.abc".format(anim_instance.instance))
             version_number = resolve.Resolver().get_next_version_number(filepath)
+            print version_number 
+            return
 
             instance_geo = [anim_instance.geo_node(long=True) or anim_instance.root_node(long=True)]
 

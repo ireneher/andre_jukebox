@@ -29,9 +29,23 @@ class Track(object):
         if shot_parse:
             return cls(shot_parse.named.get("instance"), filepath)
 
-    def __init__(self, name, filepath):
+    def __init__(
+        self,
+        name,
+        filepath,
+        task=None,
+        shot=None,
+        datatype=None,
+        instance=None,
+        asset=None,
+    ):
         self.name = name
         self.filepath = filepath
+        self.task = task
+        self.asset = asset
+        self.shot = shot
+        self.datatype = datatype
+        self.intance = instance
         self.root = os.path.dirname(self.filepath)
         self.archive = os.path.join(self.root, "archive")
         self.datatype = os.path.dirname(self.filepath)
@@ -62,8 +76,13 @@ class Track(object):
     def get_versions(self):
         versions = []
         for version in os.listdir(self.archive):
-            asset, v, rep = parse.parse(templates.VersionFile.TEMPLATE, version)
-            if not asset == self.name or not rep == self.representation:
+            # Could tidy this up a little better
+            asset = parse.parse(templates.VersionFile.TEMPLATE, version).named.get(
+                "asset"
+            )
+            rep = parse.parse(templates.VersionFile.TEMPLATE, version).named.get("rep")
+            # TODO: Kinda dodgy. Should get the template
+            if not os.path.basename(self.filepath) == "{}{}".format(asset, str(rep)):
                 continue
             versions.append(version)
         return sorted(versions)
@@ -76,6 +95,8 @@ class Track(object):
             str: 4 digit version
         """
         filename = os.path.basename(filepath)
-        return parse.parse(templates.VersionFile.TEMPLATE, filename)[
-            templates.VersionFile.version
-        ]
+        return int(
+            parse.parse(templates.VersionFile.TEMPLATE, filename)[
+                templates.VersionFile.version
+            ]
+        )
