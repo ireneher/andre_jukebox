@@ -28,7 +28,7 @@ ASSET_OUTPUT = ASSET + "outputs/"
 
 ASSET_ARCHIVE = ASSET_OUTPUT + "archive/"
 
-SHOT_OUTPUT = SHOT + "outputs/{datatype}/{asset}/{instance}/"
+SHOT_OUTPUT = SHOT + "outputs/{datatype}/{instance}/"
 
 SHOT_ARCHIVE = SHOT_OUTPUT + "archive/"
 

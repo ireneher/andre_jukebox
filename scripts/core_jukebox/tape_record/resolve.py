@@ -27,13 +27,11 @@ class Resolver(object):
             shot ([type]): [description]
             instance ([type]): [description]
         """
-        asset = self.asset_from_instance(instance).named.get("asset")
         output_template = templates.SHOT_OUTPUT.format(
             DCC_ROOT=tape.dcc_root,
             shot=tape.name,
             task=tape.task,
             datatype=datatype,
-            asset=asset,
             instance=instance,
         )
         return os.path.join(project.get_project_root(), output_template)

@@ -1,3 +1,4 @@
+import collections
 import os
 import glob
 import logging
@@ -65,27 +66,46 @@ class Track(object):
 
     @property
     def current_version(self):
-        if self.get_versions():
-            return self.get_versions()[-1]
+        if self._get_versions():
+            return self.get_versions_dict().keys()[-1]
 
     @property
     def current_version_number(self):
         if self.current_version:
             return self.get_version_from_name(self.current_version)
 
-    def get_versions(self):
+    def _get_versions(self):
         versions = []
         for version in os.listdir(self.archive):
-            # Could tidy this up a little better
-            asset = parse.parse(templates.VersionFile.TEMPLATE, version).named.get(
-                "asset"
-            )
+            # Ignore if it's not the same representation or it doesn't have any version
             rep = parse.parse(templates.VersionFile.TEMPLATE, version).named.get("rep")
-            # TODO: Kinda dodgy. Should get the template
-            if not os.path.basename(self.filepath) == "{}{}".format(asset, str(rep)):
+            if (
+                not os.path.splitext(self.filepath)[1] == str(rep)
+                or not parse.parse(templates.VersionFile.TEMPLATE, version)[
+                    templates.VersionFile.version
+                ]
+            ):
                 continue
+
             versions.append(version)
-        return sorted(versions)
+        # Sort based on version, not the alphabetical order
+        return versions
+
+    def get_versions_dict(self):
+        """Map of filepaths and versions in the archive
+
+        Returns:
+            OrderedDict: filepath(str) : version(int)
+        """
+        initial_dict = {}
+        ordered_dict = collections.OrderedDict()
+        for version in self._get_versions():
+            initial_dict[version] = int(
+                parse.parse(templates.VersionFile.TEMPLATE, filename)[
+                    templates.VersionFile.version
+                ]
+            )
+        return ordered_dict(sorted(initial_dict.items(), key=lambda t: t[1]))
 
     def get_version_from_name(self, filepath):
         """Returns the version number based on a path or an file name.

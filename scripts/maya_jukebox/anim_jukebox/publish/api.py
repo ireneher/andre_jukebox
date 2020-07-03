@@ -1,4 +1,5 @@
 import os
+import shutil
 import maya.OpenMaya as om
 import maya.cmds as cmds
 
@@ -22,33 +23,68 @@ class Manager(object):
         )
 
     def publish(self, instances=None):
+
         instances = instances or self.instances
-        for anim_instance in instances:
-            output_path = resolve.Resolver().filepath_from_instance(
-                self.shot_tape, "caches", anim_instance.instance
-            )
-            filepath = os.path.join(output_path, "{}.abc".format(anim_instance.instance))
-            version_number = resolve.Resolver().get_next_version_number(filepath)
+        # Ensure file is saved
+        cmds.file(save=True, force=True)
 
-            instance_geo = [anim_instance.geo_node(long=True) or anim_instance.root_node(long=True)]
-
-            recorder = record.Recorder()
-            with recorder.publish_record(filepath, version_number):
-                exporter = main_export.Exporter(
-                    instance_geo, frame_range=self.scene_frame_range
-                )
-                om.MGlobal.displayInfo("Recording {}...".format(anim_instance.instance))
-                exporter.export(alembic_engine.AbcEngine(), filepath, exports=instance_geo, frame_range=self.scene_frame_range)
-                recorder.status = record.Status.PUBLISHED
+        # for anim_instance in instances:
+        #     self.publish_alembic(instances=instances)
+        self.publish_workfile()
 
     @property
     def shot_name(self):
         return self.shot_tape.name
-
 
     @property
     def shot_tape(self):
         filepath = cmds.file(q=True, sceneName=True)
         # This is even more:
         # Just return the upper folder
-        return tape.ShotTape.from_filepath(filepath)      
+        return tape.ShotTape.from_filepath(filepath)
+
+    def publish_alembic(self, instance):
+        output_path = resolve.Resolver().filepath_from_instance(
+            self.shot_tape, "caches", anim_instance.instance
+        )
+        filepath = os.path.join(output_path, "{}.abc".format(anim_instance.instance))
+        version_number = resolve.Resolver().get_next_version_number(filepath)
+
+        instance_geo = [
+            anim_instance.geo_node(long=True) or anim_instance.root_node(long=True)
+        ]
+
+        recorder = record.Recorder()
+        with recorder.publish_record(filepath, version_number):
+            exporter = main_export.Exporter(
+                instance_geo, frame_range=self.scene_frame_range
+            )
+            om.MGlobal.displayInfo("Recording {}...".format(anim_instance.instance))
+            exporter.export(
+                alembic_engine.AbcEngine(),
+                filepath,
+                exports=instance_geo,
+                frame_range=self.scene_frame_range,
+            )
+            recorder.status = record.Status.PUBLISHED
+
+    def publish_workfile(self):
+
+        maya_file = cmds.file(q=True, sn=True)
+
+        output_path = resolve.Resolver().filepath_from_instance(
+            self.shot_tape, "workfile", "workfile"
+        )
+        filepath = os.path.join(
+            output_path, os.path.basename(cmds.file(maya_file))
+        )
+        version_number = resolve.Resolver().get_next_version_number(filepath)
+
+        recorder = record.Recorder()
+        with recorder.publish_record(filepath, version_number):
+            shutil.copyfile(maya_file, filepath)
+            om.MGlobal.displayInfo(
+                "Archiving workfile {}...".format(anim_instance.instance)
+            )
+
+            recorder.status = record.Status.PUBLISHED
