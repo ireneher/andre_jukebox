@@ -1,3 +1,4 @@
 {
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "python.pythonPath": "c:\\Program Files\\Autodesk\\Maya2018\\bin\\mayapy.exe"
 }

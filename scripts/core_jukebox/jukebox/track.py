@@ -46,11 +46,12 @@ class Track(object):
         self.asset = asset
         self.shot = shot
         self.datatype = datatype
-        self.intance = instance
-        self.root = os.path.dirname(self.filepath)
+        self.instance = instance        
         self.archive = os.path.join(self.root, "archive")
-        self.datatype = os.path.dirname(self.filepath)
-        self.representation = os.path.splitext(self.filepath)
+        self.root = os.path.dirname(self.filepath)
+        self.datatype = os.path.dirname(self.root)        
+        self.representation = os.path.splitext(self.filepath)[-1]
+
 
     # @property
     # def filepath(self):
@@ -80,7 +81,7 @@ class Track(object):
             # Ignore if it's not the same representation or it doesn't have any version
             rep = parse.parse(templates.VersionFile.TEMPLATE, version).named.get("rep")
             if (
-                not os.path.splitext(self.filepath)[1] == str(rep)
+                not self.representation == str(rep)
                 or not parse.parse(templates.VersionFile.TEMPLATE, version)[
                     templates.VersionFile.version
                 ]

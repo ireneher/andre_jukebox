@@ -3,7 +3,7 @@ import shutil
 import maya.OpenMaya as om
 import maya.cmds as cmds
 
-from core_jukebox.jukebox import tape
+from core_jukebox.jukebox import tape, mapping
 from core_jukebox.tape_record import resolve, record
 from maya_jukebox.export import main as main_export
 from maya_jukebox.export.engines import alembic_engine
@@ -47,7 +47,8 @@ class Manager(object):
         output_path = resolve.Resolver().filepath_from_instance(
             self.shot_tape, "caches", anim_instance.instance
         )
-        filepath = os.path.join(output_path, "{}.abc".format(anim_instance.instance))
+        filepath = os.path.join(output_path, "{}{}".format(anim_instance.instance,
+                                                           mapping.Datatypes.CACHE))
         version_number = resolve.Resolver().get_next_version_number(filepath)
 
         instance_geo = [
@@ -71,7 +72,7 @@ class Manager(object):
     def publish_workfile(self):
 
         maya_file = cmds.file(q=True, sn=True)
-
+        # TODO: move this to core as "archive_workfile"
         output_path = resolve.Resolver().filepath_from_instance(
             self.shot_tape, "workfile", "workfile"
         )
