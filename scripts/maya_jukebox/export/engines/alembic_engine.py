@@ -137,10 +137,10 @@ class AbcFlags(object):
 
 class AbcEngine(abstract_engine.AbstractEngine):
     def __init__(self, **kwargs):
-        super(AbcEngine, self).__init__(kwargs)
+        super(AbcEngine, self).__init__()
 
         self.representation = "abc"
-        self.build_flags(AbcFlags, kwargs)
+        self.build_flags(AbcFlags, **kwargs)
 
     # "AbcExport.mll"
     @lib_plugins.ensure_plugins_loaded(["AbcExport"])
@@ -169,7 +169,8 @@ class AbcEngine(abstract_engine.AbstractEngine):
             "worldSpace": self.flags.worldSpace,
             "writeVisibility": self.flags.writeVisibility,
             "writeUVSets": self.flags.writeUVSets,
-            "writeCreases": self.flags.writeCreases,
+            # Not supported in Maya 2018
+            # "writeCreases": self.flags.writeCreases,
         }
         for key, value in booleans.iteritems():
             if value:
@@ -212,8 +213,7 @@ class AbcEngine(abstract_engine.AbstractEngine):
             )
         )
 
-        for start, end in frame_range:
-            jobArg += " -frameRange {0} {1}".format(start, end)
+        jobArg += " -frameRange {0} {1}".format(frame_range[0], frame_range[1])
 
         # strip namespaces flag
         if self.flags.stripNamespaces == 0:
@@ -222,6 +222,8 @@ class AbcEngine(abstract_engine.AbstractEngine):
             jobArg += " -stripNamespaces {}".format(self.flags.stripNamespaces)
 
         # file flag
+        if not ".abc" in filepath:
+            "{}.abc".format(filepath)
         # Alembic exporter does not like back slashes
         jobArg += " -file {}".format(filepath.replace("\\", "/"))
 

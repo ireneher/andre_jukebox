@@ -1,42 +1,90 @@
 import os
+import shutil
+import maya.OpenMaya as om
 import maya.cmds as cmds
 
+from core_jukebox.jukebox import tape
 from core_jukebox.tape_record import resolve, record
 from maya_jukebox.export import main as main_export
 from maya_jukebox.export.engines import alembic_engine
 
-from maya_jukebox.anim_jukebox.scene import anim_instance, api
+from maya_jukebox.anim_jukebox.scene import anim_instance
+from maya_jukebox.anim_jukebox.scene import api as scene_api
 
 PROJECT_ROOT = "AJ_anim/MAYA"
+
+
 class Manager(object):
     def __init__(self, anim_instances=None):
-        self.instances = anim_instances or api.instances_from_scene()
+        self.instances = anim_instances or scene_api.instances_from_scene()
         self.scene_frame_range = (
             cmds.playbackOptions(query=True, minTime=True),
             cmds.playbackOptions(query=True, maxTime=True),
         )
 
     def publish(self, instances=None):
+
         instances = instances or self.instances
-        for instance in instances:
+        # Ensure file is saved
+        cmds.file(save=True, force=True)
 
-            archive_path = resolve.Resolver().filepath_from_instance(self.shot, "caches", instance.instance)
-            track = resolve.Resolver().ensure_track(archive_path, track_type= resolve.TrackTypes.SHOT)
-
-            # Actual filepath with file name
-            filepath = os.path.join(track.root, track.name)
-
-            with record.publish_record(filepath):
-                exporter = main_export.Exporter(
-                    instance.root_node, frame_range=self.scene_frame_range
-                )
-                exporter.export(alembic_engine.AbcEngine(), filepath)
+        # for anim_instance in instances:
+        #     self.publish_alembic(instances=instances)
+        self.publish_workfile()
 
     @property
-    def shot(self, filepath=None):
-        # TODO : This is pretty hacky...
-        filepath = filepath or cmds.file(q=True, sn=True)
+    def shot_name(self):
+        return self.shot_tape.name
+
+    @property
+    def shot_tape(self):
+        filepath = cmds.file(q=True, sceneName=True)
         # This is even more:
         # Just return the upper folder
-        shot = os.path.split(os.path.dirname(filepath))[1]
-        return shot
+        return tape.ShotTape.from_filepath(filepath)
+
+    def publish_alembic(self, instance):
+        output_path = resolve.Resolver().filepath_from_instance(
+            self.shot_tape, "caches", anim_instance.instance
+        )
+        filepath = os.path.join(output_path, "{}.abc".format(anim_instance.instance))
+        version_number = resolve.Resolver().get_next_version_number(filepath)
+
+        instance_geo = [
+            anim_instance.geo_node(long=True) or anim_instance.root_node(long=True)
+        ]
+
+        recorder = record.Recorder()
+        with recorder.publish_record(filepath, version_number):
+            exporter = main_export.Exporter(
+                instance_geo, frame_range=self.scene_frame_range
+            )
+            om.MGlobal.displayInfo("Recording {}...".format(anim_instance.instance))
+            exporter.export(
+                alembic_engine.AbcEngine(),
+                filepath,
+                exports=instance_geo,
+                frame_range=self.scene_frame_range,
+            )
+            recorder.status = record.Status.PUBLISHED
+
+    def publish_workfile(self):
+
+        maya_file = cmds.file(q=True, sn=True)
+
+        output_path = resolve.Resolver().filepath_from_instance(
+            self.shot_tape, "workfile", "workfile"
+        )
+        filepath = os.path.join(
+            output_path, os.path.basename(cmds.file(maya_file))
+        )
+        version_number = resolve.Resolver().get_next_version_number(filepath)
+
+        recorder = record.Recorder()
+        with recorder.publish_record(filepath, version_number):
+            shutil.copyfile(maya_file, filepath)
+            om.MGlobal.displayInfo(
+                "Archiving workfile {}...".format(anim_instance.instance)
+            )
+
+            recorder.status = record.Status.PUBLISHED

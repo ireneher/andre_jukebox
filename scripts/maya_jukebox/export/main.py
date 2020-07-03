@@ -18,6 +18,7 @@ class Exporter(object):
 
     def export(self, engine, filepath, exports=None, frame_range=None):
         # TODO: Have to sort these imports
+        print self.exports
         engine.run_export(
             filepath,
             exports= exports or self.exports,

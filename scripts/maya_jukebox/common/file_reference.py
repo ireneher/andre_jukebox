@@ -33,6 +33,7 @@ class FileReference(node.MayaNode):
 
     @classmethod
     def ls_references(cls):
+        reference_objects = []
         it = om.MItDependencyNodes(om.MFn.kReference)
         refNodes = om.MObjectArray()
         while not it.isDone():
@@ -40,11 +41,19 @@ class FileReference(node.MayaNode):
             it.next()
 
         # Kinda shitty...
-        return [
-            cls(om.MFnReference(refNodes[idx]).name())
-            for idx in range(refNodes.length())
-            if not om.MFnReference(refNodes[idx]).name() in BLACKLIST
-        ]
+        for idx in range(refNodes.length()):
+            if not om.MFnReference(refNodes[idx]).name() in BLACKLIST:
+                # Make sure it doesn't add empty references (from clipboard paste)
+                try:
+                    ref_object = cls(om.MFnReference(refNodes[idx]).name())
+                    ref_object.namespace
+                except RuntimeError:
+                    om.MGlobal.displayInfo("Ignoring empty reference: {}".format(refNodes[idx]))
+                    continue
+                else:
+                    reference_objects.append(ref_object)
+                
+        return reference_objects
 
     def __init__(self, refnode):
         super(FileReference, self).__init__(refnode)

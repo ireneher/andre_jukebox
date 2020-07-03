@@ -16,7 +16,7 @@ PROJECT_PLUGINS = (
 
 def set_project():
 
-    project_root = os_maya.find_project_root(os.path.abspath(__file__))
+    project_root = os_maya.find_project_root(os.path.dirname(os.path.abspath(__file__)))
 
     try:
         cmds.workspace(project_root, openWorkspace=True)
@@ -24,7 +24,6 @@ def set_project():
         print ("No Andre Jukebox project found. Resorting to default")
         pass
 
-set_project()
 def load_project_plugins():
     if not cmds.about(q=True, version=True) == "2018":
         print(
