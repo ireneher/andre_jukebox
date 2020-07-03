@@ -20,8 +20,8 @@ SHOT = "{DCC_ROOT}/scenes/shots/{shot}/{task}/"
 
 ##########################################
 # Overide to test in dev environment
-ASSET = "{DCC_ROOT}/scenes/dev_test/assets/{asset_type}/{asset}/{datatype}/"
-SHOT = "{DCC_ROOT}/scenes/dev_test/shots/{shot}/{task}/"
+# ASSET = "{DCC_ROOT}/scenes/dev_test/assets/{asset_type}/{asset}/{datatype}/"
+# SHOT = "{DCC_ROOT}/scenes/dev_test/shots/{shot}/{task}/"
 ##########################################
 
 ASSET_OUTPUT = ASSET + "outputs/"
