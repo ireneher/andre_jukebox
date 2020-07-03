@@ -21,7 +21,6 @@ class Track(object):
         if not os.path.exists(filepath):
             # logging.warning("No Track found in: {} ".format(filepath))
             return
-
         asset_parse = parse.search(templates.ASSET_OUTPUT, filepath)
         if asset_parse:
             return cls(asset_parse.get("asset"), filepath)
@@ -72,7 +71,8 @@ class Track(object):
     @property
     def current_version_number(self):
         if self.current_version:
-            return self.get_version_from_name(self.current_version)
+            return self.get_versions_dict().values()[-1]
+            
 
     def _get_versions(self):
         versions = []
@@ -101,10 +101,11 @@ class Track(object):
         ordered_dict = collections.OrderedDict()
         for version in self._get_versions():
             initial_dict[version] = int(
-                parse.parse(templates.VersionFile.TEMPLATE, filename)[
+                parse.parse(templates.VersionFile.TEMPLATE, version)[
                     templates.VersionFile.version
                 ]
             )
+        print initial_dict
         return ordered_dict(sorted(initial_dict.items(), key=lambda t: t[1]))
 
     def get_version_from_name(self, filepath):
