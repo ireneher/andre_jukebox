@@ -46,8 +46,8 @@ class Track(object):
         self.shot = shot
         self.datatype = datatype
         self.instance = instance        
-        self.archive = os.path.join(self.root, "archive")
         self.root = os.path.dirname(self.filepath)
+        self.archive = os.path.join(self.root, "archive")
         self.datatype = os.path.dirname(self.root)        
         self.representation = os.path.splitext(self.filepath)[-1]
 
@@ -99,15 +99,13 @@ class Track(object):
             OrderedDict: filepath(str) : version(int)
         """
         initial_dict = {}
-        ordered_dict = collections.OrderedDict()
         for version in self._get_versions():
             initial_dict[version] = int(
                 parse.parse(templates.VersionFile.TEMPLATE, version)[
                     templates.VersionFile.version
                 ]
             )
-        print initial_dict
-        return ordered_dict(sorted(initial_dict.items(), key=lambda t: t[1]))
+        return collections.OrderedDict(sorted(initial_dict.items(), key=lambda t: t[1]))
 
     def get_version_from_name(self, filepath):
         """Returns the version number based on a path or an file name.
