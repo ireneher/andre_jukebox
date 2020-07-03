@@ -81,7 +81,7 @@ class Manager(object):
         )
         version_number = resolve.Resolver().get_next_version_number(filepath)
         recorder = record.Recorder()
-        print (version_number)
+
         with recorder.publish_record(filepath, version_number):
             shutil.copyfile(maya_file, filepath)
             om.MGlobal.displayInfo(
