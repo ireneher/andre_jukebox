@@ -77,15 +77,14 @@ class Manager(object):
             self.shot_tape, "workfile", "workfile"
         )
         filepath = os.path.join(
-            output_path, os.path.basename(cmds.file(maya_file))
+            output_path, os.path.basename(maya_file)
         )
         version_number = resolve.Resolver().get_next_version_number(filepath)
-
         recorder = record.Recorder()
         with recorder.publish_record(filepath, version_number):
             shutil.copyfile(maya_file, filepath)
             om.MGlobal.displayInfo(
-                "Archiving workfile {}...".format(anim_instance.instance)
+                "Archiving workfile {}...".format(maya_file)
             )
 
             recorder.status = record.Status.PUBLISHED

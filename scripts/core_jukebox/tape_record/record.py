@@ -87,12 +87,12 @@ class Recorder(object):
             # if self.debug_mode:
             #     pass
             self.ensure_output_path(filepath)
+            self.archive_path = self.ensure_archive_path(filepath)
             yield filepath, version_number
 
         finally:
             if self.status == Status.PUBLISHED and track.Track.from_filepath(filepath):
-                archive_path = self.ensure_archive_path(filepath)
-                self.archive_file(archive_path, filepath, version_number)
+                self.archive_file(self.archive_path, filepath, version_number)
 
                 self.status = Status.COMPLETE
 
