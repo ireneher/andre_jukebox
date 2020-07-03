@@ -1,4 +1,5 @@
 import os
+import maya.OpenMaya as om
 import maya.cmds as cmds
 
 from core_jukebox.jukebox import tape
@@ -28,8 +29,6 @@ class Manager(object):
             )
             filepath = os.path.join(output_path, "{}.abc".format(anim_instance.instance))
             version_number = resolve.Resolver().get_next_version_number(filepath)
-            print version_number 
-            return
 
             instance_geo = [anim_instance.geo_node(long=True) or anim_instance.root_node(long=True)]
 
@@ -38,8 +37,8 @@ class Manager(object):
                 exporter = main_export.Exporter(
                     instance_geo, frame_range=self.scene_frame_range
                 )
+                om.MGlobal.displayInfo("Recording {}...".format(anim_instance.instance))
                 exporter.export(alembic_engine.AbcEngine(), filepath, exports=instance_geo, frame_range=self.scene_frame_range)
-                print "RECORDDDDDDING"
                 recorder.status = record.Status.PUBLISHED
 
     @property

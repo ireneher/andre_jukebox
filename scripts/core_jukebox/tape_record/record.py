@@ -56,7 +56,7 @@ class Recorder(object):
             [type]: [description]
         """
         if not track.Track.from_filepath(filepath):
-            self.create_dirs(filepath)
+            self.create_dirs(os.path.dirname(filepath))
 
         return filepath
 
@@ -86,6 +86,7 @@ class Recorder(object):
         try:
             # if self.debug_mode:
             #     pass
+            self.ensure_output_path(filepath)
             yield filepath, version_number
 
         finally:
