@@ -38,7 +38,8 @@ class Track(object):
         datatype=None,
         instance=None,
         asset=None,
-    ):
+    ):  
+        # TODO: name should be file basename
         self.name = name
         self.filepath = filepath
         self.task = task
