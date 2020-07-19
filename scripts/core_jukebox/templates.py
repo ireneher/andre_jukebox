@@ -16,7 +16,7 @@ MAYA_PROJECT_ROOT = "MAYA"
 
 ASSET = "{DCC_ROOT}/scenes/assets/{asset_type}/{asset}/{datatype}/"
 
-SHOT = "{DCC_ROOT}/scenes/shots/{shot}/{task}/"
+SHOT = "{DCC_ROOT}/scenes/Concept_Animatic/SHOTS/{shot}/{task}/"
 
 ##########################################
 # Overide to test in dev environment

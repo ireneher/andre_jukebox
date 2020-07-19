@@ -29,14 +29,14 @@ def export_interior_mappings(fbx_source_folder="C:\\Users\\their\\Documents\\And
                 if shaders:
                     shader = shaders[0]
                     nonclean[transform] = shaders[0]
-                    if "_exposition_" not in transform and "_Shop_interior_" not in transform:
+                    if interior_name_pattern == constants.interior_naming[0]:   # "*_interior_*"
                         transform = ("_").join(transform.split("_")[0:-1])
                         shader_root = shader.split("_")[0].lower()
                         shader = ("_").join((shader_root,("_").join(shader.split("_")[1:-1])))
                     else:
                         shader_root = shader.split("_")[0].upper()
                         shader = ("_").join((shader_root,("_").join(shader.split("_")[1:])))
-                    interior_mapping[transform] = shader
+                    interior_mapping[transform.lower()] = shader
     
     outfile = os.path.join(json_out_dir, "interior_mappings.json")
     with open(outfile, "w") as outfile:

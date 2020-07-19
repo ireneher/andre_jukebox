@@ -128,12 +128,11 @@ def map_interiors(interior_mapping_json=None):
             clean_interior_transform = interior_transform
             if "_exposition_" not in interior_transform and "_Shop_interior_" not in interior_transform:
                 clean_interior_transform = ("_").join(interior_transform.split("_")[0:-1])
-            else:
-                print(clean_interior_transform)
+            clean_interior_transform = clean_interior_transform.lower()
             if interior_mapping.has_key(clean_interior_transform):
                 shading_group = "{}_SHDSG".format(interior_mapping[clean_interior_transform])
                 print("Assigning {} to transform {}".format(shading_group, interior_transform))
-                cmds.sets(interior_transform, e=1, forceElement=shading_group)
+                cmds.sets(interior_transform, e=1, forceElement=shading_group, noWarnings=True)
     
     
 
