@@ -80,3 +80,16 @@ def find_project_root(path):
     for upper_dir, _, _ in walk_up_path(path):
         if os.path.exists(os.path.join(upper_dir, "workspace.mel")):
             return upper_dir
+
+            
+
+def remove_student_license(path):
+    if os.path.isfile(path):
+        with open(path, 'r') as f:
+            lines = f.readlines()
+        with open(path, 'w') as f:
+            for l in lines:
+                if l.strip("\n") != 'fileInfo "license" "student";':
+                    f.write(l)
+            f.truncate()
+  
