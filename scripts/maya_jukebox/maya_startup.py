@@ -7,10 +7,10 @@ import maya_jukebox
 from maya_jukebox.common import os_maya
 
 PROJECT_PLUGINS = (
-    "cvwrap.mll",
-    "grim_IK.mll",
-    "meshSnapCommand.mll",
-    "mgear_solvers.mll",
+    "cvwrap",
+    "grim_IK",
+    "meshSnapCommand",
+    "mgear_solvers",
 )
 
 
@@ -33,7 +33,7 @@ def load_project_plugins():
 
     for plugin in PROJECT_PLUGINS:
         cmds.evalDeferred(
-            "if not cmds.pluginInfo({0}, q=True, loaded=True): cmds.loadPlugin({0})".format(
+            "if not cmds.pluginInfo({0}, q=True, loaded=True): cmds.loadPlugin({0});cmds.pluginInfo({0}, edit=True, autoload=True)".format(
                 plugin
             )
         )
