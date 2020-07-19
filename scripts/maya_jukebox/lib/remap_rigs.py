@@ -13,7 +13,8 @@ import fnmatch
 
 BLACKLIST = ["LAY", "BG"]
 PROJECT_ROOT = os_maya.find_project_root(os.path.dirname(os.path.abspath(__file__)))
-SHOTS_FOLDER = os.path.join(PROJECT_ROOT, "scenes", "Concept_Animatic", "SHOTS")
+PROJECT_ROOT = r"C:\Users\their\Dropbox\AJ_anim\MAYA"
+SHOTS_FOLDER = r"{}\scenes\Concept_Animatic\SHOTS".format(PROJECT_ROOT)
 
 NAMESPACE_DICT = {
     "CHAR" : {"andre_0": r"\scenes\assets\char\andre\outputs\rig\andre_rig.ma"},
@@ -51,6 +52,7 @@ def remap_files():
     standalone.initialize()
 
     anim_scenes = []
+    print(SHOTS_FOLDER)
     for root, dirnames, filenames in os.walk(SHOTS_FOLDER):
         for filename in fnmatch.filter(filenames, 'SHOT_*.ma'):
             anim_scenes.append(os.path.join(root, filename))
