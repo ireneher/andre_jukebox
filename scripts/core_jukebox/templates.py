@@ -14,7 +14,7 @@ class Instance(object):
 
 MAYA_PROJECT_ROOT = "MAYA"
 
-ASSET = "{DCC_ROOT}/scenes/assets/{asset_type}/{asset}/{datatype}/"
+ASSET = "{DCC_ROOT}/scenes/assets/{asset_type}/{asset}/"
 
 SHOT = "{DCC_ROOT}/scenes/shots/{shot}/{task}/"
 
@@ -24,7 +24,7 @@ SHOT = "{DCC_ROOT}/scenes/shots/{shot}/{task}/"
 # SHOT = "{DCC_ROOT}/scenes/dev_test/shots/{shot}/{task}/"
 ##########################################
 
-ASSET_OUTPUT = ASSET + "outputs/"
+ASSET_OUTPUT = ASSET + "{datatype}/outputs/"
 
 ASSET_ARCHIVE = ASSET_OUTPUT + "archive/"
 

@@ -29,6 +29,10 @@ class AssetTape(Tape):
             return cls(
                 parsed.named.get("asset"), asset_type=parsed.named.get("asset_type")
             )
+    
+    @classmethod
+    def from_name(cls, name):
+        filepath = templates.ASSET.format()
 
     def __init__(self, name, asset_type=None):
         super(AssetTape, self).__init__(name)
