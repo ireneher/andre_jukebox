@@ -28,9 +28,9 @@ class Manager(object):
         # Ensure file is saved
         cmds.file(save=True, force=True)
 
-        # for anim_instance in instances:
-        #     self.publish_alembic(instances=instances)
         self.publish_workfile()
+        for instance_obj in instances:
+            self.publish_alembic(instance_obj)
 
     @property
     def shot_name(self):
@@ -43,16 +43,16 @@ class Manager(object):
         # Just return the upper folder
         return tape.ShotTape.from_filepath(filepath)
 
-    def publish_alembic(self, instance):
+    def publish_alembic(self, instance_obj):
         output_path = resolve.Resolver().filepath_from_instance(
-            self.shot_tape, "caches", anim_instance.instance
+            self.shot_tape, "caches", instance_obj.instance
         )
-        filepath = os.path.join(output_path, "{}{}".format(anim_instance.instance,
+        filepath = os.path.join(output_path, "{}{}".format(instance_obj.instance,
                                                            mapping.Datatypes.CACHE))
         version_number = resolve.Resolver().get_next_version_number(filepath)
 
         instance_geo = [
-            anim_instance.geo_node(long=True) or anim_instance.root_node(long=True)
+            instance_obj.geo_node(long=True) or instance_obj.root_node(long=True)
         ]
 
         recorder = record.Recorder()
@@ -60,7 +60,7 @@ class Manager(object):
             exporter = main_export.Exporter(
                 instance_geo, frame_range=self.scene_frame_range
             )
-            om.MGlobal.displayInfo("Recording {}...".format(anim_instance.instance))
+            om.MGlobal.displayInfo("Recording {}...".format(instance_obj.instance))
             exporter.export(
                 alembic_engine.AbcEngine(),
                 filepath,
@@ -81,6 +81,7 @@ class Manager(object):
         )
         version_number = resolve.Resolver().get_next_version_number(filepath)
         recorder = record.Recorder()
+
         with recorder.publish_record(filepath, version_number):
             shutil.copyfile(maya_file, filepath)
             om.MGlobal.displayInfo(
