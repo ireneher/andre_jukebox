@@ -49,7 +49,7 @@ def publish_objs(objs_dict, assets_dir, refs_dir, textures_dir):
         cmds.file(rename=asset_file)
 
         convert_materials_to_arnold(textures_dir)
-        map_interiors()
+        map_interiors(asset_name.upper())
         mel.eval("cleanUpScene 3")
         cmds.file(save=True, type="mayaAscii")
         utils.remove_student_license(asset_file)
@@ -114,7 +114,7 @@ def convert_materials_to_arnold(textures_dir):
         for object in cmds.sets(original_shading_group, q=True, nodesOnly=True):
             cmds.sets(object, e=1, forceElement=shading_group)
 
-def map_interiors(interior_mapping_json=None):
+def map_interiors(building, interior_mapping_json=None):
     interior_mapping_json = interior_mapping_json or os.path.join(
         os.path.dirname(os.path.realpath(__file__)), "interior_mappings.json"
     )
@@ -129,8 +129,8 @@ def map_interiors(interior_mapping_json=None):
             if "_exposition_" not in interior_transform and "hop_interior_" not in interior_transform:
                 clean_interior_transform = ("_").join(interior_transform.split("_")[0:-1])
             clean_interior_transform = clean_interior_transform.lower()
-            if interior_mapping.has_key(clean_interior_transform):
-                shading_group = "{}".format(interior_mapping[clean_interior_transform])
+            if interior_mapping[building].has_key(clean_interior_transform):
+                shading_group = "{}".format(interior_mapping[building][clean_interior_transform])
                 print("Assigning {} to transform {}".format(shading_group, interior_transform))
                 cmds.sets(interior_transform, e=1, forceElement=shading_group, noWarnings=True)
     
