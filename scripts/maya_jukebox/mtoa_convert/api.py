@@ -1,5 +1,6 @@
 import os
 import re
+import json
 
 import maya.cmds as cmds
 import maya.mel as mel
@@ -51,7 +52,8 @@ def publish_objs(objs_dict, assets_dir, refs_dir, textures_dir):
         map_interiors()
         mel.eval("cleanUpScene 3")
         cmds.file(save=True, type="mayaAscii")
-        utils.archive_file(asset_archive, asset_file)
+        utils.remove_student_license(asset_file)
+        utils.archive_file(asset_archive, asset_file)        
 
         if idx == total_objs:
             print("-") * 250
@@ -112,16 +114,27 @@ def convert_materials_to_arnold(textures_dir):
         for object in cmds.sets(original_shading_group, q=True, nodesOnly=True):
             cmds.sets(object, e=1, forceElement=shading_group)
 
-
-def map_interiors():
+def map_interiors(interior_mapping_json=None):
+    interior_mapping_json = interior_mapping_json or os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "interior_mappings.json"
+    )
+    with open(interior_mapping_json) as f:
+        interior_mapping = json.load(f)
+    # load in ref with shader engines
     interiors_ma = os.path.join(os.path.dirname(os.path.abspath(__file__)), "interior_shaders.ma")
     cmds.file(interiors_ma, i=True, groupReference=True, ignoreVersion=True)
-    for interior_transform in cmds.ls("*_interior_*", transforms=True):
-        interior_sg = constants.interior_shading_group if not "shop" in str(interior_transform) else constants.interior_shop_shading_group
-        version = re.findall("\d+", str(interior_transform))[1].strip("0")
-        print("Assigning {} to transform {}".format(interior_sg.format(version), interior_transform))
-        cmds.sets(interior_transform, e=1, forceElement=interior_sg.format(version))
-
+    for interior_name_pattern in constants.interior_naming:
+        for interior_transform in cmds.ls(interior_name_pattern, transforms=True):
+            clean_interior_transform = interior_transform
+            if "_exposition_" not in interior_transform and "hop_interior_" not in interior_transform:
+                clean_interior_transform = ("_").join(interior_transform.split("_")[0:-1])
+            clean_interior_transform = clean_interior_transform.lower()
+            if interior_mapping.has_key(clean_interior_transform):
+                shading_group = "{}".format(interior_mapping[clean_interior_transform])
+                print("Assigning {} to transform {}".format(shading_group, interior_transform))
+                cmds.sets(interior_transform, e=1, forceElement=shading_group, noWarnings=True)
+    
+    
 
 def publish_mtoa_convert(path):
     project_root = utils.find_project_root(path)
