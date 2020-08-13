@@ -15,7 +15,6 @@ def export_interior_mappings(fbx_source_folder="C:\\Users\\their\\Documents\\And
     cmds.loadPlugin("mtoa")
     interior_mapping = {}
     fbx_paths = []
-    #fbx_source_folder = "C:\\Users\\their\\Desktop\\test"
     for root, dirnames, filenames in os.walk(fbx_source_folder):
         for filename in fnmatch.filter(filenames, '*.fbx'):
             fbx_paths.append(os.path.join(root, filename))
@@ -32,28 +31,30 @@ def export_interior_mappings(fbx_source_folder="C:\\Users\\their\\Documents\\And
                     shader = shaders[0]
                     if not shader.startswith(("am215", "AM215")):
                         continue
-                    if interior_name_pattern == constants.interior_naming[-1]:  #  "*hop_interior_*" only has one shader
+                    if interior_name_pattern == constants.interior_naming[0]:  #  "*hop_interior_*" only has one shader
                         transform = ("_").join(transform.split("_")[0:-1])
                         version = 1
-                    elif interior_name_pattern == constants.interior_naming[0] and "hop_" not in transform:
+                    elif interior_name_pattern == constants.interior_naming[1] and "hop_" not in transform:
                         transform = ("_").join(transform.split("_")[0:-1])
                         version_tail = re.split("_V", shader, flags=re.IGNORECASE)[-1]
                         version = int(version_tail.split("_")[0])
-                    elif interior_name_pattern == constants.interior_naming[1]:
-                        file_node = cmds.listConnections("{}".format(shader), type="file")[0]
-                        file_map = cmds.getAttr("{}.fileTextureName".format(file_node))
+                    elif interior_name_pattern == constants.interior_naming[2]:
+                        file_node = cmds.listConnections("{}".format(shader), type="file")
+                        if not file_node:
+                            continue
+                        file_map = cmds.getAttr("{}.fileTextureName".format(file_node[0]))
                         version = int(os.path.splitext(file_map)[0].split("_V")[-1])
-                    if interior_mapping.has_key(building):
+                    if interior_mapping.has_key(building) and transform.lower() not in interior_mapping[building].keys():
                         interior_mapping[building].update({transform.lower(): constants.interior_mapping[interior_name_pattern].format(version)})
-                    else:
+                    elif not interior_mapping.has_key(building):
                         interior_mapping[building] = {transform.lower(): constants.interior_mapping[interior_name_pattern].format(version)}
     
     outfile = os.path.join(json_out_dir, "interior_mappings.json")
     with open(outfile, "w") as outfile:
         json.dump(interior_mapping, outfile)
 
-    print("_---------_")
-    print(interior_mapping)
+    # print("_---------_")
+    # print(interior_mapping)
     maya.standalone.uninitialize()
 
 
