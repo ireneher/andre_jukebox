@@ -4,7 +4,7 @@ SIZE = (200, 300)
 WINDOW_NAME = "Jukebox Rig Publish"
 
 
-class RigPublishWidget(QtWidgets.QDialog):
+class RigPublishWidget(QtWidgets.QWidget):
 
     set_root_signal = QtCore.Signal()
     publish_signal = QtCore.Signal()
