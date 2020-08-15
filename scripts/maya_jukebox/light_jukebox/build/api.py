@@ -18,9 +18,9 @@ class Builder(object):
 #       (group, reference_path)  / exception: vbd
 
 class Resolver():
-    def __init__(scenePath=None):
-        scenePath = scenePath or cmds.file(q=True, sn=True)
-        self.shotTape = tape.ShotTape.from_filepath(scenePath)
+    def __init__(scene_path=None):
+        scene_path = scene_path or cmds.file(q=True, sn=True)
+        self.shotTape = tape.ShotTape.from_filepath(scene_path)
         self.shotTracks = self.get_shot_tracks()
         self.assetTracks = self.get_shot_tracks()
         self.tracks = self.consolidate_tracks()
@@ -29,17 +29,17 @@ class Resolver():
         shot_products = {}  # {datatype: list of latest_version filepaths}
         for datatype in constants.SHOT_PRODUCT_DATATYPES:
             shot_products[datatype] = []
-            for track in self.shotTape.get_outputs(datatype=datatype):
-                latest_version  = track.current_version_number()               
-                shot_products[datatype].extend(track.get_versions_dict()[latest_version])
+            for shot_track in self.shotTape.get_outputs(datatype=datatype):
+                shot_products[datatype].extend(shot_track.get_latest())
 
         return shot_products
 
     def get_asset_tracks(self):
         asset_products = {}
         for asset_type, asset, datatype in constants.ASSET_PRODUCTS:
-             
-        return {}
+            asset_track = track.Track.from_fields(asset_type, asset, datatype)
+            asset_products[datatype].extend(asset_track.get_latest())
+        return asset_products
     
     def consolidate_tracks(self):
         return self.shotTracks.update(self.assetTracks)
@@ -53,4 +53,5 @@ class Builder():
             if datatype == "caches":
                 for filepath in filepaths:
                     print(">>>Loading {}".format(filepath))
+                    # TODO how to load under same group
                     cmds.file(filepath, i=True, reference=True, groupReference=True, groupName=datatype, force=True)

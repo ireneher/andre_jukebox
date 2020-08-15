@@ -27,8 +27,7 @@ class Track(object):
             print("No Track found in: {}".format(filepath))
         if len(files)>1:
             print("More than 1 Tape found. Using first")
-        file_ = files[0]
-        return cls(file_)
+        return cls(files[0])
 
     @classmethod
     def from_filepath(cls, filepath):
@@ -127,3 +126,7 @@ class Track(object):
                 templates.VersionFile.version
             ]
         )
+
+    def get_latest():
+        latest_version  = self.current_version_number()               
+        return self.get_versions_dict()[latest_version]
