@@ -20,16 +20,16 @@ class Builder(object):
 class Resolver():
     def __init__(scene_path=None):
         scene_path = scene_path or cmds.file(q=True, sn=True)
-        self.shotTape = tape.ShotTape.from_filepath(scene_path)
-        self.shotTracks = self.get_shot_tracks()
-        self.assetTracks = self.get_shot_tracks()
+        self.shot_tape = tape.ShotTape.from_filepath(scene_path)
+        self.shot_tracks = self.get_shot_tracks()
+        self.asset_tracks = self.get_shot_tracks()
         self.tracks = self.consolidate_tracks()
     
     def get_shot_tracks(self):
         shot_products = {}  # {datatype: list of latest_version filepaths}
         for datatype in constants.SHOT_PRODUCT_DATATYPES:
             shot_products[datatype] = []
-            for shot_track in self.shotTape.get_outputs(datatype=datatype):
+            for shot_track in self.shot_tape.get_outputs(datatype=datatype):
                 shot_products[datatype].extend(shot_track.get_latest())
 
         return shot_products
@@ -42,7 +42,7 @@ class Resolver():
         return asset_products
     
     def consolidate_tracks(self):
-        return self.shotTracks.update(self.assetTracks)
+        return self.shot_tracks.update(self.asset_tracks)
 
 class Builder():
     def __init__():
