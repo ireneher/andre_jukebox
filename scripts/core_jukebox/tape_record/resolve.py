@@ -17,14 +17,27 @@ class Resolver(object):
         pass
 
     @staticmethod
-    def filepath_from_asset(self, asset):
-        pass
-
-    def filepath_from_instance(self, tape, datatype, instance):
-        """Fills the path_template out to get a filepath for a shot entity 
+    def filepath_from_asset(tape, task, datatype):
+        """Fills the template to get a filepath for an asset entity 
 
         Args:
-            shot ([type]): [description]
+            asset (AssetTape): [description]
+        """
+        output_template = templates.ASSET_OUTPUT.format(
+            DCC_ROOT=tape.dcc_root,
+            asset_type=tape.asset_type,
+            asset=tape.name,
+            task=task,
+            datatype=datatype,
+        )
+        return os.path.join(project.get_project_root(), output_template)
+
+
+    def filepath_from_instance(self, tape, datatype, instance):
+        """Fills the template to get a filepath for a shot entity 
+
+        Args:
+            shot (ShotTape): [description]
             instance ([type]): [description]
         """
         output_template = templates.SHOT_OUTPUT.format(
@@ -35,6 +48,7 @@ class Resolver(object):
             instance=instance,
         )
         return os.path.join(project.get_project_root(), output_template)
+
 
     @staticmethod
     def asset_from_instance(instance_name):
