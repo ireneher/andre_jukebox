@@ -24,7 +24,7 @@ SHOT = "{DCC_ROOT}/scenes/Concept_Animatic/SHOTS/{shot}/{task}/"
 # SHOT = "{DCC_ROOT}/scenes/dev_test/shots/{shot}/{task}/"
 ##########################################
 
-ASSET_OUTPUT = ASSET + "{datatype}/outputs/"
+ASSET_OUTPUT = ASSET + "outputs/{datatype}/"
 
 ASSET_ARCHIVE = ASSET_OUTPUT + "archive/"
 

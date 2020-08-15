@@ -15,6 +15,20 @@ class Track(object):
             -output.0002.abc
         -output.abc
     """
+    @classmethod
+    def from_fields(cls, asset_type, asset, datatype, dcc_root=None):
+        dcc_root = dcc_root or templates.MAYA_PROJECT_ROOT
+        filepath = templates.ASSET_OUTPUT.parse(DCC_ROOT=dcc_root,
+                                                asset_type=asset_type,
+                                                asset=asset,
+                                                datatype=datatype)
+        files = [f for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath, f))]
+        if not files:
+            print("Invalid Tape. File not found at {}.".format(filepath))
+        if len(files)>1:
+            print("More than 1 Tape found. Using first.")
+        file_ = files[0]
+        return cls(os.path.splitext(os.path.basename(file_)[0], file_)
 
     @classmethod
     def from_filepath(cls, filepath):
