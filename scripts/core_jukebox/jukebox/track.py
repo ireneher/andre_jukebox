@@ -24,24 +24,17 @@ class Track(object):
                                                 datatype=datatype)
         files = [f for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath, f))]
         if not files:
-            print("Invalid Tape. File not found at {}.".format(filepath))
+            print("No Track found in: {}".format(filepath))
         if len(files)>1:
-            print("More than 1 Tape found. Using first.")
+            print("More than 1 Tape found. Using first")
         file_ = files[0]
-        return cls(os.path.splitext(os.path.basename(file_)[0], file_)
+        return cls(file_)
 
     @classmethod
     def from_filepath(cls, filepath):
         if not os.path.exists(filepath):
-            # logging.warning("No Track found in: {} ".format(filepath))
-            return
-        asset_parse = parse.search(templates.ASSET_OUTPUT, filepath)
-        if asset_parse:
-            return cls(asset_parse.get("asset"), filepath)
-
-        shot_parse = parse.search(templates.SHOT_OUTPUT, filepath)
-        if shot_parse:
-            return cls(shot_parse.named.get("instance"), filepath)
+            print("No Track found in: {} ".format(filepath))
+        return cls(filepath)
 
     def __init__(
         self,
@@ -52,10 +45,9 @@ class Track(object):
         datatype=None,
         instance=None,
         asset=None,
-    ):  
-        # TODO: name should be file basename
-        self.name = name
+    ):          
         self.filepath = filepath
+        self.name = os.path.splitext(os.path.basename(file_)[0]
         self.task = task
         self.asset = asset
         self.shot = shot
