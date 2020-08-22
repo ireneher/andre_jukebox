@@ -47,8 +47,9 @@ class Manager(object):
         output_path = resolve.Resolver().filepath_from_instance(
             self.shot_tape, "caches", instance_obj.instance
         )
-        filepath = os.path.join(output_path, "{}{}".format(instance_obj.instance,
-                                                           mapping.Datatypes.CACHE))
+        filepath = os.path.join(
+            output_path, "{}{}".format(instance_obj.instance, mapping.Datatypes.CACHE)
+        )
         version_number = resolve.Resolver().get_next_version_number(filepath)
 
         instance_geo = [
@@ -76,16 +77,12 @@ class Manager(object):
         output_path = resolve.Resolver().filepath_from_instance(
             self.shot_tape, "workfile", "workfile"
         )
-        filepath = os.path.join(
-            output_path, os.path.basename(maya_file)
-        )
+        filepath = os.path.join(output_path, os.path.basename(maya_file))
         version_number = resolve.Resolver().get_next_version_number(filepath)
         recorder = record.Recorder()
 
         with recorder.publish_record(filepath, version_number):
             shutil.copyfile(maya_file, filepath)
-            om.MGlobal.displayInfo(
-                "Archiving workfile {}...".format(maya_file)
-            )
+            om.MGlobal.displayInfo("Archiving workfile {}...".format(maya_file))
 
             recorder.status = record.Status.PUBLISHED

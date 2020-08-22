@@ -1,4 +1,4 @@
-from os import sys, path 
+from os import sys, path
 
 sys.path.append(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))
 
@@ -17,12 +17,13 @@ PROJECT_ROOT = r"C:\Users\their\Dropbox\AJ_anim\MAYA"
 SHOTS_FOLDER = r"{}\scenes\Concept_Animatic\SHOTS".format(PROJECT_ROOT)
 
 NAMESPACE_DICT = {
-    "CHAR" : {"andre_0": r"\scenes\assets\char\andre\outputs\rig\andre_rig.ma"},
-    "AMP" : {"vox_0": r"\scenes\assets\props\vox\outputs\rig\vox_rig.mb"},
-    "PEDAL" : {"pedal_0": r"\scenes\assets\props\pedal\outputs\rig\pedal_rig.mb"},
-    "PLANE" : {"plane_0" r"\scenes\assets\props\plane\outputs\rig\plane_rig.mb"},
-    "MIC" : {"mic_0": r"\scenes\assets\props\mic\outputs\rig\mic_rig.mb"},
+    "CHAR": {"andre_0": r"\scenes\assets\char\andre\outputs\rig\andre_rig.ma"},
+    "AMP": {"vox_0": r"\scenes\assets\props\vox\outputs\rig\vox_rig.mb"},
+    "PEDAL": {"pedal_0": r"\scenes\assets\props\pedal\outputs\rig\pedal_rig.mb"},
+    "PLANE": {"plane_0" r"\scenes\assets\props\plane\outputs\rig\plane_rig.mb"},
+    "MIC": {"mic_0": r"\scenes\assets\props\mic\outputs\rig\mic_rig.mb"},
 }
+
 
 def remap_references():
 
@@ -30,13 +31,16 @@ def remap_references():
     not_found = []
 
     for reference in file_reference.FileReference.ls_references():
-        if reference.namespace in NAMESPACE_DICT.keys() and not reference.namespace in BLACKLIST:
+        if (
+            reference.namespace in NAMESPACE_DICT.keys()
+            and not reference.namespace in BLACKLIST
+        ):
             reference.namespace = NAMESPACE_DICT.get(reference.namespace).keys()[0]
             reference.filepath = NAMESPACE_DICT.get(reference.namespace).values()[0]
             remaped.append(reference)
         else:
             not_found.append(reference)
-    
+
     if not_found:
         print(
             "Reference: {} not found in the project folder skipping asset.".format(
@@ -46,7 +50,6 @@ def remap_references():
     return remaped
 
 
-
 def remap_files():
 
     standalone.initialize()
@@ -54,7 +57,7 @@ def remap_files():
     anim_scenes = []
     print(SHOTS_FOLDER)
     for root, dirnames, filenames in os.walk(SHOTS_FOLDER):
-        for filename in fnmatch.filter(filenames, 'SHOT_*.ma'):
+        for filename in fnmatch.filter(filenames, "SHOT_*.ma"):
             anim_scenes.append(os.path.join(root, filename))
     print(anim_scenes)
     for scene in anim_scenes:

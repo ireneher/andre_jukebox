@@ -22,22 +22,19 @@ class AnimInstance(object):
     @instance.setter
     def instance(self, new_instance):
         self.file_ref.namespace = new_instance
-    
+
     @property
     def asset_tape(self):
-        return tape.AssetTape.from_filepath(
-            self.file_ref.filepath
-        )
-        
+        return tape.AssetTape.from_filepath(self.file_ref.filepath)
+
     def root_node(self, long=False):
         # Kinda shady, might want to do this a better way...
-        root_node = cmds.ls("{}:*".format(self.instance), assemblies=True, long=long)     
+        root_node = cmds.ls("{}:*".format(self.instance), assemblies=True, long=long)
         if root_node:
             return root_node[0]
-
 
     def geo_node(self, long=False):
         # Kinda shady, might want to do this a better way...
         geo_node = cmds.ls("{}:geo".format(self.instance), long=long)
         if geo_node:
-            return geo_node[0]      
+            return geo_node[0]

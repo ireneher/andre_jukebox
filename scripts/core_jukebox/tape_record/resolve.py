@@ -32,7 +32,6 @@ class Resolver(object):
         )
         return os.path.join(project.get_project_root(), output_template)
 
-
     def filepath_from_instance(self, tape, datatype, instance):
         """Fills the template to get a filepath for a shot entity 
 
@@ -48,7 +47,6 @@ class Resolver(object):
             instance=instance,
         )
         return os.path.join(project.get_project_root(), output_template)
-
 
     @staticmethod
     def asset_from_instance(instance_name):

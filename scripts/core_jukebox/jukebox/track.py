@@ -38,7 +38,7 @@ class Track(object):
         datatype=None,
         instance=None,
         asset=None,
-    ):  
+    ):
         # TODO: name should be file basename
         self.name = name
         self.filepath = filepath
@@ -46,12 +46,11 @@ class Track(object):
         self.asset = asset
         self.shot = shot
         self.datatype = datatype
-        self.instance = instance        
+        self.instance = instance
         self.root = os.path.dirname(self.filepath)
         self.archive = os.path.join(self.root, "archive")
-        self.datatype = os.path.dirname(self.root)        
+        self.datatype = os.path.dirname(self.root)
         self.representation = os.path.splitext(self.filepath)[-1]
-
 
     # @property
     # def filepath(self):
@@ -74,7 +73,6 @@ class Track(object):
     def current_version_number(self):
         if self.current_version:
             return self.get_versions_dict().values()[-1]
-            
 
     def _get_versions(self):
         versions = []

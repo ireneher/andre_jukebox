@@ -1,16 +1,22 @@
-{"shot": "SHOT_010", "inputs": {
-    "char": {
-        "cache": ["animInstanceX", "cfxInstanceY"]
-    },
-    "props":{
-        "cache": "animInstanceZ"
-    },
-    "sets":{
-        "model": ""
-    },
-    "fx":{
-        "cache": "fxInstanceL",
-        "vdb": "fxInstanceL"
-    },
-    "camera": "???"
-}}
+{
+    "shot": "SHOT_010",
+    "inputs": {
+        "char": {
+            "cache": [
+                "animInstanceX",
+                "cfxInstanceY"
+            ]
+        },
+        "props": {
+            "cache": "animInstanceZ"
+        },
+        "sets": {
+            "model": ""
+        },
+        "fx": {
+            "cache": "fxInstanceL",
+            "vdb": "fxInstanceL"
+        },
+        "camera": "???"
+    }
+}

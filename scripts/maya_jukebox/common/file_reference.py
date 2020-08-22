@@ -48,11 +48,13 @@ class FileReference(node.MayaNode):
                     ref_object = cls(om.MFnReference(refNodes[idx]).name())
                     ref_object.namespace
                 except RuntimeError:
-                    om.MGlobal.displayInfo("Ignoring empty reference: {}".format(refNodes[idx]))
+                    om.MGlobal.displayInfo(
+                        "Ignoring empty reference: {}".format(refNodes[idx])
+                    )
                     continue
                 else:
                     reference_objects.append(ref_object)
-                
+
         return reference_objects
 
     def __init__(self, refnode):

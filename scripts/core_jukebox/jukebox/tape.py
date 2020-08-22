@@ -27,20 +27,29 @@ class AssetTape(Tape):
             )
         else:
             return cls(
-                parsed.named.get("asset"), asset_type=parsed.named.get("asset_type"), task=parsed.named.get("task")
+                parsed.named.get("asset"),
+                asset_type=parsed.named.get("asset_type"),
+                task=parsed.named.get("task"),
             )
-    
+
     @classmethod
     def from_name(cls, name):
         filepath = templates.ASSET.format()
 
-    def __init__(self, name, asset_type=None, task=None, dcc_root=templates.MAYA_PROJECT_ROOT):
+    def __init__(
+        self, name, asset_type=None, task=None, dcc_root=templates.MAYA_PROJECT_ROOT
+    ):
         super(AssetTape, self).__init__(name)
         self.name = name
         self.asset_type = asset_type
         self.dcc_root = dcc_root
-        self.task=task
-        self.root = templates.ASSET.format(DCC_ROOT=self.dcc_root, asset_type=self.asset_type, asset=self.name, task=self.task)
+        self.task = task
+        self.root = templates.ASSET.format(
+            DCC_ROOT=self.dcc_root,
+            asset_type=self.asset_type,
+            asset=self.name,
+            task=self.task,
+        )
         self.absolute_path = os.path.join(project.get_project_root(), self.root)
 
 
@@ -60,7 +69,9 @@ class ShotTape(Tape):
         self.name = name
         self.task = task
         self.dcc_root = dcc_root
-        self.root = templates.SHOT.format(DCC_ROOT=self.dcc_root, shot=self.name, task=self.task)
+        self.root = templates.SHOT.format(
+            DCC_ROOT=self.dcc_root, shot=self.name, task=self.task
+        )
         self.absolute_path = os.path.join(project.get_project_root(), self.root)
 
     def get_outputs(self, datatype=None):

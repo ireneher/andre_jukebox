@@ -13,8 +13,8 @@ class RigPublishWidget(QtWidgets.QWidget):
         super(RigPublishWidget, self).__init__(parent)
         self.setWindowTitle(WINDOW_NAME)
         self.setObjectName(WINDOW_NAME)
+        self.setWindowFlags(QtCore.Qt.Window)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        # self.setWindowFlags(QtCore.Qt.Dialog)
         self.resize(SIZE[0], SIZE[1])
 
         # ======================================================================== #
