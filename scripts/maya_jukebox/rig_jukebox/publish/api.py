@@ -62,7 +62,7 @@ class Manager(object):
         maya_file = cmds.file(q=True, sn=True)
         # TODO: move this to core as "archive_workfile"
         output_path = resolve.Resolver().filepath_from_asset(
-            self.asset_tape, "workfile", "workfile"
+            self.asset_tape, "rigging", "workfile"
         )
         filepath = os.path.join(output_path, os.path.basename(maya_file))
         version_number = resolve.Resolver().get_next_version_number(filepath)
@@ -85,7 +85,7 @@ class Manager(object):
         )
         basename = "{}{}".format(self.asset_tape.name,extension)
         filepath = os.path.join(output_path, basename)
-        
+
         version_number = resolve.Resolver().get_next_version_number(filepath)
 
         self.tag_rig(self.asset_tape.name, version_number)
