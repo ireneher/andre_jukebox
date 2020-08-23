@@ -36,6 +36,7 @@ class Resolver():
 
     def get_asset_tracks(self):
         asset_products = {}
+        # TODO this is to be an excel at project level
         for asset_type, asset, datatype in constants.ASSET_PRODUCTS:
             asset_track = track.Track.from_fields(asset_type, asset, datatype)
             asset_products[datatype].extend(asset_track.get_latest())

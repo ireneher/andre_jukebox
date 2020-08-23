@@ -36,8 +36,11 @@ alpha_invert = ("specularRoughness", "specularIOR", "transmission")  # alpha is 
 #                     "*_Shop_interior_*": shop_interiors_mapping, 
 #                     "*_exposition_*": shop_exposition_mappings}
 
-interior_naming = ("*_interior_*", "*_exposition_*", "*hop_interior_*")  # for interior get shader, for exposition get map (in prep)
-interior_mapping = {interior_naming[2]: "am215_Shop_interior_V{}_SHDSG",
-                    interior_naming[0]: "am215_interior_V{}_SHDSG",
-                    interior_naming[1]: "AM215_props_Shop_exposition_V{}_SHDSG",
+INTERIOR = "*_interior_*"
+EXPOSITION = "*_exposition_*"
+SHOP_INTERIOR = "*hop_interior_*"
+interior_naming = (INTERIOR, EXPOSITION, SHOP_INTERIOR)  # for interior get shader, for exposition get map (in prep)
+interior_mapping = {SHOP_INTERIOR: "am215_Shop_interior_V{}_SHDSG",
+                    INTERIOR: "am215_interior_V{}_SHDSG",
+                    EXPOSITION: "AM215_props_Shop_exposition_V{}_SHDSG",
                     }

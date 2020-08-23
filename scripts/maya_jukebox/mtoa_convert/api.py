@@ -43,9 +43,10 @@ def publish_objs(objs_dict, assets_dir, refs_dir, textures_dir):
         asset_archive = utils.create_dir(assets_dir, os.path.join(asset_name, constants.archive_dir_rel))
         asset_file = os.path.join(os.path.dirname(asset_archive), "{}.ma".format(asset_name))
         cmds.file(new=True, force=True)  # clear scene
-        cmds.file(obj_path, i=True, groupReference=True, groupName=asset_name)
+        cmds.file(obj_path, i=True, groupReference=True, groupName=asset_name, force=True)
         asset_locator = cmds.spaceLocator(name="{}_loc".format(asset_name), position=(0, 0, 0))
-        cmds.parent(asset_name, asset_locator)
+        if cmds.objExists(asset_name):
+            cmds.parent(asset_name, asset_locator)
         cmds.file(rename=asset_file)
 
         convert_materials_to_arnold(textures_dir)
@@ -125,12 +126,12 @@ def map_interiors(building, interior_mapping_json=None):
     cmds.file(interiors_ma, i=True, groupReference=True, ignoreVersion=True)
     for interior_name_pattern in constants.interior_naming:
         for interior_transform in cmds.ls(interior_name_pattern, transforms=True):
-            clean_interior_transform = interior_transform
-            if "_exposition_" not in interior_transform and "hop_interior_" not in interior_transform:
-                clean_interior_transform = ("_").join(interior_transform.split("_")[0:-1])
-            clean_interior_transform = clean_interior_transform.lower()
-            if interior_mapping[building].has_key(clean_interior_transform):
-                shading_group = "{}".format(interior_mapping[building][clean_interior_transform])
+            transform_id = interior_transform.lower()
+            if "_exposition_" in interior_transform:
+                transform_id = str(cmds.polyEvaluate(interior_transform, v=True))  # vertex count
+            print("Processing mapping for {}".format(transform_id))
+            if interior_mapping[building].has_key(transform_id):
+                shading_group = "{}".format(interior_mapping[building][transform_id])
                 print("Assigning {} to transform {}".format(shading_group, interior_transform))
                 cmds.sets(interior_transform, e=1, forceElement=shading_group, noWarnings=True)
     
