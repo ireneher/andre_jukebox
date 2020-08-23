@@ -77,7 +77,7 @@ class Manager(object):
 
         maya_file = cmds.file(q=True, sn=True)
         # Ignore incremental versions
-        basename = maya_file.split(".")[0]
+        basename = os.path.splitext(maya_file)[0]
 
         # TODO: move this to core as "archive_workfile"
         output_path = resolve.Resolver().filepath_from_asset(

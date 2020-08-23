@@ -23,7 +23,7 @@ class Track(object):
             return
         asset_parse = parse.search(templates.ASSET_OUTPUT, filepath)
         if asset_parse:
-            return cls(asset_parse.get("asset"), filepath)
+            return cls(asset_parse.named.get("asset"), filepath)
 
         shot_parse = parse.search(templates.SHOT_OUTPUT, filepath)
         if shot_parse:

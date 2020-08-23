@@ -7,7 +7,6 @@ from core_jukebox.jukebox import track, project
 
 logger = logging.getLogger(__name__)
 
-
 class Tape(object):
     @classmethod
     def from_filepath(cls, filepath):
@@ -30,6 +29,7 @@ class AssetTape(Tape):
                 parsed.named.get("asset"),
                 asset_type=parsed.named.get("asset_type"),
                 task=parsed.named.get("task"),
+                project_root=project.find_project_from_path(os.path.dirname(filepath)),
             )
 
     @classmethod
@@ -37,7 +37,12 @@ class AssetTape(Tape):
         filepath = templates.ASSET.format()
 
     def __init__(
-        self, name, asset_type=None, task=None, dcc_root=templates.MAYA_PROJECT_ROOT
+        self,
+        name,
+        asset_type=None,
+        task=None,
+        dcc_root=templates.MAYA_PROJECT_ROOT,
+        project_root=None,
     ):
         super(AssetTape, self).__init__(name)
         self.name = name
@@ -50,7 +55,8 @@ class AssetTape(Tape):
             asset=self.name,
             task=self.task,
         )
-        self.absolute_path = os.path.join(project.get_project_root(), self.root)
+        self.project_root = project_root or project.get_project_root()
+        self.absolute_path = os.path.join(self.project_root, self.root)
 
 
 class ShotTape(Tape):
@@ -62,9 +68,15 @@ class ShotTape(Tape):
                 "Invalid filepath: {} Expected: {}".format(filepath, templates.SHOT)
             )
         else:
-            return cls(parsed.named.get("shot"), task=parsed.named.get("task"))
+            return cls(
+                parsed.named.get("shot"),
+                task=parsed.named.get("task"),
+                project_root=project.find_project_from_path(os.path.dirname(filepath)),
+            )
 
-    def __init__(self, name, task=None, dcc_root=templates.MAYA_PROJECT_ROOT):
+    def __init__(
+        self, name, task=None, dcc_root=templates.MAYA_PROJECT_ROOT, project_root=None
+    ):
         super(ShotTape, self).__init__(name)
         self.name = name
         self.task = task
@@ -72,7 +84,8 @@ class ShotTape(Tape):
         self.root = templates.SHOT.format(
             DCC_ROOT=self.dcc_root, shot=self.name, task=self.task
         )
-        self.absolute_path = os.path.join(project.get_project_root(), self.root)
+        self.project_root = project_root or project.get_project_root()
+        self.absolute_path = os.path.join(self.project_root, self.root)
 
     def get_outputs(self, datatype=None):
         # TODO: Use the template

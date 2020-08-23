@@ -6,7 +6,7 @@ ROOT_FILE = "root.jukebox"
 
 def find_project_from_path(path):
     """
-    Given path inside project, find the Maya project root
+    Given path inside the project, find the Maya project root
     """
     root = ""
     for upper_dir, _, _ in os_common.walk_up_path(path):

@@ -94,8 +94,7 @@ class Recorder(object):
             self.status = Status.FAILED
             logger.error("Failed to record: {}".format(filepath))
             raise e
-
-        finally:
+        else:
             if self.status == Status.PUBLISHED and track.Track.from_filepath(filepath):
                 self.archive_file(self.archive_path, filepath, version_number)
 
