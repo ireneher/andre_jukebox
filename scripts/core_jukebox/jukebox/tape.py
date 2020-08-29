@@ -1,3 +1,4 @@
+import glob
 import os
 import logging
 
@@ -98,3 +99,30 @@ class ShotTape(Tape):
             for output in os.listdir(sub_folder)
         ]
 
+
+class SequenceTape(Tape):
+    @classmethod
+    def from_filepath(cls, filepath):
+        parsed = parse.search(templates.SHOT, filepath)
+        if not parsed:
+            logger.warning(
+                "Invalid filepath: {} Expected: {}".format(filepath, templates.SHOT)
+            )
+        else:
+            return cls(
+                parsed.named.get("shot"),
+                task=parsed.named.get("task"),
+                project_root=project.find_project_from_path(os.path.dirname(filepath)),
+            )
+
+    def __init__(
+        self, name, task=None, dcc_root=templates.MAYA_PROJECT_ROOT, project_root=None, filepath=None
+    ):
+        super(ShotTape, self).__init__(name)
+        self.name = name
+        self.task = task
+        self.filepath = filepath
+
+    def get_shots():
+        shots = subfolders = [ f.path for f in os.scandir(self.filepath) if f.is_dir() and f.name.startswith("SHOT_")]
+        return [ShotTape.from_filepath(shot) for shot in shots]
