@@ -11,7 +11,18 @@ logger = logging.getLogger(__name__)
 class Tape(object):
     @classmethod
     def from_filepath(cls, filepath):
-        return cls()
+        if not os.path.exists(filepath):
+            # logging.warning("No Track found in: {} ".format(filepath))
+            return
+        asset_parse = parse.search(templates.ASSET, filepath)
+        if asset_parse:
+            return AssetTape(asset_parse.named.get("asset"), 
+                            asset_type=shot_parse.named.get("asset_type", None),
+                            task=shot_parse.named.get("task", None))
+
+        shot_parse = parse.search(templates.SHOT, filepath)
+        if shot_parse:
+            return ShotTape(shot_parse.named.get("instance"), task=shot_parse.named.get("task", None))
 
     def __init__(self, name):
         self.name = name
@@ -32,10 +43,6 @@ class AssetTape(Tape):
                 task=parsed.named.get("task"),
                 project_root=project.find_project_from_path(os.path.dirname(filepath)),
             )
-
-    @classmethod
-    def from_name(cls, name):
-        filepath = templates.ASSET.format()
 
     def __init__(
         self,
