@@ -81,6 +81,25 @@ class Recorder(object):
             os.makedirs(filepath)
         return filepath
 
+    def archive_workfile(self):    
+        maya_file = cmds.file(q=True, sn=True)
+        output_path = resolve.Resolver().filepath_from_instance(
+            self.shot_tape, "workfile", "workfile"
+        )
+        filepath = os.path.join(
+            output_path, os.path.basename(maya_file)
+        )
+        version_number = resolve.Resolver().get_next_version_number(filepath)
+        recorder = record.Recorder()
+
+        with recorder.publish_record(filepath, version_number):
+            shutil.copyfile(maya_file, filepath)
+            om.MGlobal.displayInfo(
+                "Archiving workfile {}...".format(maya_file)
+            )
+
+            recorder.status = record.Status.PUBLISHED
+
     @contextlib.contextmanager
     def publish_record(self, filepath, version_number):
         try:

@@ -11,6 +11,7 @@ PROJECT_PLUGINS = (
     "grim_IK",
     "meshSnapCommand",
     "mgear_solvers",
+    "multiverse"
 )
 
 

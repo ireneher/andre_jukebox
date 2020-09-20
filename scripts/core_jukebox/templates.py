@@ -14,21 +14,24 @@ class Instance(object):
 
 MAYA_PROJECT_ROOT = "MAYA"
 
-ASSET = "{DCC_ROOT}/scenes/assets/{asset_type}/{asset}/{task}/"
+ASSET = "{DCC_ROOT}/scenes/assets/{asset_type}/{asset}/"
 
 SHOT = "{DCC_ROOT}/scenes/Concept_Animatic/SHOTS/{shot}/{task}/"
 
-##########################################
-# Overide to test in dev environment
-# ASSET = "{DCC_ROOT}/scenes/dev_test/assets/{asset_type}/{asset}/{datatype}/"
-# SHOT = "{DCC_ROOT}/scenes/dev_test/shots/{shot}/{task}/"
-##########################################
+ASSET_WORKAREA = ASSET + "workarea/{task}/"
 
 ASSET_OUTPUT = ASSET + "outputs/{datatype}/"
 
 ASSET_ARCHIVE = ASSET_OUTPUT + "archive/"
 
+ASSET_WORKFILE_ARCHIVE = ASSET + "archive/{name}/"
+
+SHOT_WORKAREA = SHOT + "workarea/{task}/"
+
 SHOT_OUTPUT = SHOT + "outputs/{datatype}/{instance}/"
 
 SHOT_ARCHIVE = SHOT_OUTPUT + "archive/"
+
+SHOT_WORKFILE_ARCHIVE = SHOT + "archive/{name}/"
+
 

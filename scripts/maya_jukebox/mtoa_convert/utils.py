@@ -3,6 +3,7 @@ import shutil
 
 import maya.cmds as cmds
 
+ROOT = "MAYA/"
 
 def create_dir(root, directory):
     path = os.path.join(root, directory)
@@ -92,4 +93,5 @@ def remove_student_license(path):
                 if l.strip("\n") != 'fileInfo "license" "student";':
                     f.write(l)
             f.truncate()
-  
+
+
