@@ -17,6 +17,15 @@ class Resolver(object):
         pass
 
     @staticmethod
+    def archive_from_workfile_path(type, asset, task, name):
+        archive_template = templates.ASSET_WORKFILE_ARCHIVE.format(DCC_ROOT=tape.dcc_root,
+                                                                    asset_type=type,
+                                                                    asset=asset,
+                                                                    task=task,
+                                                                    name=name)
+        return os.path.join(project.get_project_root(), output_template)
+
+    @staticmethod
     def filepath_from_asset(tape, task, datatype):
         """Fills the template to get a filepath for an asset entity 
 

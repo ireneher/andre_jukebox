@@ -24,7 +24,7 @@ ASSET_OUTPUT = ASSET + "outputs/{datatype}/"
 
 ASSET_ARCHIVE = ASSET_OUTPUT + "archive/"
 
-ASSET_WORKFILE_ARCHIVE = ASSET + "archive/{name}/"
+ASSET_WORKFILE_ARCHIVE = ASSET + "archive/{task}/{name}/"
 
 SHOT_WORKAREA = SHOT + "workarea/{task}/"
 
