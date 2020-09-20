@@ -21,6 +21,6 @@ class Exporter(object):
         print self.exports
         engine.run_export(
             filepath,
-            exports= exports or self.exports,
+            exports=exports or self.exports,
             frame_range=frame_range or self.frame_range,
         )

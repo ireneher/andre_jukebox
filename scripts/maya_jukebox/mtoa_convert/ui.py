@@ -14,6 +14,7 @@ class Dialog(QtWidgets.QWidget):
         self.path_editor = QtWidgets.QLineEdit()
         self.path_editor.setPlaceholderText("Input path to OBJ(s)")
         self.path_editor.setText("C:/Users/their/Documents/AndreJukebox_Irene/MAYA/scenes/MODELS/SET/buildings/test")
+
         self.browse_button = QtWidgets.QPushButton("Browse")
         self.browse_button.clicked.connect(self.open_file_browser)
         self.path_layout.addWidget(self.path_editor)

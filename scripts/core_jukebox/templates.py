@@ -20,7 +20,7 @@ SHOT = "{DCC_ROOT}/scenes/Concept_Animatic/SHOTS/{shot}/{task}/"
 
 ASSET_WORKAREA = ASSET + "workarea/{task}/"
 
-ASSET_OUTPUT = ASSET + "outputs/{datatype}/"
+ASSET_OUTPUT = "{DCC_ROOT}/scenes/assets/{asset_type}/{asset}/" + "outputs/{datatype}/"
 
 ASSET_ARCHIVE = ASSET_OUTPUT + "archive/"
 

@@ -4,7 +4,7 @@ SIZE = (200, 300)
 WINDOW_NAME = "Jukebox Rig Publish"
 
 
-class RigPublishWidget(QtWidgets.QDialog):
+class RigPublishWidget(QtWidgets.QWidget):
 
     set_root_signal = QtCore.Signal()
     publish_signal = QtCore.Signal()
@@ -13,8 +13,8 @@ class RigPublishWidget(QtWidgets.QDialog):
         super(RigPublishWidget, self).__init__(parent)
         self.setWindowTitle(WINDOW_NAME)
         self.setObjectName(WINDOW_NAME)
+        self.setWindowFlags(QtCore.Qt.Window)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        # self.setWindowFlags(QtCore.Qt.Dialog)
         self.resize(SIZE[0], SIZE[1])
 
         # ======================================================================== #

@@ -16,7 +16,7 @@ def export_interior_mappings(fbx_source_folder="C:\\Users\\their\\Documents\\And
     unmapped_shaders = {}
     fbx_paths = []
     for root, dirnames, filenames in os.walk(fbx_source_folder):
-        for filename in fnmatch.filter(filenames, '*.fbx'):
+        for filename in fnmatch.filter(filenames, "*.fbx"):
             fbx_paths.append(os.path.join(root, filename))
     for fbx_path in fbx_paths:
         print(fbx_path)

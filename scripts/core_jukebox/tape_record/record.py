@@ -109,7 +109,11 @@ class Recorder(object):
             self.archive_path = self.ensure_archive_path(filepath)
             yield filepath, version_number
 
-        finally:
+        except Exception as e:
+            self.status = Status.FAILED
+            logger.error("Failed to record: {}".format(filepath))
+            raise e
+        else:
             if self.status == Status.PUBLISHED and track.Track.from_filepath(filepath):
                 self.archive_file(self.archive_path, filepath, version_number)
 
@@ -118,7 +122,3 @@ class Recorder(object):
                 logger.info(
                     "Sucessfully Recorded: {} at {}".format(filepath, self.archive_file)
                 )
-
-            else:
-                self.status = Status.FAILED
-                logger.error("Failed to record: {}".format(filepath))

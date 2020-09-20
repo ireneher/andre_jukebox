@@ -32,8 +32,15 @@ class Track(object):
     @classmethod
     def from_filepath(cls, filepath):
         if not os.path.exists(filepath):
-            print("No Track found in: {} ".format(filepath))
-        return cls(filepath)
+            # logging.warning("No Track found in: {} ".format(filepath))
+            return
+        asset_parse = parse.search(templates.ASSET_OUTPUT, filepath)
+        if asset_parse:
+            return cls(asset_parse.named.get("asset"), filepath)
+
+        shot_parse = parse.search(templates.SHOT_OUTPUT, filepath)
+        if shot_parse:
+            return cls(shot_parse.named.get("instance"), filepath)
 
     def __init__(
         self,
@@ -44,19 +51,20 @@ class Track(object):
         datatype=None,
         instance=None,
         asset=None,
-    ):          
+    ):
+        # TODO: name should be file basename
+        self.name = name
         self.filepath = filepath
         self.name = os.path.splitext(os.path.basename(file_)[0]
         self.task = task
         self.asset = asset
         self.shot = shot
         self.datatype = datatype
-        self.instance = instance        
+        self.instance = instance
         self.root = os.path.dirname(self.filepath)
         self.archive = os.path.join(self.root, "archive")
-        self.datatype = os.path.dirname(self.root)        
+        self.datatype = os.path.dirname(self.root)
         self.representation = os.path.splitext(self.filepath)[-1]
-
 
     # @property
     # def filepath(self):
@@ -79,7 +87,6 @@ class Track(object):
     def current_version_number(self):
         if self.current_version:
             return self.get_versions_dict().values()[-1]
-            
 
     def _get_versions(self):
         versions = []

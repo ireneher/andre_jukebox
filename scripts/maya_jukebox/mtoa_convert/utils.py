@@ -35,9 +35,11 @@ def archive_file(archive_dir, filepath):
 
 
 def get_scene_materials():
-    for shading_engine in cmds.ls(type='shadingEngine'):
+    for shading_engine in cmds.ls(type="shadingEngine"):
         if cmds.sets(shading_engine, q=True):
-            for material in cmds.ls(cmds.listConnections(shading_engine), materials=True):
+            for material in cmds.ls(
+                cmds.listConnections(shading_engine), materials=True
+            ):
                 yield material, shading_engine
 
 
@@ -66,7 +68,7 @@ def walk_up_path(path):
 
     yield path, dirs, nondirs
 
-    upper_path = os.path.realpath(os.path.join(path, '..'))
+    upper_path = os.path.realpath(os.path.join(path, ".."))
     if upper_path == path:
         return
 
@@ -82,16 +84,13 @@ def find_project_root(path):
         if os.path.exists(os.path.join(upper_dir, "workspace.mel")):
             return upper_dir
 
-            
 
 def remove_student_license(path):
     if os.path.isfile(path):
-        with open(path, 'r') as f:
+        with open(path, "r") as f:
             lines = f.readlines()
-        with open(path, 'w') as f:
+        with open(path, "w") as f:
             for l in lines:
                 if l.strip("\n") != 'fileInfo "license" "student";':
                     f.write(l)
             f.truncate()
-
-

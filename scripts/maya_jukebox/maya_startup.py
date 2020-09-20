@@ -22,8 +22,9 @@ def set_project():
     try:
         cmds.workspace(project_root, openWorkspace=True)
     except:
-        print ("No Andre Jukebox project found. Resorting to default")
+        print("No Andre Jukebox project found. Resorting to default")
         pass
+
 
 def load_project_plugins():
     if not cmds.about(q=True, version=True) == "2018":
@@ -38,7 +39,7 @@ def load_project_plugins():
                 plugin
             )
         )
-    print ("Sucessfully Loaded plugins: {}".format(PROJECT_PLUGINS))
+    print("Sucessfully Loaded plugins: {}".format(PROJECT_PLUGINS))
 
 
 def append_to_path():
