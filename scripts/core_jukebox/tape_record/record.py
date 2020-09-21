@@ -31,10 +31,9 @@ class Recorder(object):
             debug_mode (bool, optional): Prints all returns without actually running. Defaults to False.
         """
         self.debug_mode = debug_mode
+        self.status = Status.PENDING        
 
-        self.status = Status.PENDING
-
-    def archive_file(self, archive_path, filepath, version_number):
+    def archive_publish(self, archive_path, filepath, version_number):
         _, filename = os.path.split(filepath)
         asset, rep = os.path.splitext(filename)
 
@@ -81,24 +80,15 @@ class Recorder(object):
             os.makedirs(filepath)
         return filepath
 
-    def archive_workfile(self):    
-        maya_file = cmds.file(q=True, sn=True)
+    def archive_workfile(self, filepath): 
+        # TODO
         output_path = resolve.Resolver().filepath_from_instance(
             self.shot_tape, "workfile", "workfile"
         )
-        filepath = os.path.join(
-            output_path, os.path.basename(maya_file)
+        out_path = os.path.join(
+            output_path, os.path.basename(filepath)
         )
-        version_number = resolve.Resolver().get_next_version_number(filepath)
-        recorder = record.Recorder()
-
-        with recorder.publish_record(filepath, version_number):
-            shutil.copyfile(maya_file, filepath)
-            om.MGlobal.displayInfo(
-                "Archiving workfile {}...".format(maya_file)
-            )
-
-            recorder.status = record.Status.PUBLISHED
+        shutil.copyfile(filepath, out_path)
 
     @contextlib.contextmanager
     def publish_record(self, filepath, version_number):

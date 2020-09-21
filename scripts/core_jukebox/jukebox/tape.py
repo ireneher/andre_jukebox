@@ -42,6 +42,7 @@ class AssetTape(Tape):
                 asset_type=parsed.named.get("asset_type"),
                 task=parsed.named.get("task"),
                 project_root=project.find_project_from_path(os.path.dirname(filepath)),
+                workfile=os.path.splitext(os.path.basename(filepath))[0]
             )
 
     def __init__(
@@ -51,8 +52,10 @@ class AssetTape(Tape):
         task=None,
         dcc_root=templates.MAYA_PROJECT_ROOT,
         project_root=None,
+        workfile=None
     ):
         super(AssetTape, self).__init__(name)
+        self.is_shot = False
         self.name = name
         self.asset_type = asset_type
         self.dcc_root = dcc_root
@@ -65,7 +68,15 @@ class AssetTape(Tape):
         )
         self.project_root = project_root or project.get_project_root()
         self.absolute_path = os.path.join(self.project_root, self.root)
+        self.workfile = workfile
 
+    def get_workfile_archive_path(self):
+        path = templates.ASSET_WORKFILE_ARCHIVE.format(DCC_ROOT=self.dcc_root,
+                                                                asset_type=self.asset_type,
+                                                                asset=self.name,
+                                                                task=self.task,
+                                                                name=self.workfile)
+        return os.path.join(self.project_root, path)
 
 class ShotTape(Tape):
     @classmethod
@@ -80,12 +91,14 @@ class ShotTape(Tape):
                 parsed.named.get("shot"),
                 task=parsed.named.get("task"),
                 project_root=project.find_project_from_path(os.path.dirname(filepath)),
+                workfile=os.path.splitext(os.path.basename(filepath))[0]
             )
 
     def __init__(
-        self, name, task=None, dcc_root=templates.MAYA_PROJECT_ROOT, project_root=None
+        self, name, task=None, dcc_root=templates.MAYA_PROJECT_ROOT, project_root=None, workfile=None
     ):
         super(ShotTape, self).__init__(name)
+        self.is_shot = True
         self.name = name
         self.task = task
         self.dcc_root = dcc_root
@@ -94,6 +107,14 @@ class ShotTape(Tape):
         )
         self.project_root = project_root or project.get_project_root()
         self.absolute_path = os.path.join(self.project_root, self.root)
+        self.workfile=None
+
+    def get_workfile_archive_path(self, workfile_name):
+        path = templates.SHOT_WORKFILE_ARCHIVE.format(DCC_ROOT=self.dcc_root,
+                                                shot=self.name,
+                                                task=self.task,
+                                                name=self.workfile)
+        return os.path.join(self.project_root, path)
 
     def get_outputs(self, datatype=None):
         # TODO: Use the template
