@@ -80,15 +80,13 @@ class Recorder(object):
             os.makedirs(filepath)
         return filepath
 
-    def archive_workfile(self, filepath): 
-        # TODO
-        output_path = resolve.Resolver().filepath_from_instance(
-            self.shot_tape, "workfile", "workfile"
-        )
-        out_path = os.path.join(
-            output_path, os.path.basename(filepath)
-        )
-        shutil.copyfile(filepath, out_path)
+    def archive_workfile(self, archive_path, filepath): 
+        self.create_dirs(self, archive_path)
+        shutil.copyfile(filepath, 
+                        os.path.join(archive_path,
+                                    datetime.today().strftime('%Y%m%d')
+                                    )
+                        )
 
     @contextlib.contextmanager
     def publish_record(self, filepath, version_number):

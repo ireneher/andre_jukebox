@@ -25,7 +25,7 @@ def writeUsdAsset(outPath):
     opts.writeMaterialAssignment = True
     multiverse.WriteAsset(outPath, root_loc, opts)
 
-def publishMaterials(tapeEntity):   
+def publishMaterials(tapeEntity, recorder=None):   
     trackEntity = track.from_fields(tapeEntity.asset_type,
                                     tapeEntity.asset,
                                     "material",
@@ -33,11 +33,11 @@ def publishMaterials(tapeEntity):
 
     versionNumber = resolve.Resolver().get_next_version_number(trackEntity.filepath)
 
-    recoder = record.Recorder()
-    with recoder.publish_record(outPath, versionNumber):
+    recorder = recorder or record.Recorder()
+    with recorder.publish_record(outPath, versionNumber):
        writeMaterials(outPath)
 
-def publishUsdAsset(tapeEntity):   
+def publishUsdAsset(tapeEntity, recorder=None):   
     trackEntity = track.from_fields(tapeEntity.asset_type,
                                     tapeEntity.asset,
                                     "usd",
@@ -45,16 +45,16 @@ def publishUsdAsset(tapeEntity):
 
     versionNumber = resolve.Resolver().get_next_version_number(trackEntity.filepath)
 
-    recoder = record.Recorder()
-    with recoder.publish_record(outPath, versionNumber):
+    recorder = recorder or record.Recorder()
+    with recorder.publish_record(outPath, versionNumber):
        writeUsdAsset(outPath)    
 
 def publishAsset():
     mayaFile = cmds.file(q=True, sceneName=True)
     tapeEntity = tape.Tape.from_filepath(mayaFile)
-    # TODO: move this somewhere appropiate
     workfileArchivePath = tapeEntity.get_workfile_archive_path()
-    shutil.copyfile(mayaFile, os.path.join(workfileArchivePath,datetime.today().strftime('%Y%m%d')))
-
-    publishMaterials(usdOutPath)
-    publishUsdAsset(matOutPath)
+    recorder = record.Recorder()
+    
+    recorder.archive_workfile(workfileArchivePath, mayaFile)
+    publishMaterials(tapeEntity, recorder=recorder)
+    publishUsdAsset(tapeEntity, recorder=recorder)
