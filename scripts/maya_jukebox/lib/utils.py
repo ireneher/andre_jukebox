@@ -3,7 +3,7 @@ import maya.cmds as cmds
 def relative_repath():
     referenceNodes = cmds.filePathEditor(query=True, listFiles="", attributeOnly=True, byType="reference")
     for obj in cmds.ls(type='reference'):
-        refPath = cmds.referenceQuery(obj, filename=True, withoutCopyNumber=True)
+        refPath = cmds.referenceQuery(obj, filename=True, unresolvedName=True, withoutCopyNumber=True)
         relPath = refPath.split(ROOT)[-1]
         cmds.file(relPath, loadReference=obj)
 

@@ -15,7 +15,7 @@ def writeMaterials(outPath):
 
 def writeUsdAsset(outPath):   
     assemblies = cmds.ls(assemblies=True)
-    root_loc = cmds.listRelatives(assemblies, type="locator")
+    rootLoc = cmds.listRelatives(assemblies, type="locator")
 
     opts = multiverse.AssetWriteOptions()
     opts.writeNormals = True
@@ -23,7 +23,13 @@ def writeUsdAsset(outPath):
 
     opts.writeUVs = True
     opts.writeMaterialAssignment = True
-    multiverse.WriteAsset(outPath, root_loc, opts)
+    multiverse.WriteAsset(outPath, rootLoc, opts)
+
+
+def writeUsdComposition(outPath):   
+    usdNodes = cmds.ls(type="mvUsdCompoundShape")
+    opts = multiverse.CompositionWriteOptions()
+    multiverse.WriteComposition(outPath, usdNodes, opts)
 
 def publishMaterials(tapeEntity, recorder=None):   
     trackEntity = track.from_fields(tapeEntity.asset_type,
@@ -47,7 +53,20 @@ def publishUsdAsset(tapeEntity, recorder=None):
 
     recorder = recorder or record.Recorder()
     with recorder.publish_record(outPath, versionNumber):
-       writeUsdAsset(outPath)    
+       writeUsdAsset(outPath)   
+
+
+def publishUsdComposition(tapeEntity, recorder=None):   
+    trackEntity = track.from_fields(tapeEntity.asset_type,
+                                    tapeEntity.asset,
+                                    "usdComposition",
+                                    dcc_root=tapeEntity.dcc_root)
+
+    versionNumber = resolve.Resolver().get_next_version_number(trackEntity.filepath)
+
+    recorder = recorder or record.Recorder()
+    with recorder.publish_record(outPath, versionNumber):
+       writeUsdComposition(outPath)   
 
 def publishAsset():
     mayaFile = cmds.file(q=True, sceneName=True)
@@ -58,3 +77,12 @@ def publishAsset():
     recorder.archive_workfile(workfileArchivePath, mayaFile)
     publishMaterials(tapeEntity, recorder=recorder)
     publishUsdAsset(tapeEntity, recorder=recorder)
+
+def publishComposition():
+    mayaFile = cmds.file(q=True, sceneName=True)
+    tapeEntity = tape.Tape.from_filepath(mayaFile)
+    workfileArchivePath = tapeEntity.get_workfile_archive_path()
+    recorder = record.Recorder()
+    
+    recorder.archive_workfile(workfileArchivePath, mayaFile)
+    publishUsdComposition(tapeEntity, recorder=recorder)
