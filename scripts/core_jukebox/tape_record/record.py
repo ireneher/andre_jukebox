@@ -3,7 +3,7 @@ import os
 import shutil
 import logging
 
-from core_jukebox.jukebox import project, track
+from core_jukebox import jukebox
 from core_jukebox import templates
 
 # from core_jukebox import templates
@@ -54,7 +54,7 @@ class Recorder(object):
         Returns:
             [type]: [description]
         """
-        if not track.Track.from_filepath(filepath):
+        if not jukebox.track.Track.from_filepath(filepath):
             self.create_dirs(os.path.dirname(filepath))
 
         return filepath
@@ -102,7 +102,7 @@ class Recorder(object):
             logger.error("Failed to record: {}".format(filepath))
             raise e
         else:
-            if self.status == Status.PUBLISHED and track.Track.from_filepath(filepath):
+            if self.status == Status.PUBLISHED and jukebox.track.Track.from_filepath(filepath):
                 self.archive_file(self.archive_path, filepath, version_number)
 
                 self.status = Status.COMPLETE

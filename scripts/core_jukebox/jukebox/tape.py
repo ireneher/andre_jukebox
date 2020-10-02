@@ -4,7 +4,7 @@ import logging
 
 from python_lib import parse
 from core_jukebox import os_common, templates
-from core_jukebox.jukebox import track, project
+from core_jukebox import jukebox
 
 logger = logging.getLogger(__name__)
 
@@ -105,7 +105,7 @@ class ShotTape(Tape):
         self.root = templates.SHOT.format(
             DCC_ROOT=self.dcc_root, shot=self.name, task=self.task
         )
-        self.project_root = project_root or project.get_project_root()
+        self.project_root = project_root or jukebox.project.get_project_root()
         self.absolute_path = os.path.join(self.project_root, self.root)
         self.workfile=None
 
@@ -122,7 +122,7 @@ class ShotTape(Tape):
         if datatype:
             path = os.path.join(datatype)
         return [
-            track.Track(output)
+            jukebox.track.Track(output)
             for sub_folder in os.listdir(path)
             for output in os.listdir(sub_folder)
         ]
@@ -140,7 +140,7 @@ class SequenceTape(Tape):
             return cls(
                 parsed.named.get("shot"),
                 task=parsed.named.get("task"),
-                project_root=project.find_project_from_path(os.path.dirname(filepath)),
+                project_root=jukebox.project.find_project_from_path(os.path.dirname(filepath)),
             )
 
     def __init__(

@@ -4,7 +4,7 @@ import shutil
 import logging
 
 from python_lib import enum, parse
-from core_jukebox.jukebox import project, track, tape
+from core_jukebox import jukebox
 from core_jukebox import templates
 
 logger = logging.getLogger(__name__)
@@ -30,7 +30,7 @@ class Resolver(object):
             task=task,
             datatype=datatype,
         )
-        return os.path.join(project.get_project_root(), output_template)
+        return os.path.join(jukebox.project.get_project_root(), output_template)
 
     def filepath_from_instance(self, tape, datatype, instance):
         """Fills the template to get a filepath for a shot entity 
@@ -46,7 +46,7 @@ class Resolver(object):
             datatype=datatype,
             instance=instance,
         )
-        return os.path.join(project.get_project_root(), output_template)
+        return os.path.join(jukebox.project.get_project_root(), output_template)
 
     @staticmethod
     def asset_from_instance(instance_name):
@@ -59,7 +59,7 @@ class Resolver(object):
         return parse.parse(templates.Instance.TEMPLATE, instance_name)
 
     def get_next_version_number(self, filepath):
-        track_obj = track.Track.from_filepath(filepath)
+        track_obj = jukebox.track.Track.from_filepath(filepath)
         if track_obj and track_obj.current_version_number:
             return track_obj.current_version_number + 1
         else:
