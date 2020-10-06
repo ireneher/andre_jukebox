@@ -34,7 +34,7 @@ def writeUsdComposition(outPath):
     multiverse.WriteComposition(outPath, usdNodes, opts)
 
 def publishMaterials(tapeEntity, recorder=None):   
-    trackEntity = jukebox.track.from_fields(tapeEntity.asset_type,
+    trackEntity = jukebox.track.Track.from_fields(tapeEntity.asset_type,
                                     tapeEntity.asset,
                                     "material",
                                     dcc_root=tapeEntity.dcc_root)
@@ -46,7 +46,7 @@ def publishMaterials(tapeEntity, recorder=None):
        writeMaterials(outPath)
 
 def publishUsdAsset(tapeEntity, recorder=None):   
-    trackEntity = jukebox.track.from_fields(tapeEntity.asset_type,
+    trackEntity = jukebox.track.Track.from_fields(tapeEntity.asset_type,
                                     tapeEntity.asset,
                                     "usd",
                                     dcc_root=tapeEntity.dcc_root)
@@ -59,7 +59,7 @@ def publishUsdAsset(tapeEntity, recorder=None):
 
 
 def publishUsdComposition(tapeEntity, recorder=None):   
-    trackEntity = jukebox.track.from_fields(tapeEntity.asset_type,
+    trackEntity = jukebox.track.Track.from_fields(tapeEntity.asset_type,
                                     tapeEntity.asset,
                                     "usdComposition",
                                     dcc_root=tapeEntity.dcc_root)
@@ -71,11 +71,10 @@ def publishUsdComposition(tapeEntity, recorder=None):
        writeUsdComposition(outPath)   
 
 def publishAsset():
-    mayaFile = cmds.file(q=True, sceneName=True)
-    print(mayaFile)
+    mayaFile = cmds.file(query=True, l=True)[0]
     tapeEntity = jukebox.tape.Tape.from_filepath(mayaFile)
-    print(tapeEntity)
     workfileArchivePath = tapeEntity.get_workfile_archive_path()
+    print(workfileArchivePath)  # ---- wrong C:\Users\their\Documents\AJ_test\MAYA\MAYA/scenes/assets/sets/city/archive/model/None/
     recorder = record.Recorder()
     
     recorder.archive_workfile(workfileArchivePath, mayaFile)
@@ -83,7 +82,7 @@ def publishAsset():
     publishUsdAsset(tapeEntity, recorder=recorder)
 
 def publishComposition():
-    mayaFile = cmds.file(q=True, sceneName=True)
+    mayaFile = cmds.file(query=True, l=True)[0]
     tapeEntity = jukebox.tape.Tape.from_filepath(mayaFile)
     workfileArchivePath = tapeEntity.get_workfile_archive_path()
     recorder = record.Recorder()

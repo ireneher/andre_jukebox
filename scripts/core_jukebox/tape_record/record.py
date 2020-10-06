@@ -1,4 +1,5 @@
 import contextlib
+import datetime
 import os
 import shutil
 import logging
@@ -81,10 +82,10 @@ class Recorder(object):
         return filepath
 
     def archive_workfile(self, archive_path, filepath): 
-        self.create_dirs(self, archive_path)
+        self.create_dirs(archive_path)
         shutil.copyfile(filepath, 
                         os.path.join(archive_path,
-                                    datetime.today().strftime('%Y%m%d')
+                                    datetime.date.today().strftime('%Y%m%d')
                                     )
                         )
 

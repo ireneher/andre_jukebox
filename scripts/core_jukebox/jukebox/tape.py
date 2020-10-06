@@ -14,13 +14,13 @@ class Tape(object):
         if not os.path.exists(filepath):
             # logging.warning("No Track found in: {} ".format(filepath))
             return
-        asset_parse = parse.search(templates.ASSET, filepath)
+        asset_parse = parse.search(templates.ASSET_WORKAREA, filepath)
         if asset_parse:
             return AssetTape(asset_parse.named.get("asset"), 
-                            asset_type=shot_parse.named.get("asset_type", None),
-                            task=shot_parse.named.get("task", None))
+                            asset_type=asset_parse.named.get("asset_type", None),
+                            task=asset_parse.named.get("task", None))
 
-        shot_parse = parse.search(templates.SHOT, filepath)
+        shot_parse = parse.search(templates.SHOT_WORKAREA, filepath)
         if shot_parse:
             return ShotTape(shot_parse.named.get("instance"), task=shot_parse.named.get("task", None))
 
@@ -31,7 +31,7 @@ class Tape(object):
 class AssetTape(Tape):
     @classmethod
     def from_filepath(cls, filepath):
-        parsed = parse.search(templates.ASSET, filepath)
+        parsed = parse.search(templates.ASSET_WORKAREA, filepath)
         if not parsed:
             logger.warning(
                 "Invalid filepath: {} Expected: {}".format(filepath, templates.ASSET)
@@ -41,7 +41,7 @@ class AssetTape(Tape):
                 parsed.named.get("asset"),
                 asset_type=parsed.named.get("asset_type"),
                 task=parsed.named.get("task"),
-                project_root=project.find_project_from_path(os.path.dirname(filepath)),
+                project_root=jukebox.project.find_project_from_path(os.path.dirname(filepath)),
                 workfile=os.path.splitext(os.path.basename(filepath))[0]
             )
 
@@ -54,34 +54,34 @@ class AssetTape(Tape):
         project_root=None,
         workfile=None
     ):
-        super(AssetTape, self).__init__(name)
+        super(AssetTape, self).__init__(name)        
         self.is_shot = False
-        self.name = name
         self.asset_type = asset_type
         self.dcc_root = dcc_root
         self.task = task
-        self.root = templates.ASSET.format(
+        self.root = templates.ASSET_WORKAREA.format(
             DCC_ROOT=self.dcc_root,
             asset_type=self.asset_type,
             asset=self.name,
             task=self.task,
         )
-        self.project_root = project_root or project.get_project_root()
-        self.absolute_path = os.path.join(self.project_root, self.root)
+        self.project_root = project_root or jukebox.project.get_project_root()
+        self.project_root = r"C:\Users\their\Documents\AJ_test\MAYA"
+        self.absolute_path = os.path.join(self.project_root, self.root) if self.project_root and self.root else None
         self.workfile = workfile
 
     def get_workfile_archive_path(self):
         path = templates.ASSET_WORKFILE_ARCHIVE.format(DCC_ROOT=self.dcc_root,
-                                                                asset_type=self.asset_type,
-                                                                asset=self.name,
-                                                                task=self.task,
-                                                                name=self.workfile)
+                                                        asset_type=self.asset_type,
+                                                        asset=self.name,
+                                                        task=self.task,
+                                                        name=self.workfile)
         return os.path.join(self.project_root, path)
 
 class ShotTape(Tape):
     @classmethod
     def from_filepath(cls, filepath):
-        parsed = parse.search(templates.SHOT, filepath)
+        parsed = parse.search(templates.SHOT_WORKAREA, filepath)
         if not parsed:
             logger.warning(
                 "Invalid filepath: {} Expected: {}".format(filepath, templates.SHOT)
@@ -90,7 +90,7 @@ class ShotTape(Tape):
             return cls(
                 parsed.named.get("shot"),
                 task=parsed.named.get("task"),
-                project_root=project.find_project_from_path(os.path.dirname(filepath)),
+                project_root=jukebox.project.find_project_from_path(os.path.dirname(filepath)),
                 workfile=os.path.splitext(os.path.basename(filepath))[0]
             )
 
