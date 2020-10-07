@@ -1,7 +1,9 @@
 import os
 import maya.cmds as cmds 
 ROOT = "MAYA"
-def relative_repath():
+
+def relative_repath(*args):
+    print([a for a in args])
     print("----------------- TRIGGERED -------------")
     # referenceNodes = cmds.filePathEditor(query=True, listFiles="", attributeOnly=True, byType="reference")
     # print(referenceNodes)
@@ -23,15 +25,12 @@ def reference_check_callback(*args):
     # args = fileObject
 
     # TODO: get this path from set project
-    project_dir = r"C:\Users\their\Documents\AJ_test\MAYA\"
+    project_dir = "C:/Users/their/Documents/AJ_test/MAYA"
     reference_path = args[0].rawFullName()
     common_path = reference_path.split(ROOT)[-1]
     new_reference_path = os.path.join(project_dir, common_path)
     print "Callback changed this to %s" % new_reference_path
     args[0].setRawFullName(new_reference_path)  
-    
-    # TODO: move so it doesn't happen on each iteration
-    #relative_repath()
 
     #OpenMaya.MScriptUtil.setBool(args[0], True)
 
