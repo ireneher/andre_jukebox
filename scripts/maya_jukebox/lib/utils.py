@@ -1,13 +1,16 @@
+import os
 import maya.cmds as cmds 
-
+ROOT = "MAYA"
 def relative_repath():
-    print("*"*100)
     print("----------------- TRIGGERED -------------")
-    referenceNodes = cmds.filePathEditor(query=True, listFiles="", attributeOnly=True, byType="reference")
-    for obj in cmds.ls(type='reference'):
-        refPath = cmds.referenceQuery(obj, filename=True, unresolvedName=True, withoutCopyNumber=True)
-        relPath = refPath.split(ROOT)[-1]
-        cmds.file(relPath, loadReference=obj)
+    # referenceNodes = cmds.filePathEditor(query=True, listFiles="", attributeOnly=True, byType="reference")
+    # print(referenceNodes)
+    # for obj in cmds.ls(type='reference'):
+    #     refPath = cmds.referenceQuery(obj, filename=True, unresolvedName=True, withoutCopyNumber=True)
+    #     print(refPath)
+    #     relPath = refPath.split(ROOT)[-1]
+    #     print(relPath)
+    #     cmds.file(relPath, loadReference=obj)
 
     
     fileNodes = cmds.ls(type = "file") 
@@ -15,6 +18,22 @@ def relative_repath():
         texturePath = cmds.getAttr("{}.fileTextureName".format(fileNode))
         relPath =  texturePath.split(ROOT)[-1]
         cmds.setAttr("{}.fileTextureName".format(relPath))
+
+def reference_check_callback(*args):
+    # args = fileObject
+
+    # TODO: get this path from set project
+    project_dir = r"C:\Users\their\Documents\AJ_test\MAYA\"
+    reference_path = args[0].rawFullName()
+    common_path = reference_path.split(ROOT)[-1]
+    new_reference_path = os.path.join(project_dir, common_path)
+    print "Callback changed this to %s" % new_reference_path
+    args[0].setRawFullName(new_reference_path)  
+    
+    # TODO: move so it doesn't happen on each iteration
+    #relative_repath()
+
+    #OpenMaya.MScriptUtil.setBool(args[0], True)
 
 def get_scene_materials():
     for shading_engine in cmds.ls(type='shadingEngine'):
