@@ -73,7 +73,7 @@ class AssetTape(Tape):
         self.workfile = workfile
 
     def get_workfile_archive_path(self):
-        timestamp=datetime.date.today().strftime('%Y%m%d')
+        timestamp=datetime.datetime.utcnow().strftime('%Y%m%d_%H%M')
         path = templates.ASSET_WORKFILE_ARCHIVE.format(DCC_ROOT=self.dcc_root,
                                                         asset_type=self.asset_type,
                                                         asset=self.name,
