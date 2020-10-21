@@ -1,3 +1,4 @@
+import datetime
 import glob
 import os
 import logging
@@ -72,11 +73,14 @@ class AssetTape(Tape):
         self.workfile = workfile
 
     def get_workfile_archive_path(self):
+        timestamp=datetime.date.today().strftime('%Y%m%d')
         path = templates.ASSET_WORKFILE_ARCHIVE.format(DCC_ROOT=self.dcc_root,
                                                         asset_type=self.asset_type,
                                                         asset=self.name,
                                                         task=self.task,
-                                                        name=self.workfile)
+                                                        name=self.workfile,
+                                                        representation="ma",
+                                                        timestamp=timestamp)
         return os.path.join(self.project_root, path)
 
 class ShotTape(Tape):
@@ -108,13 +112,16 @@ class ShotTape(Tape):
         )
         self.project_root = project_root or jukebox.project.get_project_root()
         self.absolute_path = os.path.join(self.project_root, self.root)
-        self.workfile=None
+        self.workfile=workfile
 
     def get_workfile_archive_path(self):
+        timestamp=datetime.date.today().strftime('%Y%m%d')
         path = templates.SHOT_WORKFILE_ARCHIVE.format(DCC_ROOT=self.dcc_root,
                                                 shot=self.name,
                                                 task=self.task,
-                                                name=self.workfile)
+                                                name=self.workfile,
+                                                representation="ma",
+                                                timestamp=timestamp)
         return os.path.join(self.project_root, path)
 
     def get_outputs(self, datatype=None):

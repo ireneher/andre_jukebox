@@ -36,19 +36,19 @@ class Resolver(object):
         project_root = r"C:\Users\their\Documents\AJ_test"
         return os.path.join(project_root, output_template)
 
-    def filepath_from_instance(self, tape, datatype, instance, representation):
+    def filepath_from_id(self, tape, datatype, identifier, representation):
         """Fills the template to get a filepath for a shot entity 
-
+            Identifier may be task or instance depending on publish type
         Args:
             shot (ShotTape): [description]
             instance ([type]): [description]
         """
-        output_template = templates.SHOT_INSTANCE_OUTPUT.format(
+        output_template = templates.SHOT_OUTPUT.format(
             DCC_ROOT=tape.dcc_root,
             shot=tape.name,
             task=tape.task,
             datatype=datatype,
-            instance=instance,
+            identifier=identifier,
             representation=representation
         )
         return os.path.join(jukebox.project.get_project_root(), output_template)
@@ -70,3 +70,6 @@ class Resolver(object):
         else:
             return 1
 
+    def get_workfile_archive_path(self, scenepath):
+        tape_obj = jukebox.tape.Tape.from_filepath(scenepath)
+        return tape_obj.get_workfile_archive_path()

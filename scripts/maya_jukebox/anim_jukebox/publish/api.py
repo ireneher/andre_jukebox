@@ -44,13 +44,10 @@ class Manager(object):
         return tape.ShotTape.from_filepath(filepath)
 
     def publish_alembic(self, instance_obj):
-        output_path = resolve.Resolver().filepath_from_instance(
-            self.shot_tape, "caches", instance_obj.instance
+        output_path = resolve.Resolver().filepath_from_id(
+            self.shot_tape, "caches", instance_obj.instance, mapping.Datatypes.CACHE
         )
-        filepath = os.path.join(
-            output_path, "{}{}".format(instance_obj.instance, mapping.Datatypes.CACHE)
-        )
-        version_number = resolve.Resolver().get_next_version_number(filepath)
+        version_number = resolve.Resolver().get_next_version_number(output_path)
 
         instance_geo = [
             instance_obj.geo_node(long=True) or instance_obj.root_node(long=True)
@@ -71,18 +68,7 @@ class Manager(object):
             recorder.status = record.Status.PUBLISHED
 
     def publish_workfile(self):
+        maya_file = cmds.file(q=True, sn=True)      
+        workfile_path = resolve.Resolver().get_workfile_archive_path(maya_file)
+        recorder.archive_workfile(workfile_path, maya_file)
 
-        maya_file = cmds.file(q=True, sn=True)
-        # TODO: move this to core as "archive_workfile"
-        output_path = resolve.Resolver().filepath_from_instance(
-            self.shot_tape, "workfile", "workfile"
-        )
-        filepath = os.path.join(output_path, os.path.basename(maya_file))
-        version_number = resolve.Resolver().get_next_version_number(filepath)
-        recorder = record.Recorder()
-
-        with recorder.publish_record(filepath, version_number):
-            shutil.copyfile(maya_file, filepath)
-            om.MGlobal.displayInfo("Archiving workfile {}...".format(maya_file))
-
-            recorder.status = record.Status.PUBLISHED
