@@ -7,7 +7,7 @@ from python_lib import parse
 from core_jukebox import os_common, templates
 
 
-class Track(object):
+class Song(object):
     """This is the main object to describe an output entity.
     The expected hierarchy is:
         -archive
@@ -24,7 +24,7 @@ class Track(object):
                                                 datatype=datatype)
         files = [f for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath, f))]
         if not files:
-            print("No Track found in: {}".format(filepath))
+            print("No Song found in: {}".format(filepath))
         if len(files)>1:
             print("More than 1 Tape found. Using first")
         return cls(files[0])
@@ -32,7 +32,7 @@ class Track(object):
     @classmethod
     def from_filepath(cls, filepath):
         if not os.path.exists(filepath):
-            # logging.warning("No Track found in: {} ".format(filepath))
+            # logging.warning("No Song found in: {} ".format(filepath))
             return
         asset_parse = parse.search(templates.ASSET_OUTPUT, filepath)
         if asset_parse:
