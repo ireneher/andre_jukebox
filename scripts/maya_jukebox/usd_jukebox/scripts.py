@@ -47,10 +47,13 @@ def replace_refs_with_usds():
     refs = file_reference.ls_references()
     for ref in refs:
         xform_matrix = cmds.xform(ref.top_node, q=True, matrix=True)
-        tape_obj = jukebox.tape.AssetTape.from_filepath(ref)
+        tape_obj = jukebox.tape.AssetTape.from_filepath(ref.filepath)
         song_obj = jukebox.song.Song.from_fields(tape_obj.asset_type, tape_obj.name, "usd")
         usd_compound = mv.CreateUsdCompound(song_obj.filepath)
         cmds.xform(usd_compound, q=True, matrix=xform_matrix)
+
+    for ref in refs:
+        cmds.file(removeReference=ref.filepath, force=True)
                     
     gpu_shapes = cmds.ls(type="gpuCache")
     if not gpu_shapes:
@@ -65,4 +68,8 @@ def replace_refs_with_usds():
         usd_compound = mv.CreateUsdCompound(song_obj.filepath)
         cmds.xform(usd_compound, q=True, matrix=xform_matrix)
 
-        
+    try:
+        cmds.delete(gpu_shapes)
+    except:
+        pass
+
