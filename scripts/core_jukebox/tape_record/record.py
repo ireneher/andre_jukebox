@@ -39,7 +39,7 @@ class Recorder(object):
         asset, rep = os.path.splitext(filename)
 
         archive_file = templates.VersionFile.TEMPLATE.format(
-            version_number, asset=asset, rep=rep
+            version_number, asset=asset, representation=rep
         )
         versioned_path = os.path.join(archive_path, archive_file)
 
@@ -100,10 +100,10 @@ class Recorder(object):
             raise e
         else:
             if self.status == Status.PUBLISHED and jukebox.song.Song.from_filepath(filepath):
-                self.archive_file(self.archive_path, filepath, version_number)
+                self.archive_publish(self.archive_path, filepath, version_number)
 
                 self.status = Status.COMPLETE
 
                 logger.info(
-                    "Sucessfully Recorded: {} at {}".format(filepath, self.archive_file)
+                    "Sucessfully Recorded: {} at {}".format(filepath, self.archive_path)
                 )

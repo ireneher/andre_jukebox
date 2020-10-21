@@ -30,7 +30,7 @@ class Song(object):
             os.makedirs(filepath)
         files = [os.path.join(filepath, f) for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath, f))]
         if not files:
-            print("No Song found in: {}".format(filepath))
+            print("No Song found in: {} \n(Potential first publish)".format(filepath))
             return
         if len(files)>1:
             print("More than 1 Tape found. Using first")
@@ -38,8 +38,6 @@ class Song(object):
 
     @classmethod
     def from_filepath(cls, filepath):
-        print("*******")
-        print(filepath)
         if not os.path.exists(filepath):
             logging.warning("No Song found in: {} ".format(filepath))
             return
@@ -72,7 +70,6 @@ class Song(object):
     ):
         self.filepath = filepath
         self.name = name or os.path.splitext(os.path.basename(self.filepath))[0]
-        self.task = task
         self.asset = asset
         self.shot = shot
         self.datatype = datatype

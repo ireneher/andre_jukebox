@@ -14,9 +14,10 @@ def writeMaterials(outPath):
     mats = []
     for mat, sg in maya_utils.get_scene_materials():
         mats.append(mat)
-    cmds.select(mats)
-
-    cmds.file(outPath, exportSelected=True)
+    if not mats:
+        return
+    cmds.select(mats, replace=True)
+    cmds.file(outPath, exportSelected=True, type="mayaAscii")
 
 def writeUsdAsset(outPath):   
     assemblies = cmds.ls(assemblies=True)
@@ -24,7 +25,6 @@ def writeUsdAsset(outPath):
 
     opts = multiverse.AssetWriteOptions()
     opts.writeNormals = True
-
 
     opts.writeUVs = True
     opts.writeMaterialAssignment = True
@@ -37,30 +37,21 @@ def writeUsdComposition(outPath):
     multiverse.WriteComposition(outPath, usdNodes, opts)
 
 def publishMaterials(tapeEntity, workfileName, recorder=None):   
-    # songEntity = song.Song.from_fields(tapeEntity.asset_type,
-    #                                 tapeEntity.name,
-    #                                 "material",
-    #                                 dcc_root=tapeEntity.dcc_root)
     resolver = resolve.Resolver()
     songPath = resolver.filepath_from_asset(tapeEntity, 
                                             tapeEntity.task,
                                             "material",
                                             workfileName,
-                                            "usd"
+                                            "ma"
                                             )
-    print("~~~~~~~~~~~~")
-    print(songPath)
     versionNumber = resolver.get_next_version_number(songPath)
 
     recorder = recorder or record.Recorder()
     with recorder.publish_record(songPath, versionNumber):
        writeMaterials(songPath)
+       recorder.status = record.Status.PUBLISHED
 
 def publishUsdAsset(tapeEntity, workfileName, recorder=None):   
-    # songEntity = song.Song.from_fields(tapeEntity.asset_type,
-    #                                 tapeEntity.name,
-    #                                 "usd",
-    #                                 dcc_root=tapeEntity.dcc_root)
     resolver = resolve.Resolver()
     songPath = resolver.filepath_from_asset(tapeEntity, 
                                             tapeEntity.task,
@@ -68,18 +59,15 @@ def publishUsdAsset(tapeEntity, workfileName, recorder=None):
                                             workfileName,
                                             "usd"
                                             )
-    versionNumber = resolver.get_next_version_number(songEntity.filepath)
+    versionNumber = resolver.get_next_version_number(songPath)
 
     recorder = recorder or record.Recorder()
     with recorder.publish_record(songPath, versionNumber):
        writeUsdAsset(songPath)   
+       recorder.status = record.Status.PUBLISHED
 
 
 def publishUsdComposition(tapeEntity, recorder=None):   
-    # songEntity = song.Song.from_fields(tapeEntity.asset_type,
-    #                                 tapeEntity.name,
-    #                                 "usdComposition",
-    #                                 dcc_root=tapeEntity.dcc_root)
     resolver = resolve.Resolver()
     songPath = resolver.filepath_from_asset(tapeEntity, 
                                             tapeEntity.task,
@@ -92,13 +80,13 @@ def publishUsdComposition(tapeEntity, recorder=None):
     recorder = recorder or record.Recorder()
     with recorder.publish_record(songPath, versionNumber):
        writeUsdComposition(songPath)   
+       recorder.status = record.Status.PUBLISHED
 
 def publishAsset():
     mayaFile = cmds.file(query=True, l=True)[0]
     workfileName = os.path.splitext(os.path.basename(mayaFile))[0]
     tapeEntity = tape.Tape.from_filepath(mayaFile)
     workfileArchivePath = tapeEntity.get_workfile_archive_path()
-    print(workfileArchivePath)
     recorder = record.Recorder()
     
     recorder.archive_workfile(workfileArchivePath, mayaFile)
