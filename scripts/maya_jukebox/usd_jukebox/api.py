@@ -1,5 +1,6 @@
 import multiverse
 import maya.cmds as cmds
+import core_jukebox.jukebox.tape as tape
 from core_jukebox.tape_record import resolve
 from core_jukebox.tape_record import record
 from core_jukebox import jukebox
@@ -34,52 +35,54 @@ def writeUsdComposition(outPath):
     multiverse.WriteComposition(outPath, usdNodes, opts)
 
 def publishMaterials(tapeEntity, recorder=None):   
-    trackEntity = jukebox.track.Track.from_fields(tapeEntity.asset_type,
-                                    tapeEntity.asset,
-                                    "material",
-                                    dcc_root=tapeEntity.dcc_root)
+    # songEntity = song.Song.from_fields(tapeEntity.asset_type,
+    #                                 tapeEntity.name,
+    #                                 "material",
+    #                                 dcc_root=tapeEntity.dcc_root)
 
-    versionNumber = resolve.Resolver().get_next_version_number(trackEntity.filepath)
+    songPath = resolve.Resolver().filepath_from_asset(tapeEntity, tapeEntity.task, "material")
+    print(songPath)
+    versionNumber = resolve.Resolver().get_next_version_number(songPath)
 
     recorder = recorder or record.Recorder()
-    with recorder.publish_record(outPath, versionNumber):
-       writeMaterials(outPath)
+    with recorder.publish_record(songPath, versionNumber):
+       writeMaterials(songPath)
 
 def publishUsdAsset(tapeEntity, recorder=None):   
-    trackEntity = jukebox.track.Track.from_fields(tapeEntity.asset_type,
-                                    tapeEntity.asset,
-                                    "usd",
-                                    dcc_root=tapeEntity.dcc_root)
+    # songEntity = song.Song.from_fields(tapeEntity.asset_type,
+    #                                 tapeEntity.name,
+    #                                 "usd",
+    #                                 dcc_root=tapeEntity.dcc_root)
 
-    versionNumber = resolve.Resolver().get_next_version_number(trackEntity.filepath)
+    songPath = resolve.Resolver().filepath_from_asset(tapeEntity, tapeEntity.task, "usd")
+    versionNumber = resolve.Resolver().get_next_version_number(songEntity.filepath)
 
     recorder = recorder or record.Recorder()
-    with recorder.publish_record(outPath, versionNumber):
-       writeUsdAsset(outPath)   
+    with recorder.publish_record(songPath, versionNumber):
+       writeUsdAsset(songPath)   
 
 
 def publishUsdComposition(tapeEntity, recorder=None):   
-    trackEntity = jukebox.track.Track.from_fields(tapeEntity.asset_type,
-                                    tapeEntity.asset,
-                                    "usdComposition",
-                                    dcc_root=tapeEntity.dcc_root)
-
-    versionNumber = resolve.Resolver().get_next_version_number(trackEntity.filepath)
+    # songEntity = song.Song.from_fields(tapeEntity.asset_type,
+    #                                 tapeEntity.name,
+    #                                 "usdComposition",
+    #                                 dcc_root=tapeEntity.dcc_root)
+    songPath = resolve.Resolver().filepath_from_asset(tapeEntity, tapeEntity.task, "usdComposition")
+    versionNumber = resolve.Resolver().get_next_version_number(songPath)
 
     recorder = recorder or record.Recorder()
-    with recorder.publish_record(outPath, versionNumber):
-       writeUsdComposition(outPath)   
+    with recorder.publish_record(songPath, versionNumber):
+       writeUsdComposition(songPath)   
 
 def publishAsset():
     mayaFile = cmds.file(query=True, l=True)[0]
     tapeEntity = jukebox.tape.Tape.from_filepath(mayaFile)
     workfileArchivePath = tapeEntity.get_workfile_archive_path()
-    print(workfileArchivePath)  # ---- wrong C:\Users\their\Documents\AJ_test\MAYA\MAYA/scenes/assets/sets/city/archive/model/None/
     recorder = record.Recorder()
     
     recorder.archive_workfile(workfileArchivePath, mayaFile)
     publishMaterials(tapeEntity, recorder=recorder)
-    publishUsdAsset(tapeEntity, recorder=recorder)
+    # publishUsdAsset(tapeEntity, recorder=recorder)
 
 def publishComposition():
     mayaFile = cmds.file(query=True, l=True)[0]

@@ -3,6 +3,8 @@ import os
 import glob
 import logging
 
+from maya import cmds
+
 from python_lib import parse
 from core_jukebox import os_common, templates
 
@@ -18,49 +20,64 @@ class Song(object):
     @classmethod
     def from_fields(cls, asset_type, asset, datatype, dcc_root=None):
         dcc_root = dcc_root or templates.MAYA_PROJECT_ROOT
-        filepath = templates.ASSET_OUTPUT.parse(DCC_ROOT=dcc_root,
+        filepath = templates.ASSET_OUTPUT.format(DCC_ROOT=dcc_root,
                                                 asset_type=asset_type,
                                                 asset=asset,
                                                 datatype=datatype)
-        files = [f for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath, f))]
+        project_root = cmds.workspace(q=True, dir=True, rd=True).split(dcc_root)[0]
+        filepath = os.path.join(project_root, filepath)
+        if not os.path.exists(filepath):
+            os.makedirs(filepath)
+        files = [os.path.join(filepath, f) for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath, f))]
         if not files:
             print("No Song found in: {}".format(filepath))
+            return
         if len(files)>1:
             print("More than 1 Tape found. Using first")
-        return cls(files[0])
+        return cls.from_filepath(files[0])
 
     @classmethod
     def from_filepath(cls, filepath):
+        print("*******")
+        print(filepath)
         if not os.path.exists(filepath):
-            # logging.warning("No Song found in: {} ".format(filepath))
+            logging.warning("No Song found in: {} ".format(filepath))
             return
+
         asset_parse = parse.search(templates.ASSET_OUTPUT, filepath)
         if asset_parse:
-            return cls(asset_parse.named.get("asset"), filepath)
+            return cls(filepath, 
+            asset=asset_parse.named.get("asset"),
+            datatype=asset_parse.named.get("datatype"),
+            asset_type=asset_parse.named.get("asset_type"),
+            )
 
         shot_parse = parse.search(templates.SHOT_OUTPUT, filepath)
         if shot_parse:
-            return cls(shot_parse.named.get("instance"), filepath)
+            return cls(filepath,
+            datatype=asset_parse.named.get("datatype"),
+            shot=asset_parse.named.get("shot"),
+            identifier=asset_parse.named.get("identifier"),
+            )
 
     def __init__(
         self,
-        name,
         filepath,
-        task=None,
+        name=None,
         shot=None,
         datatype=None,
-        instance=None,
+        identifier=None,
         asset=None,
+        asset_type=None
     ):
-        # TODO: name should be file basename
-        self.name = name
         self.filepath = filepath
-        self.name = os.path.splitext(os.path.basename(file_)[0]
+        self.name = name or os.path.splitext(os.path.basename(self.filepath))[0]
         self.task = task
         self.asset = asset
         self.shot = shot
         self.datatype = datatype
-        self.instance = instance
+        self.identifier = identifier
+        self.asset_type = asset_type
         self.root = os.path.dirname(self.filepath)
         self.archive = os.path.join(self.root, "archive")
         self.datatype = os.path.dirname(self.root)
@@ -90,9 +107,10 @@ class Song(object):
 
     def _get_versions(self):
         versions = []
+        print(self.archive)
         for version in os.listdir(self.archive):
             # Ignore if it's not the same representation or it doesn't have any version
-            rep = parse.parse(templates.VersionFile.TEMPLATE, version).named.get("rep")
+            rep = parse.parse(templates.VersionFile.TEMPLATE, version).named.get("representation")
             if (
                 not self.representation == str(rep)
                 or not parse.parse(templates.VersionFile.TEMPLATE, version)[

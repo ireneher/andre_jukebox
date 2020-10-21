@@ -12,13 +12,14 @@ class Tape(object):
     @classmethod
     def from_filepath(cls, filepath):
         if not os.path.exists(filepath):
-            # logging.warning("No Track found in: {} ".format(filepath))
+            # logging.warning("No Song found in: {} ".format(filepath))
             return
         asset_parse = parse.search(templates.ASSET_WORKAREA, filepath)
         if asset_parse:
             return AssetTape(asset_parse.named.get("asset"), 
                             asset_type=asset_parse.named.get("asset_type", None),
-                            task=asset_parse.named.get("task", None))
+                            task=asset_parse.named.get("task", None),
+                            workfile=os.path.splitext(os.path.basename(filepath))[0])
 
         shot_parse = parse.search(templates.SHOT_WORKAREA, filepath)
         if shot_parse:
@@ -66,7 +67,7 @@ class AssetTape(Tape):
             task=self.task,
         )
         self.project_root = project_root or jukebox.project.get_project_root()
-        self.project_root = r"C:\Users\their\Documents\AJ_test\MAYA"
+        self.project_root = r"C:/Users/their/Documents/AJ_test"
         self.absolute_path = os.path.join(self.project_root, self.root) if self.project_root and self.root else None
         self.workfile = workfile
 
@@ -109,7 +110,7 @@ class ShotTape(Tape):
         self.absolute_path = os.path.join(self.project_root, self.root)
         self.workfile=None
 
-    def get_workfile_archive_path(self, workfile_name):
+    def get_workfile_archive_path(self):
         path = templates.SHOT_WORKFILE_ARCHIVE.format(DCC_ROOT=self.dcc_root,
                                                 shot=self.name,
                                                 task=self.task,
@@ -122,7 +123,7 @@ class ShotTape(Tape):
         if datatype:
             path = os.path.join(datatype)
         return [
-            jukebox.track.Track(output)
+            jukebox.song.Song(output)
             for sub_folder in os.listdir(path)
             for output in os.listdir(sub_folder)
         ]

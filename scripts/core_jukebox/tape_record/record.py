@@ -28,7 +28,7 @@ class Recorder(object):
         """ Main engine to copy and archive the new published files.
 
         Args:
-            track (Track): Object that represents an output folder for a certain asset of a specific datatype.
+            song (Song): Object that represents an output folder for a certain asset of a specific datatype.
             debug_mode (bool, optional): Prints all returns without actually running. Defaults to False.
         """
         self.debug_mode = debug_mode
@@ -50,12 +50,12 @@ class Recorder(object):
 
         Args:
             filepath ([type]): [description]
-            track_type ([type], optional): [description]. Defaults to TrackTypes.SHOT.
+            song_type ([type], optional): [description]. Defaults to SongTypes.SHOT.
 
         Returns:
             [type]: [description]
         """
-        if not jukebox.track.Track.from_filepath(filepath):
+        if not jukebox.song.Song.from_filepath(filepath):
             self.create_dirs(os.path.dirname(filepath))
 
         return filepath
@@ -65,12 +65,12 @@ class Recorder(object):
 
         Args:
             filepath ([type]): [description]
-            track_type ([type], optional): [description]. Defaults to TrackTypes.SHOT.
+            song_type ([type], optional): [description]. Defaults to SongTypes.SHOT.
 
         Returns:
             [type]: [description]
         """
-        # TODO : This currently doesn't check for the track or even queries the template
+        # TODO : This currently doesn't check for the song or even queries the template
         archive_path = os.path.join(os.path.dirname(filepath), ARCHIVE_FOLDER)
         self.create_dirs(archive_path)
 
@@ -103,7 +103,7 @@ class Recorder(object):
             logger.error("Failed to record: {}".format(filepath))
             raise e
         else:
-            if self.status == Status.PUBLISHED and jukebox.track.Track.from_filepath(filepath):
+            if self.status == Status.PUBLISHED and jukebox.song.Song.from_filepath(filepath):
                 self.archive_file(self.archive_path, filepath, version_number)
 
                 self.status = Status.COMPLETE

@@ -1,6 +1,8 @@
 import os
 import maya.cmds as cmds 
-ROOT = "MAYA"
+
+from core_jukebox import templates
+from maya_jukebox.common import os_maya 
 
 def relative_repath(*args):
     print([a for a in args])
@@ -13,22 +15,19 @@ def relative_repath(*args):
     #     relPath = refPath.split(ROOT)[-1]
     #     print(relPath)
     #     cmds.file(relPath, loadReference=obj)
-
-    
     fileNodes = cmds.ls(type = "file") 
     for fileNode in fileNodes:
         texturePath = cmds.getAttr("{}.fileTextureName".format(fileNode))
-        relPath =  texturePath.split(ROOT)[-1]
+        relPath =  texturePath.split(templates.MAYA_PROJECT_ROOT)[-1]
         cmds.setAttr("{}.fileTextureName".format(relPath))
 
 def reference_check_callback(*args):
     # args = fileObject
-
-    # TODO: get this path from set project
-    project_dir = "C:/Users/their/Documents/AJ_test/MAYA"
+    project_dir = os_maya.find_project_root(cmds.file(query=True, l=True)[0])
     reference_path = args[0].rawFullName()
-    common_path = reference_path.split(ROOT)[-1]
+    common_path = reference_path.split(templates.MAYA_PROJECT_ROOT)[-1]
     new_reference_path = os.path.join(project_dir, common_path)
+    print("~*"*50)
     print "Callback changed this to %s" % new_reference_path
     args[0].setRawFullName(new_reference_path)  
 

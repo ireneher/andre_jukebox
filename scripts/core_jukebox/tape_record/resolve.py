@@ -17,7 +17,7 @@ class Resolver(object):
         pass
     
     @staticmethod
-    def filepath_from_asset(tape, task, datatype):
+    def filepath_from_asset(tape, task, datatype, workfile_name, representation):
         """Fills the template to get a filepath for an asset entity 
 
         Args:
@@ -29,22 +29,27 @@ class Resolver(object):
             asset=tape.name,
             task=task,
             datatype=datatype,
+            name=workfile_name,
+            representation=representation
         )
-        return os.path.join(jukebox.project.get_project_root(), output_template)
+        project_root = jukebox.project.get_project_root()
+        project_root = r"C:\Users\their\Documents\AJ_test"
+        return os.path.join(project_root, output_template)
 
-    def filepath_from_instance(self, tape, datatype, instance):
+    def filepath_from_instance(self, tape, datatype, instance, representation):
         """Fills the template to get a filepath for a shot entity 
 
         Args:
             shot (ShotTape): [description]
             instance ([type]): [description]
         """
-        output_template = templates.SHOT_OUTPUT.format(
+        output_template = templates.SHOT_INSTANCE_OUTPUT.format(
             DCC_ROOT=tape.dcc_root,
             shot=tape.name,
             task=tape.task,
             datatype=datatype,
             instance=instance,
+            representation=representation
         )
         return os.path.join(jukebox.project.get_project_root(), output_template)
 
@@ -59,9 +64,9 @@ class Resolver(object):
         return parse.parse(templates.Instance.TEMPLATE, instance_name)
 
     def get_next_version_number(self, filepath):
-        track_obj = jukebox.track.Track.from_filepath(filepath)
-        if track_obj and track_obj.current_version_number:
-            return track_obj.current_version_number + 1
+        song_obj = jukebox.song.Song.from_filepath(filepath)
+        if song_obj and song_obj.current_version_number:
+            return song_obj.current_version_number + 1
         else:
             return 1
 

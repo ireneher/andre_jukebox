@@ -47,4 +47,5 @@ def append_to_path():
     sys.path.append(
         os.path.dirname(maya_jukebox.__path__)
     )  # Adds andre_jukebox dir to the path
+    os.environ["PYTHONPATH"] += os.pathsep + os.path.dirname(maya_jukebox.__path__)
 

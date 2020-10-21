@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b11cf2f7-cd77-4e75-9050-18658bdd9e87" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/scripts/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/core_jukebox/jukebox/tape.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/core_jukebox/jukebox/tape.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/core_jukebox/jukebox/track.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/core_jukebox/jukebox/song.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/core_jukebox/tape_record/record.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/core_jukebox/tape_record/record.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/core_jukebox/tape_record/resolve.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/core_jukebox/tape_record/resolve.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/core_jukebox/templates.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/core_jukebox/templates.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/lib/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/maya_jukebox/lib/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/light_jukebox/build/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/maya_jukebox/light_jukebox/build/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/usd_jukebox/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/maya_jukebox/usd_jukebox/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/usd_jukebox/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/maya_jukebox/usd_jukebox/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/userSetup.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/userSetup.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1iwERjhLvErH0RiZkgN8OazH8f8" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b11cf2f7-cd77-4e75-9050-18658bdd9e87" name="Default Changelist" comment="" />
+      <created>1602810256016</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1602810256016</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="563" y="303" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog" timestamp="1602810502852">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="563" y="303" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.0.1536.824/-2560.-358.2048.1112@0.0.1536.824" timestamp="1602810502852" />
+    <state x="478" y="0" width="579" height="824" key="find.popup" timestamp="1602810861432">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="478" y="0" width="579" height="824" key="find.popup/0.0.1536.824/-2560.-358.2048.1112@0.0.1536.824" timestamp="1602810861432" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1602810711915">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824/-2560.-358.2048.1112@0.0.1536.824" timestamp="1602810711915" />
+  </component>
+</project>

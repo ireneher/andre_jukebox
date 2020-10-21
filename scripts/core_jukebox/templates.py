@@ -1,6 +1,6 @@
 class VersionFile(object):
 
-    TEMPLATE = "{asset}.{:04}{rep}"
+    TEMPLATE = "{asset}.{:04}{representation}"
     # Version will be index 0 since is the only non-positional
     version = 0
 
@@ -15,25 +15,30 @@ class Instance(object):
 MAYA_PROJECT_ROOT = "MAYA"
 
 ASSET = "{DCC_ROOT}/scenes/assets/{asset_type}/{asset}/"
-ASSET = "{DCC_ROOT}/scenes/assets/{asset_type}/city/workarea/model/building_groups/{asset}/"
+#ASSET = "{DCC_ROOT}/scenes/assets/{asset_type}/city/workarea/model/building_groups/{asset}/"
 
 SHOT = "{DCC_ROOT}/scenes/Concept_Animatic/SHOTS/{shot}/{task}/"
 
 ASSET_WORKAREA = ASSET + "workarea/{task}/"
-ASSET_WORKAREA = ASSET
+# ASSET_WORKAREA = ASSET
 
-ASSET_OUTPUT = "{DCC_ROOT}/scenes/ASSETS/{asset_type}/{asset}/" + "outputs/{datatype}/"
+ASSET_OUTPUT_ROOT = ASSET + "outputs/{datatype}/"
 
-ASSET_ARCHIVE = ASSET_OUTPUT + "archive/"
+ASSET_OUTPUT = ASSET_OUTPUT_ROOT + "{name}.{representation}"
 
-ASSET_WORKFILE_ARCHIVE = ASSET + "archive/{task}/{name}/"
+ASSET_ARCHIVE = ASSET_OUTPUT_ROOT + "archive/{version}/{name}.{representation}"
+
+ASSET_WORKFILE_ARCHIVE = ASSET + "archive/{task}/{name}/{timestamp}.{representation}"
 
 SHOT_WORKAREA = SHOT + "workarea/{task}/"
 
-SHOT_OUTPUT = SHOT + "outputs/{datatype}/{instance}/"
+SHOT_OUTPUT_ROOT = SHOT + "outputs/{datatype}/"
 
-SHOT_ARCHIVE = SHOT_OUTPUT + "archive/"
+# ID token is INSTANCE for Instance publishes, TASK for Shot publishes
+SHOT_OUTPUT = SHOT_OUTPUT_ROOT + "{identifier}/{identifier}.{representation}"
 
-SHOT_WORKFILE_ARCHIVE = SHOT + "archive/{name}/"
+SHOT_ARCHIVE = SHOT_OUTPUT + "archive/{version}/{name}.{representation}"
+
+SHOT_WORKFILE_ARCHIVE = SHOT + "archive/{name}/{timestamp}.{representation}"
 
 

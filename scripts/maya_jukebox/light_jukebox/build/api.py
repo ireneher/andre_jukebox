@@ -1,7 +1,7 @@
 import json
 import maya.cmds as cmds 
 
-from core_jukebox.jukebox import track, tape
+from core_jukebox.jukebox import song, tape
 from ligtht_jukebox.build import constants
 
 class Builder(object):
@@ -9,11 +9,11 @@ class Builder(object):
 # (*)
 # Get current scene (requires saving before building?), get shot
 # Get ShotTape from scene filepath
-# Get outputs (Tracks) from ShotTape
-# Get asset Tracks (from json config, just need to get current version)
+# Get outputs (Songs) from ShotTape
+# Get asset Songs (from json config, just need to get current version)
 
 # objects (main=Builder):
-#   resolver (*) -> Dict of {group/dept: Tracks}
+#   resolver (*) -> Dict of {group/dept: Songs}
 #   loader
 #       (group, reference_path)  / exception: vbd
 
@@ -21,34 +21,34 @@ class Resolver():
     def __init__(scene_path=None):
         scene_path = scene_path or cmds.file(q=True, sn=True)
         self.shot_tape = tape.ShotTape.from_filepath(scene_path)
-        self.shot_tracks = self.get_shot_tracks()
-        self.asset_tracks = self.get_shot_tracks()
-        self.tracks = self.consolidate_tracks()
+        self.shot_songs = self.get_shot_songs()
+        self.asset_songs = self.get_shot_songs()
+        self.songs = self.consolidate_songs()
     
-    def get_shot_tracks(self):
+    def get_shot_songs(self):
         shot_products = {}  # {datatype: list of latest_version filepaths}
         for datatype in constants.SHOT_PRODUCT_DATATYPES:
             shot_products[datatype] = []
-            for shot_track in self.shot_tape.get_outputs(datatype=datatype):
-                shot_products[datatype].extend(shot_track.get_latest())
+            for shot_song in self.shot_tape.get_outputs(datatype=datatype):
+                shot_products[datatype].extend(shot_song.get_latest())
 
         return shot_products
 
-    def get_asset_tracks(self):
+    def get_asset_songs(self):
         asset_products = {}
         # TODO this is to be an excel at project level
         for asset_type, asset, datatype in constants.ASSET_PRODUCTS:
-            asset_track = track.Track.from_fields(asset_type, asset, datatype)
-            asset_products[datatype].extend(asset_track.get_latest())
+            asset_song = song.Song.from_fields(asset_type, asset, datatype)
+            asset_products[datatype].extend(asset_song.get_latest())
         return asset_products
     
-    def consolidate_tracks(self):
-        return self.shot_tracks.update(self.asset_tracks)
+    def consolidate_songs(self):
+        return self.shot_songs.update(self.asset_songs)
 
 class Builder():
     def __init__():
         resolver = Resolver()
-        data = resolver.tracks
+        data = resolver.songs
         for datatype, filepaths in data.items():
             print("-----Processing {}-----".format(datatype))
             if datatype == "caches":
