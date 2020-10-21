@@ -17,11 +17,13 @@ def writeMaterials(outPath):
     if not mats:
         return
     cmds.select(mats, replace=True)
-    cmds.file(outPath, exportSelected=True, type="mayaAscii")
+    cmds.file(outPath, exportSelected=True, type="mayaAscii", force=True)
 
 def writeUsdAsset(outPath):   
     assemblies = cmds.ls(assemblies=True)
     rootLoc = cmds.listRelatives(assemblies, type="locator")
+    if not rootLoc:
+	    rootLoc = [assemblies.remove(cmds.listRelatives(cam, parent=True)[0]) for cam in cmds.ls(type="camera")][0]
 
     opts = multiverse.AssetWriteOptions()
     opts.writeNormals = True
