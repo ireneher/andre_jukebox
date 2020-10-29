@@ -21,10 +21,9 @@ def relative_repath(*args):
         relPath =  texturePath.split(templates.MAYA_PROJECT_ROOT)[-1]
         cmds.setAttr("{}.fileTextureName".format(relPath))
 
-def reference_check_callback(*args, filepath=None):
+def reference_check_callback(*args):
     # args = fileObject
-    filepath = filepath or cmds.file(query=True, l=True)[0]
-    project_dir = os_maya.find_project_root(filepath)
+    project_dir = os_maya.find_project_root(cmds.file(query=True, l=True)[0])
     reference_path = args[0].rawFullName()
     common_path = reference_path.split(templates.MAYA_PROJECT_ROOT)[-1]
     new_reference_path = os.path.join(project_dir, common_path)
