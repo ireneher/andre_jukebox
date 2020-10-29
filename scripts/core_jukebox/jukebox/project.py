@@ -15,6 +15,7 @@ def find_project_from_path(path):
 
 
 def get_project_root():
+    return r"C:/Users/their/Documents/AJ_test"
     return find_project_from_path(os.path.dirname(os.path.abspath(__file__)))
 
 

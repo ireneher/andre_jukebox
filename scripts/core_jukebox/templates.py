@@ -14,12 +14,13 @@ class Instance(object):
 
 MAYA_PROJECT_ROOT = "MAYA"
 
-#ASSET = "{DCC_ROOT}/scenes/assets/{asset_type}/{asset}/"
-ASSET = "{DCC_ROOT}/scenes/assets/{asset_type}/city/workarea/model/building_groups/{asset}/"
+ASSET = "{DCC_ROOT}/scenes/assets/{asset_type}/{asset}/"
+ASSET = "{DCC_ROOT}/scenes/assets/{asset_type}/city/"
 
 SHOT = "{DCC_ROOT}/scenes/Concept_Animatic/SHOTS/{shot}/{task}/"
 
 ASSET_WORKAREA = ASSET + "workarea/{task}/"
+ASSET_WORKAREA = ASSET + "workarea/{task}/model_sources/buildings/{asset}/"
 
 ASSET_OUTPUT_ROOT = ASSET + "outputs/{datatype}/"
 

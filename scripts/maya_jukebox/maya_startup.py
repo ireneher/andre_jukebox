@@ -43,9 +43,10 @@ def load_project_plugins():
 
 
 def append_to_path():
-    print("Appending {}".format(os.path.dirname(maya_jukebox.__path__)))
+    maya_jukebox_path = maya_jukebox.__path__[0]
+    print("Appending {}".format(os.path.dirname(maya_jukebox_path)))
     sys.path.append(
-        os.path.dirname(maya_jukebox.__path__)
+        os.path.dirname(maya_jukebox_path)
     )  # Adds andre_jukebox dir to the path
-    os.environ["PYTHONPATH"] += os.pathsep + os.path.dirname(maya_jukebox.__path__)
+    os.environ["PYTHONPATH"] += os.pathsep + os.path.dirname(maya_jukebox_path)
 

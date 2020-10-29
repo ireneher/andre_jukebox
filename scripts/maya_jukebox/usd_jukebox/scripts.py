@@ -2,13 +2,16 @@ import sys
 import os
 
 from PySide2 import QtWidgets
+import maya.mel as mel
 import maya.standalone
 import maya.cmds as cmds
 
+sys.path.append(r"C:\Users\their\dev\andre_jukebox\scripts")
+
 from maya_jukebox import lib as maya_lib
-from maya_jukebox import usd_jukebox
 from core_jukebox import jukebox
 from maya_jukebox.common import file_reference
+from maya_jukebox import maya_startup
 
 ROOT_FOLDER = r"C:\Users\their\Documents\AJ_test\MAYA\scenes\ASSETS\sets\city\workarea\model\building_groups"
 
@@ -18,16 +21,21 @@ def launch():
     cmds.loadPlugin("objExport")
     cmds.loadPlugin("mtoa")
     cmds.loadPlugin("MultiverseForMaya")
+    from maya_jukebox import usd_jukebox
+
     for dirpath, dirnames, files in os.walk(ROOT_FOLDER):
         for file in files:
+            if not file.endswith(("ma", "mb")):
+                continue
             filepath = os.path.join(dirpath, file)
+            filepath = filepath.replace("\\", "/")
             print("Processing {}".format(filepath))
             cmds.file(new=True, force=True)  # clear scene
-            cmds.file(filepath, i=True, force=True)
-            usd_jukebox.api.publishAsset()
+            cmds.file(filepath, open=True, force=True)
+            usd_jukebox.api.publishAsset(mayaFile=filepath)
             mel.eval("cleanUpScene 3")
             cmds.file(save=True, type="mayaAscii")
-            maya_lib.utils.remove_student_license(asset_file)
+            maya_lib.utils.remove_student_license(filepath)
 
 
     # window = ui.Dialog()
@@ -58,7 +66,7 @@ def replace_refs_with_usds():
     gpu_shapes = cmds.ls(type="gpuCache")
     if not gpu_shapes:
         return
-    gpu_caches = [(cmds.listRelatives(gpu_shape, parent=True)[0], cmds.getAttr("{}.cacheFileName".format(gpu_shape)) for gpu_shape in gpu_shapes]
+    gpu_caches = [(cmds.listRelatives(gpu_shape, parent=True)[0], cmds.getAttr("{}.cacheFileName".format(gpu_shape))) for gpu_shape in gpu_shapes]
     for transform, filepath in gpu_caches:
         if not filepath:
             continue

@@ -7,7 +7,6 @@ from core_jukebox.tape_record import resolve
 from core_jukebox.tape_record import record
 from core_jukebox import jukebox
 
-
 import maya_jukebox.lib.utils as maya_utils
 
 def writeMaterials(outPath):
@@ -25,6 +24,8 @@ def writeUsdAsset(outPath):
     if not rootLoc:
 	    rootLoc = [assemblies.remove(cmds.listRelatives(cam, parent=True)[0]) for cam in cmds.ls(type="camera")][0]
 
+    print(outPath)
+    print(rootLoc)
     opts = multiverse.AssetWriteOptions()
     opts.writeNormals = True
 
@@ -84,8 +85,8 @@ def publishUsdComposition(tapeEntity, recorder=None):
        writeUsdComposition(songPath)   
        recorder.status = record.Status.PUBLISHED
 
-def publishAsset():
-    mayaFile = cmds.file(query=True, l=True)[0]
+def publishAsset(mayaFile=None):
+    mayaFile = mayaFile or cmds.file(query=True, l=True)[0]
     workfileName = os.path.splitext(os.path.basename(mayaFile))[0]
     tapeEntity = tape.Tape.from_filepath(mayaFile)
     workfileArchivePath = tapeEntity.get_workfile_archive_path()
@@ -95,8 +96,8 @@ def publishAsset():
     publishMaterials(tapeEntity, workfileName, recorder=recorder)
     publishUsdAsset(tapeEntity, workfileName, recorder=recorder)
 
-def publishComposition():
-    mayaFile = cmds.file(query=True, l=True)[0]
+def publishComposition(mayaFile=None):
+    mayaFile = mayaFile or cmds.file(query=True, l=True)[0]
     workfileName = os.path.splitext(os.path.basename(mayaFile))[0]
     tapeEntity = tape.Tape.from_filepath(mayaFile)
     workfileArchivePath = tapeEntity.get_workfile_archive_path()
