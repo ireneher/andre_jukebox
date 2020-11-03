@@ -81,6 +81,11 @@ class FileReference(node.MayaNode):
         return self._fn_reference.name()
 
     @property
+    def top_node(self):
+        # TODO
+        return 
+
+    @property
     def filepath(self):
         # TODO : THis should be changed to a relative path
         return self._fn_reference.fileName(True, False, False)

@@ -27,6 +27,7 @@ def reference_check_callback(*args):
     reference_path = args[0].rawFullName()
     common_path = reference_path.split(templates.MAYA_PROJECT_ROOT)[-1]
     new_reference_path = os.path.join(project_dir, common_path)
+    new_reference_path = common_path
     print("~*"*50)
     print "Callback changed this to %s" % new_reference_path
     args[0].setRawFullName(new_reference_path)  

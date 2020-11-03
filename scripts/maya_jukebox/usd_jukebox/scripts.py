@@ -1,7 +1,7 @@
 import sys
 import os
 
-from PySide2 import QtWidgets
+#from PySide2 import QtWidgets
 import maya.mel as mel
 import maya.standalone
 import maya.cmds as cmds
@@ -14,6 +14,43 @@ from maya_jukebox.common import file_reference
 from maya_jukebox import maya_startup
 
 ROOT_FOLDER = r"C:\Users\their\Documents\AJ_test\MAYA\scenes\ASSETS\sets\city\workarea\model\building_groups"
+
+def replace_refs_with_usds():
+    refs = file_reference.FileReference.ls_references()
+    print("heeyyyyyyyyyyyyyy")
+    print(refs)
+    for ref in refs:
+        xform_matrix = cmds.xform(ref.top_node, q=True, matrix=True)
+        tape_obj = jukebox.tape.AssetTape.from_filepath(ref.filepath)
+        asset_name = os.path.basename(os.path.dirname(ref.filepath))
+        song_obj = jukebox.song.Song.from_fields(tape_obj.asset_type, "env", "usd")
+        if not song_obj:
+            song_obj = jukebox.song.Song.from_fields(tape_obj.asset_type, "sets", "usdComposition")
+        print("---- Loading USD for {} ----- ".format(asset_name))
+        print(song_obj.filepath)
+        usd_compound = mv.CreateUsdCompound(song_obj.filepath)
+        cmds.xform(usd_compound, q=True, matrix=xform_matrix)
+
+    for ref in refs:
+        cmds.file(removeReference=ref.filepath, force=True)
+    gpu_shapes = cmds.ls(type="gpuCache")
+    if not gpu_shapes:
+        return
+    gpu_caches = [(cmds.listRelatives(gpu_shape, parent=True)[0], cmds.getAttr("{}.cacheFileName".format(gpu_shape))) for gpu_shape in gpu_shapes]
+    for transform, filepath in gpu_caches:
+        if not filepath:
+            continue
+        xform_matrix = cmds.xform(transform, q=True, matrix=True)
+        tape_obj = jukebox.tape.AssetTape.from_filepath(filepath)
+        song_obj = jukebox.song.Song.from_fields(tape_obj.asset_type, tape_obj.name, "usd")
+        usd_compound = mv.CreateUsdCompound(song_obj.filepath)
+        cmds.xform(usd_compound, q=True, matrix=xform_matrix)
+
+    try:
+        cmds.delete(gpu_shapes)
+    except:
+        pass
+
 
 def launch():
     # app = QtWidgets.QApplication(sys.argv)
@@ -32,7 +69,9 @@ def launch():
             print("Processing {}".format(filepath))
             cmds.file(new=True, force=True)  # clear scene
             cmds.file(filepath, open=True, force=True)
-            usd_jukebox.api.publishAsset(mayaFile=filepath)
+            replace_refs_with_usds()
+            #usd_jukebox.api.publishAsset(mayaFile=filepath)
+            usd_jukebox.api.publishComposition(mayaFile=filepath)
             mel.eval("cleanUpScene 3")
             cmds.file(save=True, type="mayaAscii")
             maya_lib.utils.remove_student_license(filepath)
@@ -50,34 +89,4 @@ def launch():
 if __name__ == "__main__":
     sys.exit(launch())
 
-
-def replace_refs_with_usds():
-    refs = file_reference.ls_references()
-    for ref in refs:
-        xform_matrix = cmds.xform(ref.top_node, q=True, matrix=True)
-        tape_obj = jukebox.tape.AssetTape.from_filepath(ref.filepath)
-        song_obj = jukebox.song.Song.from_fields(tape_obj.asset_type, tape_obj.name, "usd")
-        usd_compound = mv.CreateUsdCompound(song_obj.filepath)
-        cmds.xform(usd_compound, q=True, matrix=xform_matrix)
-
-    for ref in refs:
-        cmds.file(removeReference=ref.filepath, force=True)
-                    
-    gpu_shapes = cmds.ls(type="gpuCache")
-    if not gpu_shapes:
-        return
-    gpu_caches = [(cmds.listRelatives(gpu_shape, parent=True)[0], cmds.getAttr("{}.cacheFileName".format(gpu_shape))) for gpu_shape in gpu_shapes]
-    for transform, filepath in gpu_caches:
-        if not filepath:
-            continue
-        xform_matrix = cmds.xform(transform, q=True, matrix=True)
-        tape_obj = jukebox.tape.AssetTape.from_filepath(filepath)
-        song_obj = jukebox.song.Song.from_fields(tape_obj.asset_type, tape_obj.name, "usd")
-        usd_compound = mv.CreateUsdCompound(song_obj.filepath)
-        cmds.xform(usd_compound, q=True, matrix=xform_matrix)
-
-    try:
-        cmds.delete(gpu_shapes)
-    except:
-        pass
 

@@ -20,18 +20,17 @@ def writeMaterials(outPath):
 
 def writeUsdAsset(outPath):   
     assemblies = cmds.ls(assemblies=True)
-    rootLoc = cmds.listRelatives(assemblies, type="locator")
-    if not rootLoc:
-	    rootLoc = [assemblies.remove(cmds.listRelatives(cam, parent=True)[0]) for cam in cmds.ls(type="camera")][0]
+    [assemblies.remove(cmds.listRelatives(cam, parent=True)[0]) for cam in cmds.ls(type="camera")][0]
+    rootNode = assemblies[0]
 
     print(outPath)
-    print(rootLoc)
+    print(rootNode)
     opts = multiverse.AssetWriteOptions()
     opts.writeNormals = True
 
     opts.writeUVs = True
     opts.writeMaterialAssignment = True
-    multiverse.WriteAsset(outPath, rootLoc, opts)
+    multiverse.WriteAsset(outPath, rootNode, opts)
 
 
 def writeUsdComposition(outPath):   
@@ -70,7 +69,7 @@ def publishUsdAsset(tapeEntity, workfileName, recorder=None):
        recorder.status = record.Status.PUBLISHED
 
 
-def publishUsdComposition(tapeEntity, recorder=None):   
+def publishUsdComposition(tapeEntity, workfileName, recorder=None):   
     resolver = resolve.Resolver()
     songPath = resolver.filepath_from_asset(tapeEntity, 
                                             tapeEntity.task,
@@ -93,8 +92,8 @@ def publishAsset(mayaFile=None):
     recorder = record.Recorder()
     
     recorder.archive_workfile(workfileArchivePath, mayaFile)
-    publishMaterials(tapeEntity, workfileName, recorder=recorder)
-    publishUsdAsset(tapeEntity, workfileName, recorder=recorder)
+    publishMaterials(tapeEntity, tapeEntity.name, recorder=recorder)
+    publishUsdAsset(tapeEntity, tapeEntity.name, recorder=recorder)
 
 def publishComposition(mayaFile=None):
     mayaFile = mayaFile or cmds.file(query=True, l=True)[0]
@@ -104,4 +103,4 @@ def publishComposition(mayaFile=None):
     recorder = record.Recorder()
     
     recorder.archive_workfile(workfileArchivePath, mayaFile)
-    publishUsdComposition(tapeEntity, workfileName, recorder=recorder)
+    publishUsdComposition(tapeEntity, tapeEntity.name, recorder=recorder)
