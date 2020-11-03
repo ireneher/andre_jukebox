@@ -3,7 +3,8 @@ import maya.cmds as cmds
 
 
 class MayaNode(object):
-    """Based on the blogpost by toadstorm 
+    """
+    Based on this: https://www.toadstorm.com/blog/?p=628
     """
 
     def __init__(self, node_name):
