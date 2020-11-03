@@ -3,12 +3,13 @@ import maya.OpenMaya as om
 
 from maya_jukebox.common import node
 
-# Default maya thing that I'm still not sure what it does
+# Default nodes that maya returns
 BLACKLIST = ["sharedReferenceNode"]
 
-
 class FileReference(node.MayaNode):
-    """Inspired by the pymel FileReference, without taking ages to load
+    """
+    Object representation of maya reference similar to pymel's FileReference.
+    Wrapper arround MFnReference.
     """
 
     @classmethod
@@ -40,7 +41,7 @@ class FileReference(node.MayaNode):
             refNodes.append(it.thisNode())
             it.next()
 
-        # Kinda shitty...
+        # TODO: Make it less shitty...
         for idx in range(refNodes.length()):
             if not om.MFnReference(refNodes[idx]).name() in BLACKLIST:
                 # Make sure it doesn't add empty references (from clipboard paste)
@@ -88,4 +89,16 @@ class FileReference(node.MayaNode):
     @filepath.setter
     def filepath(self, new_filepath):
         cmds.file(new_filepath, loadReference=self.ref_node)
+
+    @property
+    def is_loaded(self):
+        return self._fn_reference.isLoaded()
+
+    @property
+    def top_nodes(self):
+        return cmds.ls(self.nodes, assemblies=True)
+
+    @property
+    def nodes(self):
+        return cmds.referenceQuery(self.ref_node, nodes=True)
 
