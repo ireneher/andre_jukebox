@@ -5,7 +5,6 @@ from core_jukebox import templates
 from maya_jukebox.common import os_maya 
 
 def relative_repath(*args):
-    print([a for a in args])
     print("----------------- TRIGGERED -------------")
     # referenceNodes = cmds.filePathEditor(query=True, listFiles="", attributeOnly=True, byType="reference")
     # print(referenceNodes)
@@ -25,11 +24,11 @@ def reference_check_callback(*args):
     # args = fileObject
     project_dir = os_maya.find_project_root(cmds.file(query=True, l=True)[0])
     reference_path = args[0].rawFullName()
-    common_path = reference_path.split(templates.MAYA_PROJECT_ROOT)[-1]
-    new_reference_path = os.path.join(project_dir, common_path)
+    common_path = reference_path.split("{}//".format(templates.MAYA_PROJECT_ROOT))[-1]
+    #new_reference_path = os.path.join(project_dir, common_path)
     new_reference_path = common_path
     print("~*"*50)
-    print "Callback changed this to %s" % new_reference_path
+    print "Callback changed {} to {}".format(reference_path, new_reference_path)
     args[0].setRawFullName(new_reference_path)  
 
     #OpenMaya.MScriptUtil.setBool(args[0], True)

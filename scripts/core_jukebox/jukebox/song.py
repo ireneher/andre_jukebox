@@ -18,12 +18,14 @@ class Song(object):
         -output.abc
     """
     @classmethod
-    def from_fields(cls, asset_type, asset, datatype, dcc_root=None):
+    def from_fields(cls, asset_type, asset, datatype, name=None, repr=None, dcc_root=None):
         dcc_root = dcc_root or templates.MAYA_PROJECT_ROOT
-        filepath = templates.ASSET_OUTPUT.format(DCC_ROOT=dcc_root,
-                                                asset_type=asset_type,
-                                                asset=asset,
-                                                datatype=datatype)
+        filepath = templates.ASSET_OUTPUT_ROOT.format(DCC_ROOT=dcc_root,
+                                                    asset_type=asset_type,
+                                                    asset=asset,
+                                                    datatype=datatype)
+        print("*****************")
+        print(filepath)
         project_root = cmds.workspace(q=True, dir=True, rd=True).split(dcc_root)[0]
         filepath = os.path.join(project_root, filepath)
         if not os.path.exists(filepath):
@@ -31,7 +33,13 @@ class Song(object):
         files = [os.path.join(filepath, f) for f in os.listdir(filepath) if os.path.isfile(os.path.join(filepath, f))]
         if not files:
             print("No Song found in: {} \n(Potential first publish)".format(filepath))
-            return
+            filepath = templates.ASSET_OUTPUT.format(DCC_ROOT=dcc_root,
+                                                asset_type=asset_type,
+                                                asset=asset,
+                                                datatype=datatype,
+                                                name=name,
+                                                representation=repr)
+            return cls.from_filepath(filepath)
         if len(files)>1:
             print("More than 1 Tape found. Using first")
         return cls.from_filepath(files[0])
@@ -48,6 +56,7 @@ class Song(object):
             asset=asset_parse.named.get("asset"),
             datatype=asset_parse.named.get("datatype"),
             asset_type=asset_parse.named.get("asset_type"),
+            name=asset_parse.named.get("name"),
             )
 
         shot_parse = parse.search(templates.SHOT_OUTPUT, filepath)
@@ -56,6 +65,7 @@ class Song(object):
             datatype=asset_parse.named.get("datatype"),
             shot=asset_parse.named.get("shot"),
             identifier=asset_parse.named.get("identifier"),
+            name=asset_parse.named.get("name"),
             )
 
     def __init__(

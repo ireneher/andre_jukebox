@@ -18,7 +18,7 @@ PROJECT_PLUGINS = (
 def set_project():
 
     project_root = os_maya.find_project_root(os.path.dirname(os.path.abspath(__file__)))
-
+    project_root = r"C:\Users\their\Documents\AJ_test\MAYA"
     try:
         cmds.workspace(project_root, openWorkspace=True)
     except:

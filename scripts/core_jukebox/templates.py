@@ -25,8 +25,7 @@ ASSET_WORKAREA = ASSET + "workarea/{task}/model_sources/TEMP/{asset}/"
 ASSET_WORKAREA = ASSET + "workarea/{task}/building_groups/{asset}/"
 
 ASSET_OUTPUT_ROOT = ASSET + "outputs/{datatype}/"
-ASSET_OUTPUT_ROOT = "{DCC_ROOT}/scenes/assets/env/{asset}/outputs/{datatype}/"
-ASSET_OUTPUT_ROOT = "{DCC_ROOT}/scenes/assets/sets/{asset}/outputs/{datatype}/"
+ASSET_OUTPUT_ROOT = "{DCC_ROOT}/scenes/assets/{asset_type}/{asset}/outputs/{datatype}/"
 
 ASSET_OUTPUT = ASSET_OUTPUT_ROOT + "{name}.{representation}"
 

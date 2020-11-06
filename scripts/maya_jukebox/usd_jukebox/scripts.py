@@ -15,24 +15,46 @@ from maya_jukebox import maya_startup
 
 ROOT_FOLDER = r"C:\Users\their\Documents\AJ_test\MAYA\scenes\ASSETS\sets\city\workarea\model\building_groups"
 
-def replace_refs_with_usds():
+def get_songs(asset_name):
+    usd_song_obj = jukebox.song.Song.from_fields("env", asset_name, "usd", asset_name, "usd")
+    mat_song_obj = jukebox.song.Song.from_fields("env", asset_name, "material", asset_name, "ma")
+    if not usd_song_obj:
+        usd_song_obj = jukebox.song.Song.from_fields("sets", asset_name, "usdComposition", asset_name, "usd")
+        mat_song_obj = jukebox.song.Song.from_fields("sets", asset_name, "material", asset_name, "ma")
+    return usd_song_obj, mat_song_obj
+
+def replace_refs_with_usds(): 
+    import multiverse as mv   
     refs = file_reference.FileReference.ls_references()
     print("heeyyyyyyyyyyyyyy")
     print(refs)
     for ref in refs:
-        xform_matrix = cmds.xform(ref.top_node, q=True, matrix=True)
-        tape_obj = jukebox.tape.AssetTape.from_filepath(ref.filepath)
-        asset_name = os.path.basename(os.path.dirname(ref.filepath))
-        song_obj = jukebox.song.Song.from_fields(tape_obj.asset_type, "env", "usd")
-        if not song_obj:
-            song_obj = jukebox.song.Song.from_fields(tape_obj.asset_type, "sets", "usdComposition")
-        print("---- Loading USD for {} ----- ".format(asset_name))
-        print(song_obj.filepath)
-        usd_compound = mv.CreateUsdCompound(song_obj.filepath)
-        cmds.xform(usd_compound, q=True, matrix=xform_matrix)
+        if len(ref.top_nodes)>1:
+            print("Using first top node for reference {}".format(ref))
 
-    for ref in refs:
-        cmds.file(removeReference=ref.filepath, force=True)
+        print ("Ref: {}".format(ref))
+        print ("Ref Loaded: {}".format(ref.is_loaded))
+        print ("Ref nodes: {}".format(ref.top_nodes))
+
+        try:
+            xform_matrix = cmds.xform(ref.nodes[0], q=True, matrix=True)
+        except IndexError:
+            print(ref.filepath)
+            continue
+        #tape_obj = jukebox.tape.AssetTape.from_filepath(ref.filepath)
+        asset_name = os.path.basename(os.path.dirname(ref.filepath))
+        print("---- Loading USD for {} ----- ".format(asset_name))
+        song_obj, mat_song_obj = get_songs(asset_name)
+        print(song_obj)
+        print(mat_song_obj)
+        if not song_obj:
+            continue
+        print("Resolved filepath: {}".format(song_obj.filepath))
+        usd_compound = mv.CreateUsdCompound(song_obj.filepath)
+        cmds.xform(usd_compound, matrix=xform_matrix)
+
+    # for ref in refs:
+    #     cmds.file(removeReference=ref.filepath, force=True)
     gpu_shapes = cmds.ls(type="gpuCache")
     if not gpu_shapes:
         return
@@ -41,10 +63,21 @@ def replace_refs_with_usds():
         if not filepath:
             continue
         xform_matrix = cmds.xform(transform, q=True, matrix=True)
-        tape_obj = jukebox.tape.AssetTape.from_filepath(filepath)
-        song_obj = jukebox.song.Song.from_fields(tape_obj.asset_type, tape_obj.name, "usd")
+        #tape_obj = jukebox.tape.AssetTape.from_filepath(filepath)
+        asset_name = os.path.basename(os.path.dirname(ref.filepath))
+        song_obj, mat_song_obj = get_songs(asset_name)
+        print ("Loading usd: {}".format(song_obj.filepath))
+        # Load USD
         usd_compound = mv.CreateUsdCompound(song_obj.filepath)
-        cmds.xform(usd_compound, q=True, matrix=xform_matrix)
+        # Load Material
+        cmds.file(mat_song_obj.filepath, reference=True)
+        # Set material namespace
+        #mv.AddAttributeSetOverride(usd_compound, primPath,)
+        mvSetNode = cmds.createNode("mvSet", name="mvSet_{}".format(usd_compound))
+        cmds.setAttr("{}.materialNamespaceEnable".format(mvSetNode), 1.0)
+        cmds.setAttr("{}.materialNamespace".format(mvSetNode), asset_name)
+        cmds.connectAttr("{}.message".format(mvSetNode), "{}Shape.ItemOverrides.ItemAttribute".format(usd_compound))
+        cmds.xform(usd_compound, matrix=xform_matrix)
 
     try:
         cmds.delete(gpu_shapes)
@@ -56,11 +89,16 @@ def launch():
     # app = QtWidgets.QApplication(sys.argv)
     maya.standalone.initialize()
     cmds.loadPlugin("objExport")
+    cmds.loadPlugin("gpuCache")
     cmds.loadPlugin("mtoa")
     cmds.loadPlugin("MultiverseForMaya")
+    import multiverse as mv
+
+
     from maya_jukebox import usd_jukebox
 
     for dirpath, dirnames, files in os.walk(ROOT_FOLDER):
+        dirnames[:] = [d for d in dirnames if d not in ("incrementalSave")]
         for file in files:
             if not file.endswith(("ma", "mb")):
                 continue
@@ -68,13 +106,14 @@ def launch():
             filepath = filepath.replace("\\", "/")
             print("Processing {}".format(filepath))
             cmds.file(new=True, force=True)  # clear scene
-            cmds.file(filepath, open=True, force=True)
+            cmds.file(filepath, open=True, force=True, loadReferenceDepth="all")
             replace_refs_with_usds()
             #usd_jukebox.api.publishAsset(mayaFile=filepath)
+            cmds.file(rename=r"C:\Users\their\Desktop\block01_A.ma")
+            cmds.file(save=True, type="mayaAscii", force=True)
             usd_jukebox.api.publishComposition(mayaFile=filepath)
             mel.eval("cleanUpScene 3")
-            cmds.file(save=True, type="mayaAscii")
-            maya_lib.utils.remove_student_license(filepath)
+            # maya_lib.utils.remove_student_license(filepath)
 
 
     # window = ui.Dialog()
