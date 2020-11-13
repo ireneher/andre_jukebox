@@ -13,7 +13,7 @@ from core_jukebox import jukebox
 from maya_jukebox.common import file_reference
 from maya_jukebox import maya_startup
 
-ROOT_FOLDER = r"C:\Users\their\Documents\AJ_test\MAYA\scenes\ASSETS\sets\city\workarea\model\building_groups"
+ROOT_FOLDER = r"C:\Users\their\Documents\AJ_test\MAYA\scenes\ASSETS\sets\city\workarea\model\testing"
 
 def get_songs(asset_name):
     usd_song_obj = jukebox.song.Song.from_fields("env", asset_name, "usd", asset_name, "usd")
@@ -26,7 +26,6 @@ def get_songs(asset_name):
 def replace_refs_with_usds(): 
     import multiverse as mv   
     refs = file_reference.FileReference.ls_references()
-    print("heeyyyyyyyyyyyyyy")
     print(refs)
     for ref in refs:
         if len(ref.top_nodes)>1:
@@ -45,13 +44,15 @@ def replace_refs_with_usds():
         asset_name = os.path.basename(os.path.dirname(ref.filepath))
         print("---- Loading USD for {} ----- ".format(asset_name))
         song_obj, mat_song_obj = get_songs(asset_name)
-        print(song_obj)
-        print(mat_song_obj)
+        print("song:", song_obj)
+        print("mat:", mat_song_obj)
         if not song_obj:
             continue
         print("Resolved filepath: {}".format(song_obj.filepath))
-        usd_compound = mv.CreateUsdCompound(song_obj.filepath)
+        usd_compound = cmds.listRelatives(mv.CreateUsdCompound(song_obj.filepath), parent=True)
         cmds.xform(usd_compound, matrix=xform_matrix)
+        print("~*"*50)
+        print(xform_matrix)
 
     # for ref in refs:
     #     cmds.file(removeReference=ref.filepath, force=True)
@@ -68,7 +69,7 @@ def replace_refs_with_usds():
         song_obj, mat_song_obj = get_songs(asset_name)
         print ("Loading usd: {}".format(song_obj.filepath))
         # Load USD
-        usd_compound = mv.CreateUsdCompound(song_obj.filepath)
+        usd_compound = cmds.listRelatives(mv.CreateUsdCompound(song_obj.filepath), parent=True)
         # Load Material
         cmds.file(mat_song_obj.filepath, reference=True)
         # Set material namespace

@@ -34,9 +34,8 @@ def writeUsdAsset(outPath):
 
 
 def writeUsdComposition(outPath):   
-    usdNodes = cmds.ls(type="mvUsdCompoundShape")
-    opts = multiverse.CompositionWriteOptions()
-    multiverse.WriteComposition(outPath, usdNodes, opts)
+    usdNodes = cmds.listRelatives(cmds.ls(type="mvUsdCompoundShape"),parent=True)
+    multiverse.WriteComposition(outPath, usdNodes)
 
 def publishMaterials(tapeEntity, workfileName, recorder=None):   
     resolver = resolve.Resolver()

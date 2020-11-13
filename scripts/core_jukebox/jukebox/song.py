@@ -24,8 +24,6 @@ class Song(object):
                                                     asset_type=asset_type,
                                                     asset=asset,
                                                     datatype=datatype)
-        print("*****************")
-        print(filepath)
         project_root = cmds.workspace(q=True, dir=True, rd=True).split(dcc_root)[0]
         filepath = os.path.join(project_root, filepath)
         if not os.path.exists(filepath):
@@ -114,7 +112,6 @@ class Song(object):
 
     def _get_versions(self):
         versions = []
-        print(self.archive)
         for version in os.listdir(self.archive):
             # Ignore if it's not the same representation or it doesn't have any version
             rep = parse.parse(templates.VersionFile.TEMPLATE, version).named.get("representation")
@@ -159,6 +156,9 @@ class Song(object):
             ]
         )
 
-    def get_latest():
-        latest_version  = self.current_version_number()               
-        return self.get_versions_dict()[latest_version]
+    def get_latest(self):
+        return self.get_versions_dict().keys()[self.current_version_number-1]
+
+    def get_latest_filepath(self):
+        filename = self.get_latest()
+        return os.path.join(self.archive, filename)

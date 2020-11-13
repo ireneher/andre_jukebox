@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b11cf2f7-cd77-4e75-9050-18658bdd9e87" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/andre_jukebox.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/andre_jukebox.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/core_jukebox/jukebox/song.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/core_jukebox/jukebox/song.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/core_jukebox/templates.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/core_jukebox/templates.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/lib/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/maya_jukebox/lib/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/usd_jukebox/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/maya_jukebox/usd_jukebox/api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/usd_jukebox/scripts.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/maya_jukebox/usd_jukebox/scripts.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -48,6 +48,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.scripts" />
         <item itemvalue="Python.scripts" />
         <item itemvalue="Python.scripts" />
         <item itemvalue="Python.scripts" />
