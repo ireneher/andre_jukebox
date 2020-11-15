@@ -23,8 +23,6 @@ def writeUsdAsset(outPath):
     [assemblies.remove(cmds.listRelatives(cam, parent=True)[0]) for cam in cmds.ls(type="camera")][0]
     rootNode = assemblies[0]
 
-    print(outPath)
-    print(rootNode)
     opts = multiverse.AssetWriteOptions()
     opts.writeNormals = True
 
