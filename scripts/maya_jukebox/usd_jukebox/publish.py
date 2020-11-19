@@ -13,6 +13,7 @@ def writeMaterials(outPath):
     mats = []
     for mat, sg in maya_utils.get_scene_materials():
         mats.append(mat)
+        mats.append(sg)
     if not mats:
         return
     cmds.select(mats, replace=True)
@@ -34,6 +35,8 @@ def writeUsdAsset(outPath):
 def writeUsdComposition(outPath):  
     opts = multiverse.CompositionWriteOptions() 
     usdNodes = cmds.listRelatives(cmds.ls(type="mvUsdCompoundShape"),parent=True)
+    print("-"*100)
+    print(usdNodes)
     multiverse.WriteComposition(outPath, usdNodes, opts)
 
 def publishMaterials(tapeEntity, workfileName, recorder=None):   

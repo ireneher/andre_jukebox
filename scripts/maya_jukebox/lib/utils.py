@@ -5,21 +5,18 @@ from core_jukebox import templates
 from maya_jukebox.common import os_maya 
 
 def relative_repath(*args):
-    print("----------------- TRIGGERED -------------")
-    # referenceNodes = cmds.filePathEditor(query=True, listFiles="", attributeOnly=True, byType="reference")
-    # print(referenceNodes)
-    # for obj in cmds.ls(type='reference'):
-    #     refPath = cmds.referenceQuery(obj, filename=True, unresolvedName=True, withoutCopyNumber=True)
-    #     print(refPath)
-    #     relPath = refPath.split(ROOT)[-1]
-    #     print(relPath)
-    #     cmds.file(relPath, loadReference=obj)
+    print("----------------- Relative Repath -------------")
+    import maya.cmds as cmds
+    from core_jukebox import templates
     fileNodes = cmds.ls(type = "file") 
     for fileNode in fileNodes:
         texturePath = cmds.getAttr("{}.fileTextureName".format(fileNode))
         relPath =  texturePath.split(templates.MAYA_PROJECT_ROOT)[-1]
-        cmds.setAttr("{}.fileTextureName".format(relPath))
-
+        while relPath.startswith("/"):
+            relPath = "/".join(relPath.split("/")[1:])
+        print("--- {}".format(relPath))
+        cmds.setAttr("{}.fileTextureName".format(fileNode), relPath, type="string")
+        
 def reference_check_callback(*args):
     # args = fileObject
     project_dir = os_maya.find_project_root(cmds.file(query=True, l=True)[0])

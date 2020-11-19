@@ -10,10 +10,9 @@ sys.path.append(r"C:\Users\their\dev\andre_jukebox\scripts")
 
 from maya_jukebox import lib as maya_lib
 from core_jukebox import jukebox
-from maya_jukebox.common import file_reference
 from maya_jukebox import maya_startup
 
-ROOT_FOLDER = r"C:\Users\their\Documents\AJ_test\MAYA\scenes\ASSETS\sets\city\workarea\model\testing"
+ROOT_FOLDER = r"C:\Users\their\Documents\AJ_test\MAYA\scenes\ASSETS\sets\city\workarea\model\assettest"
 
 def get_songs(asset_name):
     usd_song_obj = jukebox.song.Song.from_fields("env", asset_name, "usd", asset_name, "usd")
@@ -25,8 +24,9 @@ def get_songs(asset_name):
 
 def replace_refs_with_usds(): 
     import multiverse as mv   
+    from maya_jukebox.common import file_reference
+
     refs = file_reference.FileReference.ls_references()
-    print(refs)
     for ref in refs:
         if len(ref.top_nodes)>1:
             print("Using first top node for reference {}".format(ref))
@@ -73,7 +73,6 @@ def replace_refs_with_usds():
         # Load Material
         cmds.file(mat_song_obj.filepath, reference=True)
         # Set material namespace
-        #mv.AddAttributeSetOverride(usd_compound, primPath,)
         mvSetNode = cmds.createNode("mvSet", name="mvSet_{}".format(usd_compound))
         cmds.setAttr("{}.materialNamespaceEnable".format(mvSetNode), 1.0)
         cmds.setAttr("{}.materialNamespace".format(mvSetNode), asset_name)
@@ -95,9 +94,9 @@ def launch():
     cmds.loadPlugin("MultiverseForMaya")
     import multiverse as mv
 
-
-    from maya_jukebox import usd_jukebox
-
+    from maya_jukebox.usd_jukebox import publish
+    from maya_jukebox.lib import utils
+    
     for dirpath, dirnames, files in os.walk(ROOT_FOLDER):
         dirnames[:] = [d for d in dirnames if d not in ("incrementalSave")]
         for file in files:
@@ -108,13 +107,19 @@ def launch():
             print("Processing {}".format(filepath))
             cmds.file(new=True, force=True)  # clear scene
             cmds.file(filepath, open=True, force=True, loadReferenceDepth="all")
-            replace_refs_with_usds()
-            #usd_jukebox.api.publishAsset(mayaFile=filepath)
-            cmds.file(rename=r"C:\Users\their\Desktop\block01_A.ma")
-            cmds.file(save=True, type="mayaAscii", force=True)
-            usd_jukebox.api.publishComposition(mayaFile=filepath)
+            utils.relative_repath()
+
+            ## Asset
+            publish.publishAsset(mayaFile=filepath)
+
+            ## Composition
+            # replace_refs_with_usds()
+            # cmds.file(rename=r"C:\Users\their\Desktop\block01_A.ma")
+            # cmds.file(save=True, type="mayaAscii", force=True)
+            # publish.publishComposition(mayaFile=filepath)
+
             mel.eval("cleanUpScene 3")
-            # maya_lib.utils.remove_student_license(filepath)
+            #maya_lib.utils.remove_student_license(filepath)
 
 
     # window = ui.Dialog()
