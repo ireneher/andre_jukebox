@@ -12,11 +12,10 @@ import maya_jukebox.lib.utils as maya_utils
 def writeMaterials(outPath):
     mats = []
     for mat, sg in maya_utils.get_scene_materials():
-        mats.append(mat)
-        mats.append(sg)
+        mats.extend([mat, sg])
     if not mats:
         return
-    cmds.select(mats, replace=True)
+    cmds.select(mats, replace=True, allDagObjects=False, noExpand=True)
     cmds.file(outPath, exportSelected=True, type="mayaAscii", force=True)
 
 def writeUsdAsset(outPath):   

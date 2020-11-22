@@ -4,7 +4,7 @@ import maya.cmds as cmds
 from core_jukebox import templates
 from maya_jukebox.common import os_maya 
 
-def relative_repath(*args):
+def relative_repath(reformat=None):
     print("----------------- Relative Repath -------------")
     import maya.cmds as cmds
     from core_jukebox import templates
@@ -14,6 +14,9 @@ def relative_repath(*args):
         relPath =  texturePath.split(templates.MAYA_PROJECT_ROOT)[-1]
         while relPath.startswith("/"):
             relPath = "/".join(relPath.split("/")[1:])
+        if reformat:
+            root, _  = os.path.splitext(relPath)
+            relPath = "{}.{}".format(root, reformat)
         print("--- {}".format(relPath))
         cmds.setAttr("{}.fileTextureName".format(fileNode), relPath, type="string")
         

@@ -96,7 +96,7 @@ def launch():
 
     from maya_jukebox.usd_jukebox import publish
     from maya_jukebox.lib import utils
-    
+
     for dirpath, dirnames, files in os.walk(ROOT_FOLDER):
         dirnames[:] = [d for d in dirnames if d not in ("incrementalSave")]
         for file in files:
@@ -107,7 +107,7 @@ def launch():
             print("Processing {}".format(filepath))
             cmds.file(new=True, force=True)  # clear scene
             cmds.file(filepath, open=True, force=True, loadReferenceDepth="all")
-            utils.relative_repath()
+            utils.relative_repath(reformat="tx")
 
             ## Asset
             publish.publishAsset(mayaFile=filepath)
