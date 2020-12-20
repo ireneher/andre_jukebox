@@ -12,7 +12,7 @@ from maya_jukebox import lib as maya_lib
 from core_jukebox import jukebox
 from maya_jukebox import maya_startup
 
-ROOT_FOLDER = r"C:\Users\their\Documents\AJ_test\MAYA\scenes\ASSETS\sets\city\workarea\model\assettest"
+ROOT_FOLDER = r"C:\Users\their\Documents\AJ_test\MAYA\scenes\assets\sets\city\workarea\topublish"
 
 def get_songs(asset_name):
     usd_song_obj = jukebox.song.Song.from_fields("env", asset_name, "usd", asset_name, "usd")
@@ -106,17 +106,20 @@ def launch():
             filepath = filepath.replace("\\", "/")
             print("Processing {}".format(filepath))
             cmds.file(new=True, force=True)  # clear scene
-            cmds.file(filepath, open=True, force=True, loadReferenceDepth="all")
-            utils.relative_repath(reformat="tx")
+            try:
+                cmds.file(filepath, open=True, force=True, loadReferenceDepth="all")
+            except RuntimeError:
+                pass
 
+            utils.relative_repath(reformat="tx")
             ## Asset
-            publish.publishAsset(mayaFile=filepath)
+            # publish.publishAsset(mayaFile=filepath)
 
             ## Composition
-            # replace_refs_with_usds()
-            # cmds.file(rename=r"C:\Users\their\Desktop\block01_A.ma")
-            # cmds.file(save=True, type="mayaAscii", force=True)
-            # publish.publishComposition(mayaFile=filepath)
+            replace_refs_with_usds()
+            cmds.file(rename=r"C:\Users\their\Desktop\block01_A.ma")
+            cmds.file(save=True, type="mayaAscii", force=True)
+            publish.publishComposition(mayaFile=filepath)
 
             mel.eval("cleanUpScene 3")
             #maya_lib.utils.remove_student_license(filepath)
