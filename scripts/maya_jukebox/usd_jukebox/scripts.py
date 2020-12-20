@@ -49,7 +49,9 @@ def replace_refs_with_usds():
         if not song_obj:
             continue
         print("Resolved filepath: {}".format(song_obj.filepath))
-        usd_compound = cmds.listRelatives(mv.CreateUsdCompound(song_obj.filepath), parent=True)
+        usd_shape = mv.CreateUsdCompound(song_obj.filepath)
+        cmds.setAttr("{}.WriteMode".format(usd_shape), 1)
+        usd_compound = cmds.listRelatives(usd_shape, parent=True)
         cmds.xform(usd_compound, matrix=xform_matrix)
         print("~*"*50)
         print(xform_matrix)
@@ -69,7 +71,9 @@ def replace_refs_with_usds():
         song_obj, mat_song_obj = get_songs(asset_name)
         print ("Loading usd: {}".format(song_obj.filepath))
         # Load USD
-        usd_compound = cmds.listRelatives(mv.CreateUsdCompound(song_obj.filepath), parent=True)
+        usd_shape = mv.CreateUsdCompound(song_obj.filepath)
+        cmds.setAttr("{}.WriteMode".format(usd_shape), 1)
+        usd_compound = cmds.listRelatives(usd_shape, parent=True)
         # Load Material
         cmds.file(mat_song_obj.filepath, reference=True)
         # Set material namespace
