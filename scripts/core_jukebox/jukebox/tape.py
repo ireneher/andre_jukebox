@@ -16,9 +16,6 @@ class Tape(object):
             # logging.warning("No Song found in: {} ".format(filepath))
             return
         asset_parse = parse.search(templates.ASSET_WORKAREA, filepath)
-        print(templates.ASSET_WORKAREA)
-        print(filepath)
-        print(asset_parse)
         if asset_parse:
             return AssetTape(asset_parse.named.get("asset"), 
                             asset_type=asset_parse.named.get("asset_type", None),

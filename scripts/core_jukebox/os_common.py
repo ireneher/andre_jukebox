@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from core_jukebox.jukebox import tape
+from core_jukebox import templates
 
 def create_dir(root, directory):
     path = os.path.join(root, directory)
@@ -69,5 +71,23 @@ def retrieve_assets():
                 assets[os.path.join(asset_dir, asset_filename)] = os.path.splitext(
                     asset_filename
                 )[0]
+
+    return assets
+
+def retrieve_tapes(project_root, dcc_root=templates.MAYA_PROJECT_ROOT):
+    """
+    Returns list of Tape objects
+    """
+    # ASSETS_PATH = "C:/Users/their/Documents/AndreJukebox/MAYA/scenes/REFS"
+    assets_path = os.path.join(project_root,
+                               templates.ASSETS_ROOT.format(dcc_root)
+                               )
+    assets = []
+    for asset_dir_name in os.listdir(assets_path):
+        asset_dir = os.path.join(assets_path, asset_dir_name)
+        for asset_filename in os.listdir(asset_dir):
+            filepath = os.path.join(asset_dir, asset_filename)
+            if os.path.isfile(filepath):
+                assets.append(tape.Tape.from_filepath(filepath))
 
     return assets
