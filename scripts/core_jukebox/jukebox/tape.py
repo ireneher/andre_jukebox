@@ -162,3 +162,24 @@ class SequenceTape(Tape):
     def get_shots():
         shots = subfolders = [ f.path for f in os.scandir(self.filepath) if f.is_dir() and f.name.startswith("SHOT_")]
         return [ShotTape.from_filepath(shot) for shot in shots]
+
+
+def retrieve_tapes_with_types(project_root, dcc_root=templates.MAYA_PROJECT_ROOT):
+    """
+    Returns dict of type: Tape object
+    """
+    assets_path = os.path.join(project_root,
+                               templates.ASSETS_ROOT.format(dcc_root)
+                               )
+    assets = {}
+    for asset_dir_name in os.listdir(assets_path):
+        asset_dir = os.path.join(assets_path, asset_dir_name)
+        for asset_filename in os.listdir(asset_dir):
+            filepath = os.path.join(asset_dir, asset_filename)
+            if os.path.isfile(filepath):
+                if asset_dir_name not in assets:
+                    assets[asset_dir_name] = tape.Tape.from_filepath(filepath)
+                else:
+                    assets[asset_dir_name].append(tape.Tape.from_filepath(filepath))
+
+    return assets

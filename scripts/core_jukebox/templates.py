@@ -24,7 +24,7 @@ ASSET_WORKAREA = ASSET + "workarea/{task}/"
 
 ASSET_OUTPUT_ROOT = ASSET + "outputs/{datatype}/"
 #ASSET_OUTPUT_ROOT = "{DCC_ROOT}/scenes/assets/{asset_type}/{asset}/outputs/{datatype}/"
-
+        
 ASSET_OUTPUT = ASSET_OUTPUT_ROOT + "{name}.{representation}"
 
 ASSET_ARCHIVE = ASSET_OUTPUT_ROOT + "archive/{version}/{name}.{representation}"

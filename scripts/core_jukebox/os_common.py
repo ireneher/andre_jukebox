@@ -1,7 +1,6 @@
 import os
 import shutil
 
-from core_jukebox.jukebox import tape
 from core_jukebox import templates
 
 def create_dir(root, directory):
@@ -91,3 +90,5 @@ def retrieve_tapes(project_root, dcc_root=templates.MAYA_PROJECT_ROOT):
                 assets.append(tape.Tape.from_filepath(filepath))
 
     return assets
+
+
