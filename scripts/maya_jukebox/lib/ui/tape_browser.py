@@ -76,6 +76,11 @@ class TapeBrowser(QtWidgets.QDialog):
         self.searchBar = QtWidgets.QLineEdit()
         self.searchBar.setPlaceholderText("Search")
         self.searchBar.setFont(QtGui.QFont("Open Sans", 12))
+        
+        # Task input
+        self.taskBar = QtWidgets.QLineEdit()
+        self.taskBar.setPlaceholderText("Task")
+        self.taskBar.setFont(QtGui.QFont("Open Sans", 12))
 
         # Dropdown
         self.optionsDropdown = QtWidgets.QComboBox()
@@ -92,6 +97,7 @@ class TapeBrowser(QtWidgets.QDialog):
         layout.addWidget(self.mayapyBar)
         layout.addWidget(self.searchBar)
         layout.addWidget(self.splitter)
+        layout.addWidget(self.taskBar)
         layout.addWidget(self.optionsDropdown)
         layout.addWidget(self.publishButton)
 
@@ -117,8 +123,9 @@ class TapeBrowser(QtWidgets.QDialog):
 
     def onButtonClicked(self):
         publishMode = constants.PUBLISH_OPTIONS[0] if self.optionsDropdown.currentIndex() == 0 else constants.PUBLISH_OPTIONS[1]
+        task = str(self.taskBar.currentText())  
         for idx in self.tapeView.selectionModel().selectedIndexes():
-            filepath = self.tapeModel.filePath(idx)
+            filepath = os.path.join(self.tapeModel.filePath(idx), task)
             mayaFiles = glob.glob('{}/*.m*'.format(filepath))
             print(mayaFiles)
             if not mayaFiles:
