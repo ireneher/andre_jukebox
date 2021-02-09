@@ -20,8 +20,11 @@ def _parse_args(argv=None):
 
 def __main__(argv=None):
     args = _parse_args(argv=argv)
+    print(args)
     cmds.file(new=True, force=True)  # clear scene
+    print("hello")
     cmds.file(args.path, i=True, groupReference=True, groupName=asset_name, force=True)
+    print(args.action)
     if args.action == constants.PUBLISH_OPTIONS[0]:
         usd_publish.publishAsset(mayaFile=args.path)
     elif args.action == constants.PUBLISH_OPTIONS[1]:

@@ -1,1 +1,0 @@
-PUBLISH_OPTIONS = ("usdAsset", "usdComposition")

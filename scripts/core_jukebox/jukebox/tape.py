@@ -13,7 +13,7 @@ class Tape(object):
     @classmethod
     def from_filepath(cls, filepath):
         if not os.path.exists(filepath):
-            # logging.warning("No Song found in: {} ".format(filepath))
+            logging.warning("No Tape found in: {} ".format(filepath))
             return
         asset_parse = parse.search(templates.ASSET_WORKAREA, filepath)
         if asset_parse:

@@ -19,7 +19,8 @@ ASSET = ASSETS_ROOT+"{asset_type}/{asset}/"
 
 SHOT = "{DCC_ROOT}/scenes/Concept_Animatic/SHOTS/{shot}/{task}/"
 
-ASSET_WORKAREA = ASSET + "workarea/{task}/"
+ASSET_WORKAREA_REL = "workarea/{task}/"
+ASSET_WORKAREA = ASSET + ASSET_WORKAREA_REL
 #ASSET_WORKAREA = ASSET + "workarea/{task}/{asset}/"
 
 ASSET_OUTPUT_ROOT = ASSET + "outputs/{datatype}/"

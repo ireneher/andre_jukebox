@@ -1,7 +1,7 @@
 import os
 
-import multiverse
-import maya.cmds as cmds
+from maya import cmds
+
 import core_jukebox.jukebox.tape as tape
 from core_jukebox.tape_record import resolve
 from core_jukebox.tape_record import record
@@ -18,7 +18,8 @@ def writeMaterials(outPath):
     cmds.select(mats, replace=True, allDagObjects=False, noExpand=True)
     cmds.file(outPath, exportSelected=True, type="mayaAscii", force=True)
 
-def writeUsdAsset(outPath):   
+def writeUsdAsset(outPath):  
+    import multiverse
     assemblies = cmds.ls(assemblies=True)
     [assemblies.remove(cmds.listRelatives(cam, parent=True)[0]) for cam in cmds.ls(type="camera")][0]
     rootNode = assemblies[0]
@@ -31,10 +32,11 @@ def writeUsdAsset(outPath):
     multiverse.WriteAsset(outPath, rootNode, opts)
 
 
-def writeUsdComposition(outPath):  
+def writeUsdComposition(outPath): 
+    import multiverse 
     opts = multiverse.CompositionWriteOptions() 
     usdNodes = cmds.listRelatives(cmds.ls(type="mvUsdCompoundShape"),parent=True)
-    print("-"*100)
+    print("*"*50)
     print(usdNodes)
     multiverse.WriteComposition(outPath, usdNodes, opts)
 
@@ -84,8 +86,13 @@ def publishUsdComposition(tapeEntity, workfileName, recorder=None):
        writeUsdComposition(songPath)   
        recorder.status = record.Status.PUBLISHED
 
-def publishAsset(mayaFile=None):
+def publishAsset(mayaFile=None, batch=False):
+    if batch:
+        cmds.file(new=True, force=True)  # clear scene
+        cmds.file(mayaFile, force=True, o=True)
+
     mayaFile = mayaFile or cmds.file(query=True, l=True)[0]
+    mayaFile = mayaFile.replace("\\", "/")
     workfileName = os.path.splitext(os.path.basename(mayaFile))[0]
     tapeEntity = tape.Tape.from_filepath(mayaFile)
     workfileArchivePath = tapeEntity.get_workfile_archive_path()
@@ -95,8 +102,13 @@ def publishAsset(mayaFile=None):
     publishMaterials(tapeEntity, tapeEntity.name, recorder=recorder)
     publishUsdAsset(tapeEntity, tapeEntity.name, recorder=recorder)
 
-def publishComposition(mayaFile=None):
+def publishComposition(mayaFile=None, batch=False):
+    if batch:
+        cmds.file(new=True, force=True)  # clear scene
+        cmds.file(mayaFile, force=True, o=True)
+
     mayaFile = mayaFile or cmds.file(query=True, l=True)[0]
+    mayaFile = mayaFile.replace("\\", "/")
     workfileName = os.path.splitext(os.path.basename(mayaFile))[0]
     tapeEntity = tape.Tape.from_filepath(mayaFile)
     workfileArchivePath = tapeEntity.get_workfile_archive_path()
