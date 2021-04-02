@@ -14,3 +14,4 @@ rem DEFINE ALIASES FOR STAND-ALONE TOOLS
 reg add "HKCU\Software\Microsoft\Command Processor" /v Autorun /d "doskey /macrofile=\"%CD%\aliases.doskey\"" /f
 reg query "HKCU\Software\Microsoft\Command Processor" /v Autorun
 
+
