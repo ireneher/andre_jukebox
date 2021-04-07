@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b11cf2f7-cd77-4e75-9050-18658bdd9e87" name="Default Changelist" comment="script tweaks">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/core_jukebox/templates.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/core_jukebox/templates.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/common/publish/constants.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/common/publish/script.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/maya_jukebox/common/publish/script.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/common/publish/ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/maya_jukebox/common/publish/ui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/lib/ui/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/lib/ui/tape_browser.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/maya_jukebox/usd_jukebox/publish.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/maya_jukebox/usd_jukebox/publish.py" afterDir="false" />
-    </list>
+    <list default="true" id="b11cf2f7-cd77-4e75-9050-18658bdd9e87" name="Default Changelist" comment="script tweaks" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
