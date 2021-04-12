@@ -8,6 +8,8 @@ import maya.cmds as cmds
 from maya_jukebox.common import os_maya, publish
 from core_jukebox import templates
 from maya_jukebox.usd_jukebox import publish as usd_publish
+from maya_jukebox.anim_jukebox.publish import api as anim_publish
+from maya_jukebox.common.publish import utils
 
 WINDOW_NAME = "Andre Jukebox Tapes"
 
@@ -19,6 +21,9 @@ class TapeBrowser(QtWidgets.QDialog):
         #self.projectPath = cmds.workspace(q=True, active=True)
         self.projectPath = "C:/Users/their/Documents/AJ_test/MAYA"
         self.projectPath = os.environ["AJ_PROJECT"]
+
+        self.publishCurrentCheckbox = QtWidgets.QCheckBox("Publish Current")
+        self.publishCurrentCheckbox.setChecked(True)
 
         self.setWindowTitle(WINDOW_NAME)
         self.setObjectName(WINDOW_NAME)
@@ -70,10 +75,10 @@ class TapeBrowser(QtWidgets.QDialog):
         self.tapeView.setItemsExpandable(False)
 
         # maya project location 
-        self.projectBar = QtWidgets.QLineEdit()
-        self.projectBar.setPlaceholderText("/path/to/project/root/MAYA")
-        self.projectBar.setText(self.projectPath)
-        self.projectBar.setFont(QtGui.QFont("Open Sans", 12))
+        # self.projectBar = QtWidgets.QLineEdit()
+        # self.projectBar.setPlaceholderText("/path/to/project/root/MAYA")
+        # self.projectBar.setText(self.projectPath)
+        # self.projectBar.setFont(QtGui.QFont("Open Sans", 12))
 
         # Search bar
         # self.searchBar = QtWidgets.QLineEdit()
@@ -87,7 +92,7 @@ class TapeBrowser(QtWidgets.QDialog):
 
         # Dropdown
         self.optionsDropdown = QtWidgets.QComboBox()
-        self.optionsDropdown.addItems(["USD Asset", "USD Composition"])
+        self.optionsDropdown.addItems(["USD Asset", "USD Composition", "Anim Cache"])
 
         # Button
         self.publishButton = QtWidgets.QPushButton("Publish")
@@ -99,6 +104,7 @@ class TapeBrowser(QtWidgets.QDialog):
         layout = QtWidgets.QVBoxLayout(self)
         #layout.addWidget(self.projectBar)
         #layout.addWidget(self.searchBar)
+        layout.addWidget(self.publishCurrentCheckbox)
         layout.addWidget(self.splitter)
         layout.addWidget(self.taskBar)
         layout.addWidget(self.optionsDropdown)
@@ -125,20 +131,29 @@ class TapeBrowser(QtWidgets.QDialog):
         from maya_jukebox.usd_jukebox import publish as usd_publish
         task = str(self.taskBar.text())  
         task_workarea = templates.ASSET_WORKAREA_REL.format(task=task)
+        if self.publishCurrentCheckbox.checkState():
+            self._publish(cmds.file(query=True))
         for idx in self.tapeView.selectionModel().selectedRows():
             filepath = os.path.join(self.tapeModel.filePath(idx), task_workarea)
             mayaFiles = glob.glob('{}/*.m*'.format(filepath))
             if not mayaFiles:
                 print("No Maya files found at {}".format(filepath))
             mayaFile = max(mayaFiles, key=os.path.getctime)  # get most recent scene file
-            if self.optionsDropdown.currentIndex() == 0:
-                usd_publish.publishAsset(mayaFile=mayaFile, batch=True)
-            elif self.optionsDropdown.currentIndex() == 1:
-                usd_publish.publishComposition(mayaFile=mayaFile, batch=True)
+            self._publish(mayaFile)
             
             # scriptPath = "{}/script.py".format(publish.__path__[0])
             # maya = subprocess.Popen([self._toRaw(self.mayapyBar.text())+' '+self._toRaw(scriptPath)+' '+ self._toRaw(mayaFile) + " --mode " + publishMode],
             #                         shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+    def _publish(mayaFile):
+        if self.optionsDropdown.currentIndex() == 0:
+                usd_publish.publishAsset(mayaFile=mayaFile, batch=True)
+        elif self.optionsDropdown.currentIndex() == 1:
+            usd_publish.publishComposition(mayaFile=mayaFile, batch=True)
+        elif self.optionsDropdown.currentIndex() == 2:
+            animPublishManager = anim_publish.Manager()
+            animPublishManager.publish(archive=True, mayaFile=mayaFile)
+        
+        utils.sanitise(mayaFile)
 
     def _toRaw(self, string):
         return r'{}'.format(string)

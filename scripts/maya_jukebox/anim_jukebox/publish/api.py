@@ -22,7 +22,10 @@ class Manager(object):
             cmds.playbackOptions(query=True, maxTime=True),
         )
 
-    def publish(self, instances=None):
+    def publish(self, instances=None, archive=True, mayaFile=None):
+        if archive:
+            mayaFile = mayaFile or cmds.file(q=True, sn=True)
+            self.publish_workfile(mayaFile=mayaFile)
 
         instances = instances or self.instances
         # Ensure file is saved
@@ -67,8 +70,8 @@ class Manager(object):
             )
             recorder.status = record.Status.PUBLISHED
 
-    def publish_workfile(self):
-        maya_file = cmds.file(q=True, sn=True)      
+    def publish_workfile(self, mayaFile=None):
+        maya_file = mayaFile or cmds.file(q=True, sn=True)      
         workfile_path = resolve.Resolver().get_workfile_archive_path(maya_file)
         recorder.archive_workfile(workfile_path, maya_file)
 
