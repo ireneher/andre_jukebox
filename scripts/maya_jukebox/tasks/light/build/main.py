@@ -10,7 +10,7 @@ def extract_version():
     s = re.findall("(?:_v)\d+$",f)
     return (int(s[0]) if s else -1,f)
 
-def main():
+def main(shots=[]):
     maya.standalone.initialize()
     cmds.loadPlugin("objExport")
     cmds.loadPlugin("mtoa")
@@ -18,6 +18,8 @@ def main():
     shots_root = os.path.join(os.environ["AJ_PROJECT_PATH"], "concept_animatic\shots_lgt")
     shot_folder_names = [d for d in os.listdir(shots_root) if os.path.isdir(d) and d.startswith("shot")]
     for shot_folder_name in shot_folder_names:
+        if shots and shot_folder_path not in shots:
+            continue
         cmds.file(new=True, force=True)
         print("Processing {}".format(shot_folder_path))
         shot_folder_path = os.path.join(shots_root, shot_folder_name)
@@ -47,4 +49,5 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    shots = sys.argv[1:] or []
+    sys.exit(main(shots))
