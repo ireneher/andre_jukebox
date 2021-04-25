@@ -3,9 +3,8 @@ import maya.cmds as cmds
 
 from core_jukebox.jukebox import song, tape
 from ligtht_jukebox.build import constants
+from usd_jukebox import build as usd_build 
 
-class Builder(object):
-    pass
 # (*)
 # Get current scene (requires saving before building?), get shot
 # Get ShotTape from scene filepath
@@ -56,3 +55,4 @@ class Builder():
                     print(">>>Loading {}".format(filepath))
                     # TODO how to load under same group
                     cmds.file(filepath, i=True, reference=True, groupReference=True, groupName=datatype, force=True)
+                    usd_build.buildSet(assetName, assetType="sets")

@@ -11,7 +11,7 @@
             "cache": "animInstanceZ"
         },
         "sets": {
-            "model": ""
+            "model": "city"
         },
         "fx": {
             "cache": "fxInstanceL",
