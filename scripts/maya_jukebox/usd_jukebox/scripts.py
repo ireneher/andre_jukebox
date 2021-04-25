@@ -56,8 +56,8 @@ def replace_refs_with_usds():
         print("~*"*50)
         print(xform_matrix)
 
-    # for ref in refs:
-    #     cmds.file(removeReference=ref.filepath, force=True)
+    for ref in refs:
+        cmds.file(removeReference=ref.filepath, force=True)
     gpu_shapes = cmds.ls(type="gpuCache")
     if not gpu_shapes:
         return

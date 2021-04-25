@@ -5,7 +5,7 @@ import maya.cmds as cmds
 from maya_jukebox.lib import utils
 import maya_jukebox.maya_startup as maya_startup
 
-#OpenMaya.MSceneMessage.addCheckFileCallback(OpenMaya.MSceneMessage.kBeforeReferenceCheck, utils.reference_check_callback)
+OpenMaya.MSceneMessage.addCheckFileCallback(OpenMaya.MSceneMessage.kBeforeReferenceCheck, utils.reference_check_callback)
 OpenMaya.MSceneMessage.addCallback(OpenMaya.MSceneMessage.kAfterOpen, utils.relative_repath)
 
 cmds.evalDeferred(maya_startup.set_project)

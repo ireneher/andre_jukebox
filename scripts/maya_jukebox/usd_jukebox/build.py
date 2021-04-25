@@ -51,7 +51,7 @@ def buildAsset(assetName, assetType="prop"):
         mv.AddUsdCompoundAssetPath(usdCompositionNode, usdAnimPath)
         # Add lattice layer
         # TODO query 
-         mv.AddUsdCompoundAssetPath(usdCompositionNode, usdModifierPath)
+        mv.AddUsdCompoundAssetPath(usdCompositionNode, usdModifierPath)
 
     
 

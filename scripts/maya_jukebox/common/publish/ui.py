@@ -8,7 +8,7 @@ import maya.cmds as cmds
 from maya_jukebox.common import os_maya, publish
 from core_jukebox import templates
 from maya_jukebox.usd_jukebox import publish as usd_publish
-from maya_jukebox.anim_jukebox.publish import api as anim_publish
+#from maya_jukebox.tasks.anim.publish import api as anim_publish
 from maya_jukebox.common.publish import utils
 
 WINDOW_NAME = "Andre Jukebox Tapes"
@@ -112,7 +112,7 @@ class TapeBrowser(QtWidgets.QDialog):
 
         # ----- Connections -----
         self.tapeTypeView.clicked.connect(self.onTreeClicked)
-        self.projectBar.returnPressed.connect(self.updateProject)
+        #self.projectBar.returnPressed.connect(self.updateProject)
         self.publishButton.clicked.connect(self.onButtonClicked)
         
     def updateProject():
@@ -150,8 +150,9 @@ class TapeBrowser(QtWidgets.QDialog):
         elif self.optionsDropdown.currentIndex() == 1:
             usd_publish.publishComposition(mayaFile=mayaFile, batch=True)
         elif self.optionsDropdown.currentIndex() == 2:
-            animPublishManager = anim_publish.Manager()
-            animPublishManager.publish(archive=True, mayaFile=mayaFile)
+            pass
+            #animPublishManager = anim_publish.Manager()
+            #animPublishManager.publish(archive=True, mayaFile=mayaFile)
         
         utils.sanitise(mayaFile)
 
