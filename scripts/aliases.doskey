@@ -1,2 +1,3 @@
 aj_publisher="%AJ_MAYAPY%" %AJ_SCRIPTS%"/maya_jukebox/common/publish/main.py"
+aj_builder="%AJ_MAYAPY%" %AJ_SCRIPTS%"/maya_jukebox/tasks/light/build/main.py"
 mtoa_convert="%AJ_MAYAPY%" %AJ_SCRIPTS%"/maya_jukebox/mtoa_convert/main.py"
