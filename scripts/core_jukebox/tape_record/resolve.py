@@ -32,8 +32,7 @@ class Resolver(object):
             name=workfile_name,
             representation=representation
         )
-        project_root = jukebox.project.get_project_root()
-        project_root = r"C:\Users\their\Documents\AJ_test"
+        project_root = os.path.dirname(os.environ.get("AJ_PROJECT")) or jukebox.project.get_project_root()
         return os.path.join(project_root, output_template)
 
     def filepath_from_id(self, tape, datatype, identifier, representation):
@@ -51,7 +50,8 @@ class Resolver(object):
             identifier=identifier,
             representation=representation
         )
-        return os.path.join(jukebox.project.get_project_root(), output_template)
+        project_root = os.path.dirname(os.environ.get("AJ_PROJECT")) or jukebox.project.get_project_root()
+        return os.path.join(project_root, output_template)
 
     @staticmethod
     def asset_from_instance(instance_name):
